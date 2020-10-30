@@ -86,6 +86,9 @@ public class DiscordMessageSender {
 	public static void sendPrivateMessage(KiraUser user, String msg) {
 		JDA jda = KiraMain.getInstance().getJDA();
 		User discordUser = jda.getUserById(user.getDiscordID());
+		if (discordUser == null) {
+			discordUser = user.getCurrentDiscordUser();
+		}
 		PrivateChannel pm = discordUser.openPrivateChannel().complete();
 		sendMessageInternal(null, null, s -> {
 			pm.sendMessage(s).queue();
