@@ -30,6 +30,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.requests.GatewayIntent;
 
 public class KiraMain {
 
@@ -226,7 +227,8 @@ public class KiraMain {
 			return false;
 		}
 		try {
-			jda = new JDABuilder(token).build();
+			jda = JDABuilder.create(token, GatewayIntent.GUILD_MESSAGES, 
+					GatewayIntent.GUILD_INVITES, GatewayIntent.GUILD_MEMBERS, GatewayIntent.DIRECT_MESSAGES).build();
 			jda.awaitReady();
 		} catch (LoginException | InterruptedException e) {
 			logger.error("Failed to start jda", e);
