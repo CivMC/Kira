@@ -6,7 +6,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.github.maxopoly.kira.KiraMain;
 import com.github.maxopoly.kira.command.model.discord.CommandHandler;
-import com.github.maxopoly.kira.command.model.discord.DiscordCommandChannelSupplier;
+import com.github.maxopoly.kira.command.model.discord.DiscordCommandChannelMessageSupplier;
 import com.github.maxopoly.kira.command.model.discord.DiscordCommandPMSupplier;
 import com.github.maxopoly.kira.command.model.top.InputSupplier;
 import com.github.maxopoly.kira.relay.GroupChat;
@@ -53,8 +53,8 @@ public class DiscordMessageListener extends ListenerAdapter {
 				logger.info(
 						String.format("CHAT [%s][%s] %s: %s", event.getGuild().getName(), event.getTextChannel().getName(),
 								event.getMember().getEffectiveName(), event.getMessage().getContentDisplay()));
-				InputSupplier supplier = new DiscordCommandChannelSupplier(user, event.getGuild().getIdLong(),
-						event.getChannel().getIdLong());
+				InputSupplier supplier = new DiscordCommandChannelMessageSupplier(user, event.getGuild().getIdLong(),
+						event.getChannel().getIdLong(), event.getMessage());
 				cmdHandler.handle(content.substring(keyWord.length()), supplier);
 				return;
 			}
