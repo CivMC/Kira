@@ -104,8 +104,8 @@ public class DAO {
 				PreparedStatement prep = conn
 						.prepareStatement("insert into relay_configs (relayFromDiscord, relayToDiscord, showSnitches,"
 								+ "deleteMessages, chatFormat, snitchFormat, loginAction, logoutAction, enterAction, hereFormat, everyoneFormat,"
-								+ "canPing, owner_id, name, skynetFormat, relaySkynet, skynetLogin, skynetLogout, newPlayerFormat, relayNewPlayer) values "
-								+ "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);", Statement.RETURN_GENERATED_KEYS)) {
+								+ "canPing, owner_id, name, timeFormat, skynetFormat, relaySkynet, skynetLogin, skynetLogout, newPlayerFormat, relayNewPlayer) values "
+								+ "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);", Statement.RETURN_GENERATED_KEYS)) {
 			prep.setBoolean(1, relayFromDiscord);
 			prep.setBoolean(2, relayToDiscord);
 			prep.setBoolean(3, showSnitches);
@@ -120,12 +120,13 @@ public class DAO {
 			prep.setBoolean(12, canPing);
 			prep.setInt(13, creatorID);
 			prep.setString(14, name);
-			prep.setString(15, skynetFormat);
-			prep.setBoolean(16, relaySkynet);
-			prep.setString(17, skynetLogin);
-			prep.setString(18, skynetLogout);
-			prep.setString(19, newPlayerFormat);
-			prep.setBoolean(20, relayNewPlayer);
+			prep.setString(15, timeFormat);
+			prep.setString(16, skynetFormat);
+			prep.setBoolean(17, relaySkynet);
+			prep.setString(18, skynetLogin);
+			prep.setString(19, skynetLogout);
+			prep.setString(20, newPlayerFormat);
+			prep.setBoolean(21, relayNewPlayer);
 			prep.execute();
 			try (ResultSet rs = prep.getGeneratedKeys()) {
 				if (!rs.next()) {
@@ -146,15 +147,19 @@ public class DAO {
 
 	private boolean createTables() {
 		try (Connection conn = db.getConnection()) {
+			// TABLE: users
 			try (PreparedStatement prep = conn.prepareStatement("CREATE TABLE IF NOT EXISTS users "
 					+ "(id serial primary key, discord_id bigint not null unique, name varchar(255) unique, "
 					+ "uuid char(36) unique, reddit varchar(255) unique," + timestampField + ");")) {
 				prep.execute();
 			}
+			// TABLE: permissions
 			try (PreparedStatement prep = conn.prepareStatement("CREATE TABLE IF NOT EXISTS permissions "
 					+ "(id serial primary key, name varchar(255) not null unique," + timestampField + ");")) {
 				prep.execute();
 			}
+			// TABLE: relay_configs
+			// REQUIRES: [users]
 			try (PreparedStatement prep = conn.prepareStatement("CREATE TABLE IF NOT EXISTS relay_configs "
 					+ "(id serial primary key, name varchar(255) not null unique, relayFromDiscord boolean not null, "
 					+ "relayToDiscord boolean not null, showSnitches boolean not null, deleteMessages boolean not null, chatFormat text not null,"
@@ -166,22 +171,29 @@ public class DAO {
 					+ "owner_id int references users (id) on delete cascade," + timestampField + ");")) {
 				prep.execute();
 			}
+			// TABLE: roles
+			try (PreparedStatement prep = conn.prepareStatement("CREATE TABLE IF NOT EXISTS roles "
+					+ "(id serial primary key, name varchar(255) not null unique," + timestampField + ");")) {
+				prep.execute();
+			}
+			// TABLE: group_chats
+			// REQUIRES: [roles, relay_configs]
 			try (PreparedStatement prep = conn.prepareStatement("CREATE TABLE IF NOT EXISTS group_chats "
 					+ "(id serial primary key, channel_id bigint, guild_id bigint, name varchar(255) not null unique, "
 					+ "role_id int references roles(id) on delete cascade, creator_id int references users(id) "
 					+ "on delete cascade, config_id int references relay_configs(id)," + timestampField + ");")) {
 				prep.execute();
 			}
-			try (PreparedStatement prep = conn.prepareStatement("CREATE TABLE IF NOT EXISTS roles "
-					+ "(id serial primary key, name varchar(255) not null unique," + timestampField + ");")) {
-				prep.execute();
-			}
+			// TABLE: role_permissions
+			// REQUIRES: [roles, permissions]
 			try (PreparedStatement prep = conn.prepareStatement("CREATE TABLE IF NOT EXISTS role_permissions "
 					+ "(role_id int references roles(id) on delete cascade, "
 					+ "permission_id int references permissions(id) on delete cascade," + timestampField
 					+ ", unique(role_id, permission_id));")) {
 				prep.execute();
 			}
+			// TABLE: role_members
+			// REQUIRES: [users, roles]
 			try (PreparedStatement prep = conn.prepareStatement(
 					"CREATE TABLE IF NOT EXISTS role_members (user_id int references users(id) on delete cascade, "
 							+ "role_id int references roles(id) on delete cascade," + timestampField
