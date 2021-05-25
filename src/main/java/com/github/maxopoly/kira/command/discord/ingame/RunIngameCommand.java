@@ -54,6 +54,6 @@ public class RunIngameCommand extends ArgumentBasedCommand {
 		}
 		KiraMain.getInstance().getRequestSessionManager()
 		.request(new SendIngameCommandSession(sender, commandString));
-		return "Running command '" + commandString + "' as " + sender.getUser().getName();
+		return "Running command `" + commandString + "` as `" + sender.getUser().getName() + "`";
 	}
 }

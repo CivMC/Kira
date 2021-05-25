@@ -37,6 +37,11 @@ public class DiscordMessageSender {
 		if (msg.trim().length() == 0) {
 			return;
 		}
+		msg = msg
+				.replaceAll("§\\w", "")
+				.replaceAll("_", "\\_")
+				.replaceAll("\\*", "\\*")
+				.replaceAll("~", "\\~");
 		String tag = "";
 		if (guild != null && user != null) {
 			Member member = guild.getMemberById(user.getDiscordID());
