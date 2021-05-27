@@ -26,7 +26,7 @@ public class SelfInfoCommand extends Command {
 
 	@Override
 	public String handleInternal(String argument, InputSupplier sender) {
-		return "You are " + sender.getIdentifier();
+		return "Your details are as follows: ```json\n" + sender.getIdentifier() + "\n```";
 	}
 
 }
