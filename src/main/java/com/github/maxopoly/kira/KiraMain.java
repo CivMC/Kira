@@ -53,6 +53,9 @@ public class KiraMain {
 		if (!instance.loadPermission()) {
 			return;
 		}
+		else {
+			instance.kiraRoleManager.setupDefaultPermissions();
+		}
 		if (!instance.startJDA()) {
 			return;
 		}
