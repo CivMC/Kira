@@ -4,8 +4,10 @@ import java.util.EnumSet;
 
 import com.github.maxopoly.kira.KiraMain;
 import com.github.maxopoly.kira.command.model.discord.ArgumentBasedCommand;
+import com.github.maxopoly.kira.command.model.discord.DiscordCommandChannelMessageSupplier;
 import com.github.maxopoly.kira.command.model.top.InputSupplier;
 import com.github.maxopoly.kira.user.KiraUser;
+
 
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -35,6 +37,12 @@ public class CreateRelayChannelHereCommand extends ArgumentBasedCommand {
 
 	@Override
 	public String handle(InputSupplier sender, String[] args) {
+		if (!(sender instanceof DiscordCommandChannelMessageSupplier)) {
+			return "Something went wrong, tell an admin";
+		}
+
+		DiscordCommandChannelMessageSupplier supplier = (DiscordCommandChannelMessageSupplier) sender;
+
 		KiraUser user = sender.getUser();
 		long channelID = sender.getChannelID();
 		if (channelID <= -1) {
@@ -47,8 +55,7 @@ public class CreateRelayChannelHereCommand extends ArgumentBasedCommand {
 		if (channel.getGuild().getIdLong() == KiraMain.getInstance().getGuild().getIdLong()) {
 			return "You can't create relays here";
 		}
-		long discordUserID = sender.getUser().getDiscordID();
-		EnumSet<Permission> perms = channel.getGuild().getMemberById(discordUserID).getPermissions(channel);
+		EnumSet<Permission> perms = supplier.getMessage().getMember().getPermissions(channel);
 		if (!perms.contains(Permission.MANAGE_CHANNEL)) {
 			return "You need the 'MANAGE_CHANNEL' permission to add a relay to this channel";
 		}
