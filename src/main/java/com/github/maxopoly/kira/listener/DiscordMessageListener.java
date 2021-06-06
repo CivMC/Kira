@@ -1,9 +1,5 @@
 package com.github.maxopoly.kira.listener;
 
-import java.util.Set;
-
-import org.apache.logging.log4j.Logger;
-
 import com.github.maxopoly.kira.KiraMain;
 import com.github.maxopoly.kira.command.model.discord.CommandHandler;
 import com.github.maxopoly.kira.command.model.discord.DiscordCommandChannelSupplier;
@@ -13,12 +9,15 @@ import com.github.maxopoly.kira.relay.GroupChat;
 import com.github.maxopoly.kira.relay.GroupChatManager;
 import com.github.maxopoly.kira.user.KiraUser;
 import com.github.maxopoly.kira.user.UserManager;
-
+import java.util.Set;
+import javax.annotation.Nonnull;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.apache.logging.log4j.Logger;
 
 public class DiscordMessageListener extends ListenerAdapter {
 
@@ -80,7 +79,7 @@ public class DiscordMessageListener extends ListenerAdapter {
 			}
 		}
 	}
-	
+
 	@Override
 	public void onGuildMemberJoin(GuildMemberJoinEvent event) {
 		if (!isValidDiscordAccount(event.getUser())) {
@@ -91,7 +90,7 @@ public class DiscordMessageListener extends ListenerAdapter {
 			KiraMain.getInstance().getDiscordRoleManager().giveDiscordRole(user);
 		}
 	}
-	
+
 	private boolean isValidDiscordAccount(User user) {
 		if (user == null) {
 			return false;
@@ -109,6 +108,15 @@ public class DiscordMessageListener extends ListenerAdapter {
 			result = result.substring(0, 255);
 		}
 		return result;
+	}
+
+	// Refuse to join a Discord server if it's banned.
+	@Override
+	public void onGuildJoin(@Nonnull final GuildJoinEvent event) {
+		final var discordServer = event.getGuild();
+		if (KiraMain.getInstance().getDAO().isServerBanned(discordServer.getIdLong())) {
+			discordServer.leave().queue();
+		}
 	}
 
 }

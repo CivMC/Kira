@@ -1,14 +1,16 @@
 package com.github.maxopoly.kira.command.model.discord;
 
-import org.apache.logging.log4j.Logger;
-
 import com.github.maxopoly.kira.KiraMain;
 import com.github.maxopoly.kira.command.discord.admin.CreateDefaultPermsCommand;
 import com.github.maxopoly.kira.command.discord.admin.DeauthDiscordCommand;
 import com.github.maxopoly.kira.command.discord.admin.GiveDefaultPermission;
 import com.github.maxopoly.kira.command.discord.admin.GivePermissionToRoleCommand;
 import com.github.maxopoly.kira.command.discord.admin.GiveRoleCommand;
+import com.github.maxopoly.kira.command.discord.admin.LeaveDiscordServerCommand;
+import com.github.maxopoly.kira.command.discord.admin.ListDiscordRelaysCommand;
+import com.github.maxopoly.kira.command.discord.admin.ListDiscordServersCommand;
 import com.github.maxopoly.kira.command.discord.admin.ListPermissionsForUserCommand;
+import com.github.maxopoly.kira.command.discord.admin.ManageDiscordBansCommand;
 import com.github.maxopoly.kira.command.discord.admin.ReloadPermissionCommand;
 import com.github.maxopoly.kira.command.discord.admin.StopCommand;
 import com.github.maxopoly.kira.command.discord.admin.SyncUsernameCommand;
@@ -32,6 +34,7 @@ import com.github.maxopoly.kira.command.discord.user.QuoteCommand;
 import com.github.maxopoly.kira.command.discord.user.SelfInfoCommand;
 import com.github.maxopoly.kira.command.model.top.InputSupplier;
 import com.github.maxopoly.kira.command.model.top.TextInputHandler;
+import org.apache.logging.log4j.Logger;
 
 public class CommandHandler extends TextInputHandler<Command, String, InputSupplier> {
 
@@ -82,33 +85,42 @@ public class CommandHandler extends TextInputHandler<Command, String, InputSuppl
 
 	@Override
 	protected void registerCommands() {
-		registerCommand(new StopCommand());
-		registerCommand(new RunIngameCommand());
-		registerCommand(new AuthCommand());
-		registerCommand(new DeauthDiscordCommand());
-		registerCommand(new SelfInfoCommand());
-		registerCommand(new SyncUsernameCommand());
-		registerCommand(new ReloadPermissionCommand());
+		// Admin
 		registerCommand(new CreateDefaultPermsCommand());
-		registerCommand(new HelpCommand());
+		registerCommand(new DeauthDiscordCommand());
 		registerCommand(new GiveDefaultPermission());
-		registerCommand(new ListPermissionsForUserCommand());
-		registerCommand(new GiveRoleCommand());
-		registerCommand(new JoinDiscordCommand());
-		registerCommand(new CreateRelayChannelHereCommand());
-		registerCommand(new GetWeightCommand());
-		registerCommand(new QuoteCommand());
-		registerCommand(new ConfigureRelayConfigCommand());
-		registerCommand(new CreateRelayConfig());
-		registerCommand(new TieRelayConfigCommand());
-		registerCommand(new ChannelInfoCommand());
-		registerCommand(new DeleteRelayCommand());
-		registerCommand(new InfoCommand());
-		registerCommand(new GenerateAPIToken());
-		registerCommand(new ConsoleCommand());
 		registerCommand(new GivePermissionToRoleCommand());
+		registerCommand(new GiveRoleCommand());
+		registerCommand(new LeaveDiscordServerCommand());
+		registerCommand(new ListDiscordRelaysCommand());
+		registerCommand(new ListDiscordServersCommand());
+		registerCommand(new ListPermissionsForUserCommand());
+		registerCommand(new ManageDiscordBansCommand());
+		registerCommand(new ReloadPermissionCommand());
+		registerCommand(new StopCommand());
+		registerCommand(new SyncUsernameCommand());
+		// API
+		registerCommand(new GenerateAPIToken());
 		registerCommand(new ListTokens());
 		registerCommand(new RevokeAPIToken());
+		// Game
+		registerCommand(new ConsoleCommand());
+		registerCommand(new RunIngameCommand());
+		// Relay
+		registerCommand(new ConfigureRelayConfigCommand());
+		registerCommand(new CreateRelayChannelHereCommand());
+		registerCommand(new CreateRelayConfig());
+		registerCommand(new DeleteRelayCommand());
+		registerCommand(new TieRelayConfigCommand());
+		// User
+		registerCommand(new AuthCommand());
+		registerCommand(new ChannelInfoCommand());
+		registerCommand(new GetWeightCommand());
+		registerCommand(new HelpCommand());
+		registerCommand(new InfoCommand());
+		registerCommand(new JoinDiscordCommand());
+		registerCommand(new QuoteCommand());
+		registerCommand(new SelfInfoCommand());
 		logger.info("Loaded total of " + commands.values().size() + " commands");
 	}
 

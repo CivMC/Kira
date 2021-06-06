@@ -1,27 +1,27 @@
 package com.github.maxopoly.kira.relay;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Consumer;
-
-import org.apache.logging.log4j.Logger;
-
 import com.github.maxopoly.kira.KiraMain;
 import com.github.maxopoly.kira.database.DAO;
 import com.github.maxopoly.kira.permission.KiraRole;
 import com.github.maxopoly.kira.permission.KiraRoleManager;
 import com.github.maxopoly.kira.user.KiraUser;
 import com.github.maxopoly.kira.user.UserManager;
-
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 import net.dv8tion.jda.api.entities.Category;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.PermissionOverride;
 import net.dv8tion.jda.api.entities.TextChannel;
+import org.apache.logging.log4j.Logger;
 
 public class GroupChatManager {
 
@@ -36,28 +36,32 @@ public class GroupChatManager {
 		return "KIRA_MANAGE_CHANNEL";
 	}
 
-	private Map<String, GroupChat> groupChatByName;
-	private Map<Long, Set<GroupChat>> chatsByChannelId;
-	private Map<Integer, Float> ownedChatsByUserId;
-	private DAO dao;
-	private long sectionID;
+	private final Logger logger;
+	private final DAO databaseManager;
+	private final long sectionID;
+	private final RelayConfigManager relayConfigManager;
 
-	private Logger logger;
+	private final Map<String, GroupChat> groupChatByName;
+	private final Map<Long, Set<GroupChat>> chatsByChannelId;
+	private final Map<Integer, Float> ownedChatsByUserId;
 
-	private RelayConfigManager relayConfigManager;
-
-	public GroupChatManager(DAO dao, Logger logger, long sectionID, RelayConfigManager relayConfigManager) {
-		groupChatByName = new ConcurrentHashMap<>();
-		chatsByChannelId = new TreeMap<>();
-		ownedChatsByUserId = new TreeMap<>();
-		this.dao = dao;
-		this.relayConfigManager = relayConfigManager;
+	public GroupChatManager(final Logger logger,
+							final DAO databaseManager,
+							final long sectionID,
+							final RelayConfigManager relayConfigManager) {
 		this.logger = logger;
+		this.databaseManager = databaseManager;
 		this.sectionID = sectionID;
-		for (GroupChat chat : dao.loadGroupChats(relayConfigManager)) {
+		this.relayConfigManager = relayConfigManager;
+
+		this.groupChatByName = new ConcurrentHashMap<>();
+		this.chatsByChannelId = new TreeMap<>();
+		this.ownedChatsByUserId = new TreeMap<>();
+
+		for (GroupChat chat : this.databaseManager.loadGroupChats(relayConfigManager)) {
 			putGroupChat(chat);
 		}
-		logger.info("Loaded " + groupChatByName.size() + " group chats from database");
+		logger.info("Loaded " + this.groupChatByName.size() + " group chats from database");
 	}
 
 	public void addMember(GroupChat chat, KiraUser user) {
@@ -111,7 +115,7 @@ public class GroupChatManager {
 
 	public GroupChat createGroupChat(String name, long guildID, long channelID, KiraUser creator) {
 		KiraRole role = KiraMain.getInstance().getKiraRoleManager().getOrCreateRole(name + ACCESS_PERM_SUFFIX);
-		int id = dao.createGroupChat(guildID, channelID, name, role, creator.getID(),
+		int id = databaseManager.createGroupChat(guildID, channelID, name, role, creator.getID(),
 				relayConfigManager.getDefaultConfig());
 		if (id == -1) {
 			return null;
@@ -147,7 +151,7 @@ public class GroupChatManager {
 		}
 		// db clean up is done by deleting the chat via foreign keys
 		KiraMain.getInstance().getKiraRoleManager().deleteRole(chat.getTiedRole(), false);
-		dao.deleteGroupChat(chat);
+		databaseManager.deleteGroupChat(chat);
 		if (!isManaged && channel != null) {
 			channel.sendMessage("Relay " + chat.getName()
 					+ " which was previously linked to this channel is being deleted as requested by a user. It will no longer broadcast anything")
@@ -197,18 +201,22 @@ public class GroupChatManager {
 	}
 
 	public void setConfig(GroupChat chat, RelayConfig config) {
-		dao.setRelayConfigForChat(chat, config);
+		databaseManager.setRelayConfigForChat(chat, config);
 		chat.setConfig(config);
 	}
 
 	public void syncAccess(GroupChat chat, Set<Integer> intendedMembers) {
 		UserManager userMan = KiraMain.getInstance().getUserManager();
-		Set<Integer> currentMembers = dao.getGroupChatMembers(chat);
+		Set<Integer> currentMembers = databaseManager.getGroupChatMembers(chat);
 		// remove all members that shouldnt be there
-		currentMembers.stream().filter(i -> !intendedMembers.contains(i))
-				.forEach(i -> removeMember(chat, userMan.getUser(i)));
+		currentMembers.removeIf(Predicate.not(intendedMembers::contains));
+		currentMembers.forEach(member -> removeMember(chat, userMan.getUser(member)));
 		// add all that are missing
-		intendedMembers.stream().forEach(i -> addMember(chat, userMan.getUser(i)));
+		intendedMembers.forEach(i -> addMember(chat, userMan.getUser(i)));
+	}
+
+	public List<GroupChat> getGroupChats() {
+		return new ArrayList<>(this.groupChatByName.values());
 	}
 
 }
