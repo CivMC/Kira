@@ -1,5 +1,14 @@
 package com.github.maxopoly.kira.database;
 
+import com.github.maxopoly.kira.KiraMain;
+import com.github.maxopoly.kira.permission.KiraPermission;
+import com.github.maxopoly.kira.permission.KiraRole;
+import com.github.maxopoly.kira.permission.KiraRoleManager;
+import com.github.maxopoly.kira.relay.GroupChat;
+import com.github.maxopoly.kira.relay.RelayConfig;
+import com.github.maxopoly.kira.relay.RelayConfigManager;
+import com.github.maxopoly.kira.user.KiraUser;
+import com.github.maxopoly.kira.user.UserManager;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,25 +23,14 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.UUID;
-
 import org.apache.logging.log4j.Logger;
-
-import com.github.maxopoly.kira.KiraMain;
-import com.github.maxopoly.kira.permission.KiraPermission;
-import com.github.maxopoly.kira.permission.KiraRole;
-import com.github.maxopoly.kira.permission.KiraRoleManager;
-import com.github.maxopoly.kira.relay.GroupChat;
-import com.github.maxopoly.kira.relay.RelayConfig;
-import com.github.maxopoly.kira.relay.RelayConfigManager;
-import com.github.maxopoly.kira.user.KiraUser;
-import com.github.maxopoly.kira.user.UserManager;
 
 public class DAO {
 
-	private static final String timestampField = "last_updated timestamp with time zone not null default now()";
+	private static final String TIMESTAMP_FIELD = "last_updated timestamp with time zone not null default now()";
 
-	private DBConnection db;
-	private Logger logger;
+	private final DBConnection db;
+	private final Logger logger;
 
 	public DAO(DBConnection connection, Logger logger) {
 		this.logger = logger;
@@ -46,7 +44,7 @@ public class DAO {
 	public void addPermissionToRole(KiraPermission permission, KiraRole role) {
 		try (Connection conn = db.getConnection();
 				PreparedStatement prep = conn.prepareStatement(
-						"insert into role_permissions (role_id, permission_id) " + "values (?, ?);")) {
+						"insert into role_permissions (role_id, permission_id) values (?, ?);")) {
 			prep.setInt(1, role.getID());
 			prep.setInt(2, permission.getID());
 			prep.execute();
@@ -150,12 +148,12 @@ public class DAO {
 			// TABLE: users
 			try (PreparedStatement prep = conn.prepareStatement("CREATE TABLE IF NOT EXISTS users "
 					+ "(id serial primary key, discord_id bigint not null unique, name varchar(255) unique, "
-					+ "uuid char(36) unique, reddit varchar(255) unique," + timestampField + ");")) {
+					+ "uuid char(36) unique, reddit varchar(255) unique," + TIMESTAMP_FIELD + ");")) {
 				prep.execute();
 			}
 			// TABLE: permissions
 			try (PreparedStatement prep = conn.prepareStatement("CREATE TABLE IF NOT EXISTS permissions "
-					+ "(id serial primary key, name varchar(255) not null unique," + timestampField + ");")) {
+					+ "(id serial primary key, name varchar(255) not null unique," + TIMESTAMP_FIELD + ");")) {
 				prep.execute();
 			}
 			// TABLE: relay_configs
@@ -168,12 +166,12 @@ public class DAO {
 					+ "canPing boolean not null, timeFormat text not null, skynetFormat text not null, relaySkynet boolean not null,"
 					+ "skynetLogin text not null, skynetLogout text not null,"
 					+ "newPlayerFormat text not null, relayNewPlayer boolean not null,"
-					+ "owner_id int references users (id) on delete cascade," + timestampField + ");")) {
+					+ "owner_id int references users (id) on delete cascade," + TIMESTAMP_FIELD + ");")) {
 				prep.execute();
 			}
 			// TABLE: roles
 			try (PreparedStatement prep = conn.prepareStatement("CREATE TABLE IF NOT EXISTS roles "
-					+ "(id serial primary key, name varchar(255) not null unique," + timestampField + ");")) {
+					+ "(id serial primary key, name varchar(255) not null unique," + TIMESTAMP_FIELD + ");")) {
 				prep.execute();
 			}
 			// TABLE: group_chats
@@ -181,14 +179,14 @@ public class DAO {
 			try (PreparedStatement prep = conn.prepareStatement("CREATE TABLE IF NOT EXISTS group_chats "
 					+ "(id serial primary key, channel_id bigint, guild_id bigint, name varchar(255) not null unique, "
 					+ "role_id int references roles(id) on delete cascade, creator_id int references users(id) "
-					+ "on delete cascade, config_id int references relay_configs(id)," + timestampField + ");")) {
+					+ "on delete cascade, config_id int references relay_configs(id)," + TIMESTAMP_FIELD + ");")) {
 				prep.execute();
 			}
 			// TABLE: role_permissions
 			// REQUIRES: [roles, permissions]
 			try (PreparedStatement prep = conn.prepareStatement("CREATE TABLE IF NOT EXISTS role_permissions "
 					+ "(role_id int references roles(id) on delete cascade, "
-					+ "permission_id int references permissions(id) on delete cascade," + timestampField
+					+ "permission_id int references permissions(id) on delete cascade," + TIMESTAMP_FIELD
 					+ ", unique(role_id, permission_id));")) {
 				prep.execute();
 			}
@@ -196,11 +194,19 @@ public class DAO {
 			// REQUIRES: [users, roles]
 			try (PreparedStatement prep = conn.prepareStatement(
 					"CREATE TABLE IF NOT EXISTS role_members (user_id int references users(id) on delete cascade, "
-							+ "role_id int references roles(id) on delete cascade," + timestampField
+							+ "role_id int references roles(id) on delete cascade," + TIMESTAMP_FIELD
 							+ ", unique(role_id, user_id));")) {
 				prep.execute();
 			}
-		} catch (SQLException e) {
+			// TABLE: kira_banned_relays
+			try (PreparedStatement prep = conn.prepareStatement(
+					"CREATE TABLE IF NOT EXISTS kira_banned_discords (" +
+							"guild_id bigint not null unique," +
+							TIMESTAMP_FIELD + ");")) {
+				prep.execute();
+			}
+		}
+		catch (SQLException e) {
 			logger.error("Failed to create table", e);
 			return false;
 		}
@@ -593,6 +599,46 @@ public class DAO {
 			prep.executeUpdate();
 		} catch (SQLException e) {
 			logger.error("Failed to update user", e);
+		}
+	}
+
+	public boolean isServerBanned(final long serverID) {
+		try (final Connection connection = this.db.getConnection();
+			 final PreparedStatement statement = connection.prepareStatement(
+			 		"SELECT * FROM kira_banned_discords WHERE guild_id=?;")) {
+			statement.setLong(1, serverID);
+
+			try (final ResultSet results = statement.executeQuery()) {
+				return results.next();
+			}
+		}
+		catch (final SQLException exception) {
+			this.logger.warn("Could not check if Discord server is Kira banned.", exception);
+			return false;
+		}
+	}
+
+	public void banServer(final long serverID) {
+		try (final Connection connection = this.db.getConnection();
+			 final PreparedStatement statement = connection.prepareStatement(
+					 "INSERT INTO kira_banned_discords (guild_id) VALUES (?) ON CONFLICT DO NOTHING;")) {
+			statement.setLong(1, serverID);
+			statement.execute();
+		}
+		catch (final SQLException exception) {
+			this.logger.warn("Could not add Discord server to Kira ban list.", exception);
+		}
+	}
+
+	public void unbanServer(final long serverID) {
+		try (final Connection connection = this.db.getConnection();
+			 final PreparedStatement statement = connection.prepareStatement(
+					 "DELETE FROM kira_banned_discords WHERE guild_id=?;")) {
+			statement.setLong(1, serverID);
+			statement.execute();
+		}
+		catch (final SQLException exception) {
+			this.logger.warn("Could not remove Discord server from Kira ban list.", exception);
 		}
 	}
 

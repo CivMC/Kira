@@ -39,7 +39,7 @@ public class KiraMain {
 	public static KiraMain getInstance() {
 		return instance;
 	}
-	
+
 	public static void main(String[] args) {
 		instance = new KiraMain();
 		if (!instance.loadConfig()) {
@@ -76,7 +76,7 @@ public class KiraMain {
 		instance.rabbit.beginAsyncListen();
 		instance.parseInput();
 	}
-	
+
 	private Logger logger = LogManager.getLogger("Main");
 	private JDA jda;
 	private boolean shutdown = false;
@@ -154,7 +154,7 @@ public class KiraMain {
 	public DiscordRoleManager getDiscordRoleManager() {
 		return roleManager;
 	}
-	
+
 	public UserManager getUserManager() {
 		return userManager;
 	}
@@ -181,7 +181,7 @@ public class KiraMain {
 			return false;
 		}
 		relayConfigManager = new RelayConfigManager(dao);
-		groupChatManager = new GroupChatManager(dao, logger, configManager.getRelaySectionID(), relayConfigManager);
+		groupChatManager = new GroupChatManager(logger, dao, configManager.getRelaySectionID(), relayConfigManager);
 		return true;
 	}
 
@@ -210,7 +210,7 @@ public class KiraMain {
 			commandHandler.handle(msg, new CommandLineInputSupplier());
 		}
 	}
-	
+
 	private boolean setupAuthManager() {
 		roleManager = new DiscordRoleManager(configManager.getAuthroleID(), logger, userManager);
 		roleManager.syncFully();
@@ -230,7 +230,7 @@ public class KiraMain {
 			return false;
 		}
 		try {
-			jda = JDABuilder.create(token, GatewayIntent.GUILD_MESSAGES, 
+			jda = JDABuilder.create(token, GatewayIntent.GUILD_MESSAGES,
 					GatewayIntent.GUILD_INVITES, GatewayIntent.DIRECT_MESSAGES).build();
 			jda.awaitReady();
 		} catch (LoginException | InterruptedException e) {
