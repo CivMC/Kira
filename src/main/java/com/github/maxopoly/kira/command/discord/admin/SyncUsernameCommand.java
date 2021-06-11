@@ -39,7 +39,7 @@ public class SyncUsernameCommand extends Command {
 			if (!user.hasIngameAccount()) {
 				return;
 			}
-			Member member = guild.getMemberById(user.getDiscordID());
+			Member member = guild.retrieveMemberById(user.getDiscordID()).complete();
 			if (member == null) {
 				return; // not in the discord
 			}

@@ -73,7 +73,7 @@ public class GroupChatManager {
 		Guild guild = KiraMain.getInstance().getGuild();
 		if (guild.getIdLong() == chat.getGuildId()) {
 			TextChannel channel = KiraMain.getInstance().getJDA().getTextChannelById(chat.getDiscordChannelId());
-			Member member = guild.getMemberById(user.getDiscordID());
+			Member member = guild.retrieveMemberById(user.getDiscordID()).complete();
 			if (channel == null) {
 				logger.error(
 						"Could not update member perm on channel for group " + chat.getName() + ", it didnt exist");

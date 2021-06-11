@@ -80,7 +80,7 @@ public class CreateGroupChatMessage extends RabbitMessage {
 		JDA jda = KiraMain.getInstance().getJDA();
 		TextChannel channel = jda.getTextChannelById(chat.getDiscordChannelId());
 		if (channel != null) {
-			Member mem = channel.getGuild().getMemberById(creator.getDiscordID());
+			Member mem = channel.getGuild().retrieveMemberById(creator.getDiscordID()).complete();
 			channel.sendMessage("Channel is ready " + mem.getAsMention()).queue();
 		}
 	}

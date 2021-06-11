@@ -44,7 +44,7 @@ public class DiscordMessageSender {
 				.replaceAll("~", "\\~");
 		String tag = "";
 		if (guild != null && user != null) {
-			Member member = guild.getMemberById(user.getDiscordID());
+			Member member = guild.retrieveMemberById(user.getDiscordID()).complete();
 			if (member != null) {
 				tag = member.getAsMention() + "\n";
 			}
@@ -90,7 +90,7 @@ public class DiscordMessageSender {
 
 	public static void sendPrivateMessage(KiraUser user, String msg) {
 		JDA jda = KiraMain.getInstance().getJDA();
-		User discordUser = jda.getUserById(user.getDiscordID());
+		User discordUser = jda.retrieveUserById(user.getDiscordID()).complete();
 		if (discordUser == null) {
 			discordUser = user.getCurrentDiscordUser();
 		}

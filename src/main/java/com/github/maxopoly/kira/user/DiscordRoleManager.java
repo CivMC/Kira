@@ -54,7 +54,7 @@ public class DiscordRoleManager {
 			return;
 		}
 		logger.info("Giving auth role to " + user.getName());
-		Member member = guild.getMemberById(user.getDiscordID());
+		Member member = guild.retrieveMemberById(user.getDiscordID()).complete();
 		if (member == null) {
 			logger.warn("Could not add auth role to " + user.toString() + ", he was not in the official discord");
 			return;
@@ -92,7 +92,7 @@ public class DiscordRoleManager {
 		// to them
 		authUsers.stream().filter(us -> us.hasIngameAccount() && !memberByDiscordID.containsKey(us.getDiscordID()))
 				.forEach(user -> {
-					Member member = guild.getMemberById(user.getDiscordID());
+					Member member = guild.retrieveMemberById(user.getDiscordID()).complete();
 					if (member == null || member.isOwner()) {
 						return;
 					}
@@ -120,7 +120,7 @@ public class DiscordRoleManager {
 			logger.warn("Could not remove " + user.toString() + " from auth role, no discord account associated");
 			return false;
 		}
-		Member member = guild.getMemberById(user.getDiscordID());
+		Member member = guild.retrieveMemberById(user.getDiscordID()).complete();
 		if (member == null) {
 			logger.warn("Could not remove " + user.toString() + " from auth role, discord account not found");
 			return false;
