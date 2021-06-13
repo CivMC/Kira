@@ -31,59 +31,59 @@ public class DiscordMessageSender {
 		if (msg.trim().length() == 0) {
 			return;
 		}
-
-		guild.retrieveMemberById(user.getDiscordID()).submit()
-				.whenComplete((member, error) -> {
-					String msg_ = msg
-							.replaceAll("§\\w", "")
-							.replaceAll("_", "\\_")
-							.replaceAll("\\*", "\\*")
-							.replaceAll("~", "\\~");
-
-					String tag = "";
-
-					if (error == null) {
-						tag = member.getAsMention() + "\n";
-					}
-
-					if (msg_.length() + tag.length() <= MAX_MSG_LENGTH) {
-						receiver.accept(tag + msg_);
-						return;
-					}
-					int allowedLengthWithoutTag = MAX_MSG_LENGTH - tag.length();
-					String[] split = msg_.split("\n");
-					StringBuilder sb = new StringBuilder();
-					for (int i = 0; i < split.length; i++) {
-						String currString = split[i];
-						if (sb.length() + currString.length() > allowedLengthWithoutTag) {
-							if (sb.length() == 0) {
-								if (currString.length() > allowedLengthWithoutTag) {
-									int beginIndex = 0;
-									while (beginIndex != currString.length()) {
-										int endIndex = Math.min(beginIndex + allowedLengthWithoutTag, currString.length());
-										String subPart = currString.substring(beginIndex, endIndex);
-										receiver.accept(tag + subPart);
-										beginIndex = endIndex;
-									}
-								} else {
-									receiver.accept(tag + currString);
-								}
-							} else {
-								receiver.accept(sb.toString());
-								sb = new StringBuilder();
-							}
-						} else {
-							if (sb.length() == 0) {
-								sb.append(tag);
-							}
-							sb.append(currString);
-							sb.append('\n');
+		msg = msg
+				.replaceAll("§\\w", "")
+				.replaceAll("_", "\\_")
+				.replaceAll("\\*", "\\*")
+				.replaceAll("~", "\\~");
+		String tag = "";
+		if (guild != null && user != null) {
+			try {
+				Member member = guild.retrieveMemberById(user.getDiscordID()).complete();
+				if (member != null) {
+					tag = member.getAsMention() + "\n";
+				}
+			} catch (Exception e) {
+				// NO-OP
+			}
+		}
+		if (msg.length() + tag.length() <= MAX_MSG_LENGTH) {
+			receiver.accept(tag + msg);
+			return;
+		}
+		int allowedLengthWithoutTag = MAX_MSG_LENGTH - tag.length();
+		String[] split = msg.split("\n");
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < split.length; i++) {
+			String currString = split[i];
+			if (sb.length() + currString.length() > allowedLengthWithoutTag) {
+				if (sb.length() == 0) {
+					if (currString.length() > allowedLengthWithoutTag) {
+						int beginIndex = 0;
+						while (beginIndex != currString.length()) {
+							int endIndex = Math.min(beginIndex + allowedLengthWithoutTag, currString.length());
+							String subPart = currString.substring(beginIndex, endIndex);
+							receiver.accept(tag + subPart);
+							beginIndex = endIndex;
 						}
+					} else {
+						receiver.accept(tag + currString);
 					}
-					if (sb.length() != 0) {
-						receiver.accept(sb.toString());
-					}
-				});
+				} else {
+					receiver.accept(sb.toString());
+					sb = new StringBuilder();
+				}
+			} else {
+				if (sb.length() == 0) {
+					sb.append(tag);
+				}
+				sb.append(currString);
+				sb.append('\n');
+			}
+		}
+		if (sb.length() != 0) {
+			receiver.accept(sb.toString());
+		}
 	}
 
 	public static void sendPrivateMessage(KiraUser user, String msg) {
