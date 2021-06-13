@@ -1,21 +1,15 @@
 package com.github.maxopoly.kira.util;
 
+import com.github.maxopoly.kira.KiraMain;
+import com.github.maxopoly.kira.user.KiraUser;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.*;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
-
-import com.github.maxopoly.kira.KiraMain;
-import com.github.maxopoly.kira.user.KiraUser;
-
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.PrivateChannel;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
 
 public class DiscordMessageSender {
 
@@ -37,67 +31,75 @@ public class DiscordMessageSender {
 		if (msg.trim().length() == 0) {
 			return;
 		}
-		msg = msg
-				.replaceAll("§\\w", "")
-				.replaceAll("_", "\\_")
-				.replaceAll("\\*", "\\*")
-				.replaceAll("~", "\\~");
-		String tag = "";
-		if (guild != null && user != null) {
-			Member member = guild.retrieveMemberById(user.getDiscordID()).complete();
-			if (member != null) {
-				tag = member.getAsMention() + "\n";
-			}
-		}
-		if (msg.length() + tag.length() <= MAX_MSG_LENGTH) {
-			receiver.accept(tag + msg);
-			return;
-		}
-		int allowedLengthWithoutTag = MAX_MSG_LENGTH - tag.length();
-		String[] split = msg.split("\n");
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < split.length; i++) {
-			String currString = split[i];
-			if (sb.length() + currString.length() > allowedLengthWithoutTag) {
-				if (sb.length() == 0) {
-					if (currString.length() > allowedLengthWithoutTag) {
-						int beginIndex = 0;
-						while (beginIndex != currString.length()) {
-							int endIndex = Math.min(beginIndex + allowedLengthWithoutTag, currString.length());
-							String subPart = currString.substring(beginIndex, endIndex);
-							receiver.accept(tag + subPart);
-							beginIndex = endIndex;
-						}
-					} else {
-						receiver.accept(tag + currString);
+
+		guild.retrieveMemberById(user.getDiscordID()).submit()
+				.whenComplete((member, error) -> {
+					String msg_ = msg
+							.replaceAll("§\\w", "")
+							.replaceAll("_", "\\_")
+							.replaceAll("\\*", "\\*")
+							.replaceAll("~", "\\~");
+
+					String tag = "";
+
+					if (error == null) {
+						tag = member.getAsMention() + "\n";
 					}
-				} else {
-					receiver.accept(sb.toString());
-					sb = new StringBuilder();
-				}
-			} else {
-				if (sb.length() == 0) {
-					sb.append(tag);
-				}
-				sb.append(currString);
-				sb.append('\n');
-			}
-		}
-		if (sb.length() != 0) {
-			receiver.accept(sb.toString());
-		}
+
+					if (msg_.length() + tag.length() <= MAX_MSG_LENGTH) {
+						receiver.accept(tag + msg_);
+						return;
+					}
+					int allowedLengthWithoutTag = MAX_MSG_LENGTH - tag.length();
+					String[] split = msg_.split("\n");
+					StringBuilder sb = new StringBuilder();
+					for (int i = 0; i < split.length; i++) {
+						String currString = split[i];
+						if (sb.length() + currString.length() > allowedLengthWithoutTag) {
+							if (sb.length() == 0) {
+								if (currString.length() > allowedLengthWithoutTag) {
+									int beginIndex = 0;
+									while (beginIndex != currString.length()) {
+										int endIndex = Math.min(beginIndex + allowedLengthWithoutTag, currString.length());
+										String subPart = currString.substring(beginIndex, endIndex);
+										receiver.accept(tag + subPart);
+										beginIndex = endIndex;
+									}
+								} else {
+									receiver.accept(tag + currString);
+								}
+							} else {
+								receiver.accept(sb.toString());
+								sb = new StringBuilder();
+							}
+						} else {
+							if (sb.length() == 0) {
+								sb.append(tag);
+							}
+							sb.append(currString);
+							sb.append('\n');
+						}
+					}
+					if (sb.length() != 0) {
+						receiver.accept(sb.toString());
+					}
+				});
 	}
 
 	public static void sendPrivateMessage(KiraUser user, String msg) {
 		JDA jda = KiraMain.getInstance().getJDA();
-		User discordUser = jda.retrieveUserById(user.getDiscordID()).complete();
-		if (discordUser == null) {
-			discordUser = user.getCurrentDiscordUser();
-		}
-		PrivateChannel pm = discordUser.openPrivateChannel().complete();
-		sendMessageInternal(null, null, s -> {
-			pm.sendMessage(s).queue();
-		}, msg);
+
+		jda.retrieveUserById(user.getDiscordID()).submit()
+				.whenComplete((discordUser, error) -> {
+					if (error != null) {
+						discordUser = user.getCurrentDiscordUser();
+					}
+
+					PrivateChannel pm = discordUser.openPrivateChannel().complete();
+					sendMessageInternal(null, null, s -> {
+						pm.sendMessage(s).queue();
+					}, msg);
+				});
 	}
 	
 	public static void sendTextChannelMessage(KiraUser user, TextChannel channel, String msg) {

@@ -1,23 +1,20 @@
 package com.github.maxopoly.kira.user;
 
+import com.github.maxopoly.kira.KiraMain;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.exceptions.ErrorResponseException;
+import org.apache.logging.log4j.Logger;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
-import org.apache.logging.log4j.Logger;
-
-import com.github.maxopoly.kira.KiraMain;
-
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.exceptions.ContextException;
-import net.dv8tion.jda.api.exceptions.ErrorResponseException;
-import net.dv8tion.jda.internal.requests.DeferredRestAction;
 
 public class DiscordRoleManager {
 	private long roleID;
@@ -54,17 +51,20 @@ public class DiscordRoleManager {
 			return;
 		}
 		logger.info("Giving auth role to " + user.getName());
-		Member member = guild.retrieveMemberById(user.getDiscordID()).complete();
-		if (member == null) {
-			logger.warn("Could not add auth role to " + user.toString() + ", he was not in the official discord");
-			return;
-		}
-		Member self = guild.getSelfMember();
-		if (self.canInteract(member)) {
-			//has to be complete() instead of queue() because of a bug in JDA/Discord which results in race conditions
-			guild.modifyNickname(member, user.getName()).queue();
-		}
-		guild.addRoleToMember(member, role).queue(); 
+		guild.retrieveMemberById(user.getDiscordID()).submit()
+				.whenComplete((member, error) -> {
+					if (error != null) {
+						logger.warn("Could not add auth role to " + user.toString() + ", he was not in the official discord");
+						return;
+					}
+
+					Member self = guild.getSelfMember();
+					if (self.canInteract(member)) {
+						//has to be complete() instead of queue() because of a bug in JDA/Discord which results in race conditions
+						guild.modifyNickname(member, user.getName()).queue();
+					}
+					guild.addRoleToMember(member, role).queue();
+				});
 	}
 
 	public void syncFully() {
@@ -92,11 +92,14 @@ public class DiscordRoleManager {
 		// to them
 		authUsers.stream().filter(us -> us.hasIngameAccount() && !memberByDiscordID.containsKey(us.getDiscordID()))
 				.forEach(user -> {
-					Member member = guild.retrieveMemberById(user.getDiscordID()).complete();
-					if (member == null || member.isOwner()) {
-						return;
-					}
-					giveDiscordRole(user);
+					guild.retrieveMemberById(user.getDiscordID()).submit()
+							.whenComplete((member, error) -> {
+								if (error != null || member.isOwner()) {
+									return;
+								}
+
+								giveDiscordRole(user);
+							});
 				});
 
 		// also make sure to update all user names
@@ -114,18 +117,25 @@ public class DiscordRoleManager {
 		});
 	}
 
-	public boolean takeDiscordRole(Guild guild, KiraUser user) {
+	public CompletableFuture<Boolean> takeDiscordRole(Guild guild, KiraUser user) {
 		
 		if (!user.hasDiscord()) {
 			logger.warn("Could not remove " + user.toString() + " from auth role, no discord account associated");
-			return false;
+			return CompletableFuture.completedFuture(false);
 		}
-		Member member = guild.retrieveMemberById(user.getDiscordID()).complete();
-		if (member == null) {
-			logger.warn("Could not remove " + user.toString() + " from auth role, discord account not found");
-			return false;
-		}
-		return takeDiscordRole(guild, member);
+
+		CompletableFuture<Boolean> future = new CompletableFuture<>();
+		guild.retrieveMemberById(user.getDiscordID()).submit()
+				.whenComplete((member, error) -> {
+					if (error != null) {
+						logger.warn("Could not remove " + user.toString() + " from auth role, discord account not found");
+						future.complete(false);
+					}
+
+					future.complete(takeDiscordRole(guild, member));
+				});
+
+		return future;
 	}
 
 	public boolean takeDiscordRole(Guild guild, Member member) {

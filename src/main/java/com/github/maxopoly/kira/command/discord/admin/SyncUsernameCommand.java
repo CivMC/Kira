@@ -39,19 +39,22 @@ public class SyncUsernameCommand extends Command {
 			if (!user.hasIngameAccount()) {
 				return;
 			}
-			Member member = guild.retrieveMemberById(user.getDiscordID()).complete();
-			if (member == null) {
-				return; // not in the discord
-			}
-			if (member.getEffectiveName().equals(user.getName())) {
-				return; //already correct
-			}
-			if (!self.canInteract(member)) {
-				return; //no perm
-			}
-			sb.append("Changing name of " + user.toString() + " from " + member.getNickname() + " to " + user.getName() + "\n");
-			guild.modifyNickname(member, user.getName()).queue();
 
+			guild.retrieveMemberById(user.getDiscordID()).submit()
+					.whenComplete((member, error) -> {
+						if (error != null) {
+							return; // not in the discord
+						}
+
+						if (member.getEffectiveName().equals(user.getName())) {
+							return; //already correct
+						}
+						if (!self.canInteract(member)) {
+							return; //no perm
+						}
+						sb.append("Changing name of " + user.toString() + " from " + member.getNickname() + " to " + user.getName() + "\n");
+						guild.modifyNickname(member, user.getName()).queue();
+					});
 		});
 		sb.append("Successfully updated all usernames");
 		return sb.toString();
