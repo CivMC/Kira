@@ -1,19 +1,7 @@
 package com.github.maxopoly.kira.command.model.discord;
 
 import com.github.maxopoly.kira.KiraMain;
-import com.github.maxopoly.kira.command.discord.admin.CreateDefaultPermsCommand;
-import com.github.maxopoly.kira.command.discord.admin.DeauthDiscordCommand;
-import com.github.maxopoly.kira.command.discord.admin.GiveDefaultPermission;
-import com.github.maxopoly.kira.command.discord.admin.GivePermissionToRoleCommand;
-import com.github.maxopoly.kira.command.discord.admin.GiveRoleCommand;
-import com.github.maxopoly.kira.command.discord.admin.LeaveDiscordServerCommand;
-import com.github.maxopoly.kira.command.discord.admin.ListDiscordRelaysCommand;
-import com.github.maxopoly.kira.command.discord.admin.ListDiscordServersCommand;
-import com.github.maxopoly.kira.command.discord.admin.ListPermissionsForUserCommand;
-import com.github.maxopoly.kira.command.discord.admin.ManageDiscordBansCommand;
-import com.github.maxopoly.kira.command.discord.admin.ReloadPermissionCommand;
-import com.github.maxopoly.kira.command.discord.admin.StopCommand;
-import com.github.maxopoly.kira.command.discord.admin.SyncUsernameCommand;
+import com.github.maxopoly.kira.command.discord.admin.*;
 import com.github.maxopoly.kira.command.discord.api.GenerateAPIToken;
 import com.github.maxopoly.kira.command.discord.api.ListTokens;
 import com.github.maxopoly.kira.command.discord.api.RevokeAPIToken;
@@ -91,7 +79,7 @@ public class CommandHandler extends TextInputHandler<Command, String, InputSuppl
 		registerCommand(new ManageDiscordBansCommand());
 		registerCommand(new ReloadPermissionCommand());
 		registerCommand(new StopCommand());
-		registerCommand(new SyncUsernameCommand());
+		registerCommand(new SyncUserCommand());
 		// API
 		registerCommand(new GenerateAPIToken());
 		registerCommand(new ListTokens());
