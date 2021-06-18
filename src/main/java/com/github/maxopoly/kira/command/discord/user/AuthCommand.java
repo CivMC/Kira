@@ -1,7 +1,5 @@
 package com.github.maxopoly.kira.command.discord.user;
 
-import java.util.UUID;
-
 import com.github.maxopoly.kira.KiraMain;
 import com.github.maxopoly.kira.command.model.discord.ArgumentBasedCommand;
 import com.github.maxopoly.kira.command.model.top.InputSupplier;
@@ -9,6 +7,8 @@ import com.github.maxopoly.kira.permission.KiraRole;
 import com.github.maxopoly.kira.permission.KiraRoleManager;
 import com.github.maxopoly.kira.user.AuthManager;
 import com.github.maxopoly.kira.user.KiraUser;
+
+import java.util.UUID;
 
 public class AuthCommand extends ArgumentBasedCommand {
 
@@ -49,7 +49,8 @@ public class AuthCommand extends ArgumentBasedCommand {
 		user.updateIngame(uuid, name);
 		KiraRoleManager kiraRoleMan = KiraMain.getInstance().getKiraRoleManager();
 		KiraMain.getInstance().getUserManager().addUser(user);
-		KiraMain.getInstance().getDiscordRoleManager().giveDiscordRole(user);
+		KiraMain.getInstance().getDiscordRoleManager().giveDiscordRole(KiraMain.getInstance().getGuild(), user);
+		KiraMain.getInstance().getDiscordRoleManager().setName(KiraMain.getInstance().getGuild(), user);
 		KiraMain.getInstance().getDAO().updateUser(user);
 		KiraRole authRole = kiraRoleMan.getRole("auth");
 		if (authRole != null) {

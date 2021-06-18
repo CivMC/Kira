@@ -1,19 +1,13 @@
 package com.github.maxopoly.kira.user;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.regex.Pattern;
-
-import org.apache.logging.log4j.Logger;
-
 import com.github.maxopoly.kira.KiraMain;
 import com.github.maxopoly.kira.permission.KiraRoleManager;
-
 import net.dv8tion.jda.api.JDA;
+import org.apache.logging.log4j.Logger;
+
+import javax.annotation.Nullable;
+import java.util.*;
+import java.util.regex.Pattern;
 
 public class UserManager {
 
@@ -58,6 +52,11 @@ public class UserManager {
 
 	public Set<KiraUser> getAllUsers() {
 		return new HashSet<>(userByID.values());
+	}
+
+	@Nullable
+	public KiraUser getUserByDiscordID(long discordID) {
+		return userByDiscordID.get(discordID);
 	}
 
 	public KiraUser getOrCreateUserByDiscordID(long discordID) {

@@ -24,14 +24,7 @@ import com.github.maxopoly.kira.command.discord.relay.CreateRelayChannelHereComm
 import com.github.maxopoly.kira.command.discord.relay.CreateRelayConfig;
 import com.github.maxopoly.kira.command.discord.relay.DeleteRelayCommand;
 import com.github.maxopoly.kira.command.discord.relay.TieRelayConfigCommand;
-import com.github.maxopoly.kira.command.discord.user.AuthCommand;
-import com.github.maxopoly.kira.command.discord.user.ChannelInfoCommand;
-import com.github.maxopoly.kira.command.discord.user.GetWeightCommand;
-import com.github.maxopoly.kira.command.discord.user.HelpCommand;
-import com.github.maxopoly.kira.command.discord.user.InfoCommand;
-import com.github.maxopoly.kira.command.discord.user.JoinDiscordCommand;
-import com.github.maxopoly.kira.command.discord.user.QuoteCommand;
-import com.github.maxopoly.kira.command.discord.user.SelfInfoCommand;
+import com.github.maxopoly.kira.command.discord.user.*;
 import com.github.maxopoly.kira.command.model.top.InputSupplier;
 import com.github.maxopoly.kira.command.model.top.TextInputHandler;
 import org.apache.logging.log4j.Logger;
@@ -121,6 +114,7 @@ public class CommandHandler extends TextInputHandler<Command, String, InputSuppl
 		registerCommand(new JoinDiscordCommand());
 		registerCommand(new QuoteCommand());
 		registerCommand(new SelfInfoCommand());
+		registerCommand(new UpdateRolesCommand());
 		logger.info("Loaded total of " + commands.values().size() + " commands");
 	}
 
