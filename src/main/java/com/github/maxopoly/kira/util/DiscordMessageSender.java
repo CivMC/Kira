@@ -92,7 +92,7 @@ public class DiscordMessageSender {
 		jda.retrieveUserById(user.getDiscordID()).submit()
 				.whenComplete((discordUser, error) -> {
 					if (error != null) {
-						discordUser = user.getCurrentDiscordUser();
+						return;
 					}
 
 					PrivateChannel pm = discordUser.openPrivateChannel().complete();
@@ -107,7 +107,7 @@ public class DiscordMessageSender {
 			channel.sendMessage(s).queue();
 		}, msg);
 	}
-	
+
 	
 	private Map<Long, StringBuilder> queuedMessagesByChannel;
 	private List<StringBuilder> messageQueue;

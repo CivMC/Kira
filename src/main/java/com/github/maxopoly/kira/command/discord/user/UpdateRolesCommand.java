@@ -2,9 +2,7 @@ package com.github.maxopoly.kira.command.discord.user;
 
 import com.github.maxopoly.kira.KiraMain;
 import com.github.maxopoly.kira.command.model.discord.Command;
-import com.github.maxopoly.kira.command.model.discord.DiscordCommandChannelMessageSupplier;
 import com.github.maxopoly.kira.command.model.top.InputSupplier;
-import net.dv8tion.jda.api.entities.Member;
 
 public class UpdateRolesCommand extends Command {
 
@@ -29,12 +27,9 @@ public class UpdateRolesCommand extends Command {
 
     @Override
     public String handleInternal(String argument, InputSupplier sender) {
-        DiscordCommandChannelMessageSupplier supplier = (DiscordCommandChannelMessageSupplier) sender;
 
-        Member member = supplier.getMessage().getMember();
-
-        if (member != null) {
-            KiraMain.getInstance().getDiscordRoleManager().syncMember(supplier.getMessage().getMember());
+        if (sender != null) {
+            KiraMain.getInstance().getDiscordRoleManager().syncUser(sender.getUser());
             return "Your roles have been updated";
         }
 
