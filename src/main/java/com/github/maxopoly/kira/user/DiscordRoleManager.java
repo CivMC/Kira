@@ -62,10 +62,23 @@ public class DiscordRoleManager {
 	}
 
 	/**
+	 * Sync all of our known users. Really this should just add roles to those who need it.
+	 *
 	 * TODO: Not used for now due to rate limiting. Maybe schedule this to be during daily reset?
 	 */
 	public void syncAllUsers() {
 		userManager.getAllUsers().forEach(this::syncUser);
+	}
+
+	/**
+	 * Sync all members in the discord.
+	 *
+	 * Warning! Do NOT try to use this unless the GUILD_MEMBERS intent is enabled.
+	 * This is here for the future for when we do get over that bridge.
+	 */
+	public void syncAllMembers() {
+		KiraMain.getInstance().getGuild().loadMembers().
+				onSuccess(members -> members.forEach(this::syncMember));
 	}
 
 	public void setName(Guild guild, KiraUser user) {
