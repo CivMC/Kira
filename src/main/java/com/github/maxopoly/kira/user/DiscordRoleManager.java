@@ -52,7 +52,7 @@ public class DiscordRoleManager {
 		KiraUser user = userManager.getUserByDiscordID(member.getIdLong());
 
 		// If the user does not exist, remove the auth role
-		if (user == null) {
+		if (user == null || !user.hasIngameAccount()) {
 			takeDiscordRole(guild, member);
 		} else {
 			// If the user does exist, give the auth role and update their nickname

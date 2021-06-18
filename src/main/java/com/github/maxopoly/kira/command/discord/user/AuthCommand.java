@@ -3,7 +3,6 @@ package com.github.maxopoly.kira.command.discord.user;
 import com.github.maxopoly.kira.KiraMain;
 import com.github.maxopoly.kira.command.model.discord.ArgumentBasedCommand;
 import com.github.maxopoly.kira.command.model.top.InputSupplier;
-import com.github.maxopoly.kira.permission.KiraRole;
 import com.github.maxopoly.kira.permission.KiraRoleManager;
 import com.github.maxopoly.kira.user.AuthManager;
 import com.github.maxopoly.kira.user.KiraUser;
@@ -52,10 +51,7 @@ public class AuthCommand extends ArgumentBasedCommand {
 		KiraMain.getInstance().getDiscordRoleManager().giveDiscordRole(KiraMain.getInstance().getGuild(), user);
 		KiraMain.getInstance().getDiscordRoleManager().setName(KiraMain.getInstance().getGuild(), user);
 		KiraMain.getInstance().getDAO().updateUser(user);
-		KiraRole authRole = kiraRoleMan.getRole("auth");
-		if (authRole != null) {
-			kiraRoleMan.giveRoleToUser(user, authRole);
-		}
+		KiraMain.getInstance().getDiscordRoleManager().syncUser(user);
 		authMan.removeCode(code);
 		return "Successfully authenticated as " + name;
 	}
