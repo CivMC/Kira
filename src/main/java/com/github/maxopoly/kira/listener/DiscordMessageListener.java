@@ -45,7 +45,7 @@ public class DiscordMessageListener extends ListenerAdapter {
 		String content = event.getMessage().getContentRaw();
 		if (event.isFromType(ChannelType.PRIVATE)) {
 			user.setCurrentDiscordUser(event.getAuthor());
-			logger.info(String.format("CHAT [PM] %s: %s", event.getAuthor().getName(),
+			logger.info(String.format("PM [%s -> Kira]: %s", event.getAuthor().getName(),
 					event.getMessage().getContentDisplay()));
 			cmdHandler.handle(content, new DiscordCommandPMSupplier(user));
 		} else {

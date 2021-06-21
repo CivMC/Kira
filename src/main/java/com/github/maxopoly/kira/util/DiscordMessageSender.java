@@ -3,17 +3,19 @@ package com.github.maxopoly.kira.util;
 import com.github.maxopoly.kira.KiraMain;
 import com.github.maxopoly.kira.user.KiraUser;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.PrivateChannel;
+import net.dv8tion.jda.api.entities.TextChannel;
+import org.apache.logging.log4j.Logger;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 public class DiscordMessageSender {
 
 	private static final int MAX_MSG_LENGTH = 1950;
+
+	private static final Logger logger = KiraMain.getInstance().getLogger();
 
 	/**
 	 * Splits up arbitrary messages into ones not exceeding the character limit of
@@ -92,39 +94,22 @@ public class DiscordMessageSender {
 		jda.retrieveUserById(user.getDiscordID()).submit()
 				.whenComplete((discordUser, error) -> {
 					if (error != null) {
+						logger.warn("Failed to send PM to user " + user.getDiscordID(), error);
 						return;
 					}
 
 					PrivateChannel pm = discordUser.openPrivateChannel().complete();
 					sendMessageInternal(null, null, s -> {
 						pm.sendMessage(s).queue();
+						logger.info(String.format("PM [Kira -> %s]: %s", user.getName(), s));
 					}, msg);
 				});
 	}
-	
+
 	public static void sendTextChannelMessage(KiraUser user, TextChannel channel, String msg) {
 		sendMessageInternal(user, channel.getGuild(), s -> {
 			channel.sendMessage(s).queue();
+			logger.info(String.format("CHAT [%s][%s] Kira: %s", channel.getGuild().getName(), channel.getName(), s));
 		}, msg);
 	}
-
-	
-	private Map<Long, StringBuilder> queuedMessagesByChannel;
-	private List<StringBuilder> messageQueue;
-
-	private DiscordMessageSender() {
-		queuedMessagesByChannel = new ConcurrentHashMap<>();
-		messageQueue = new LinkedList<>();
-	}
-
-	private void queueMessage(String msg, long id, Consumer<String> sendFunction) {
-		StringBuilder sb = queuedMessagesByChannel.computeIfAbsent(id, a -> new StringBuilder());
-		if (sb.length() + msg.length() > MAX_MSG_LENGTH) {
-			//send and empty current one
-			sendFunction.accept(sb.toString());
-			sb.setLength(0);
-		}
-		sb.append(msg);
-	}
-
 }
