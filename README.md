@@ -1,4 +1,7 @@
-# Getting Started
+# Kira
+Kira is essentially a Discord Bot that uses KiraBukkitRelay to communicate with a Minecraft server. Kira uses a PostgreSQL database to store Kira user permissions and uses RabbitMQ to communicate with KiraBukkitRelay which is a Minecraft plugin. 
+
+Kira allows you to seamlessly communicate with your Minecraft server on Discord. Uses include role-based authentication on Discord by requiring a link to an in-game Minecraft account, relaying in-game information such as JukeAlert messages to Discord, running commands on your Minecraft server from Discord, or even running console commands as an admin from Discord. Kira empowers admins to monitor and moderate their Minecraft server from the comfort of Discord instead of their server terminal. 
 
 ## Setting up a Kira development environment
 
