@@ -1,19 +1,7 @@
 package com.github.maxopoly.kira.command.model.discord;
 
 import com.github.maxopoly.kira.KiraMain;
-import com.github.maxopoly.kira.command.discord.admin.CreateDefaultPermsCommand;
-import com.github.maxopoly.kira.command.discord.admin.DeauthDiscordCommand;
-import com.github.maxopoly.kira.command.discord.admin.GiveDefaultPermission;
-import com.github.maxopoly.kira.command.discord.admin.GivePermissionToRoleCommand;
-import com.github.maxopoly.kira.command.discord.admin.GiveRoleCommand;
-import com.github.maxopoly.kira.command.discord.admin.LeaveDiscordServerCommand;
-import com.github.maxopoly.kira.command.discord.admin.ListDiscordRelaysCommand;
-import com.github.maxopoly.kira.command.discord.admin.ListDiscordServersCommand;
-import com.github.maxopoly.kira.command.discord.admin.ListPermissionsForUserCommand;
-import com.github.maxopoly.kira.command.discord.admin.ManageDiscordBansCommand;
-import com.github.maxopoly.kira.command.discord.admin.ReloadPermissionCommand;
-import com.github.maxopoly.kira.command.discord.admin.StopCommand;
-import com.github.maxopoly.kira.command.discord.admin.SyncUsernameCommand;
+import com.github.maxopoly.kira.command.discord.admin.*;
 import com.github.maxopoly.kira.command.discord.api.GenerateAPIToken;
 import com.github.maxopoly.kira.command.discord.api.ListTokens;
 import com.github.maxopoly.kira.command.discord.api.RevokeAPIToken;
@@ -24,14 +12,7 @@ import com.github.maxopoly.kira.command.discord.relay.CreateRelayChannelHereComm
 import com.github.maxopoly.kira.command.discord.relay.CreateRelayConfig;
 import com.github.maxopoly.kira.command.discord.relay.DeleteRelayCommand;
 import com.github.maxopoly.kira.command.discord.relay.TieRelayConfigCommand;
-import com.github.maxopoly.kira.command.discord.user.AuthCommand;
-import com.github.maxopoly.kira.command.discord.user.ChannelInfoCommand;
-import com.github.maxopoly.kira.command.discord.user.GetWeightCommand;
-import com.github.maxopoly.kira.command.discord.user.HelpCommand;
-import com.github.maxopoly.kira.command.discord.user.InfoCommand;
-import com.github.maxopoly.kira.command.discord.user.JoinDiscordCommand;
-import com.github.maxopoly.kira.command.discord.user.QuoteCommand;
-import com.github.maxopoly.kira.command.discord.user.SelfInfoCommand;
+import com.github.maxopoly.kira.command.discord.user.*;
 import com.github.maxopoly.kira.command.model.top.InputSupplier;
 import com.github.maxopoly.kira.command.model.top.TextInputHandler;
 import org.apache.logging.log4j.Logger;
@@ -98,7 +79,7 @@ public class CommandHandler extends TextInputHandler<Command, String, InputSuppl
 		registerCommand(new ManageDiscordBansCommand());
 		registerCommand(new ReloadPermissionCommand());
 		registerCommand(new StopCommand());
-		registerCommand(new SyncUsernameCommand());
+		registerCommand(new SyncUserCommand());
 		// API
 		registerCommand(new GenerateAPIToken());
 		registerCommand(new ListTokens());
@@ -121,6 +102,7 @@ public class CommandHandler extends TextInputHandler<Command, String, InputSuppl
 		registerCommand(new JoinDiscordCommand());
 		registerCommand(new QuoteCommand());
 		registerCommand(new SelfInfoCommand());
+		registerCommand(new UpdateRolesCommand());
 		logger.info("Loaded total of " + commands.values().size() + " commands");
 	}
 

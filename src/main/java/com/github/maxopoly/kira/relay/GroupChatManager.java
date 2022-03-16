@@ -6,22 +6,13 @@ import com.github.maxopoly.kira.permission.KiraRole;
 import com.github.maxopoly.kira.permission.KiraRoleManager;
 import com.github.maxopoly.kira.user.KiraUser;
 import com.github.maxopoly.kira.user.UserManager;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import net.dv8tion.jda.api.entities.*;
+import org.apache.logging.log4j.Logger;
+
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-import net.dv8tion.jda.api.entities.Category;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.PermissionOverride;
-import net.dv8tion.jda.api.entities.TextChannel;
-import org.apache.logging.log4j.Logger;
 
 public class GroupChatManager {
 
@@ -73,22 +64,29 @@ public class GroupChatManager {
 		Guild guild = KiraMain.getInstance().getGuild();
 		if (guild.getIdLong() == chat.getGuildId()) {
 			TextChannel channel = KiraMain.getInstance().getJDA().getTextChannelById(chat.getDiscordChannelId());
-			Member member = guild.getMemberById(user.getDiscordID());
+
 			if (channel == null) {
 				logger.error(
 						"Could not update member perm on channel for group " + chat.getName() + ", it didnt exist");
 				return;
 			}
-			if (member != null) {
-				PermissionOverride perm = channel.getPermissionOverride(member);
-				if (perm == null) {
-					perm = channel.createPermissionOverride(member).complete();
-				}
-				if (perm.getAllowedRaw() != CHANNEL_PERMS) {
-					logger.info("Adjusting channel perms to " + chat.getName() + " for " + user.toString());
-					perm.getManager().grant(CHANNEL_PERMS).queue();
-				}
-			}
+
+			guild.retrieveMemberById(user.getDiscordID()).submit()
+					.whenComplete((member, error) -> {
+						if (error != null) {
+							logger.error("Could not update member perm on channel for member " + user.getDiscordID());
+							return;
+						}
+
+						PermissionOverride perm = channel.getPermissionOverride(member);
+						if (perm == null) {
+							perm = channel.createPermissionOverride(member).complete();
+						}
+						if (perm.getAllowedRaw() != CHANNEL_PERMS) {
+							logger.info("Adjusting channel perms to " + chat.getName() + " for " + user.toString());
+							perm.getManager().grant(CHANNEL_PERMS).queue();
+						}
+					});
 		}
 	}
 

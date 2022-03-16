@@ -1,16 +1,14 @@
 package com.github.maxopoly.kira.command.discord.relay;
 
-import java.util.EnumSet;
-
 import com.github.maxopoly.kira.KiraMain;
 import com.github.maxopoly.kira.command.model.discord.ArgumentBasedCommand;
-import com.github.maxopoly.kira.command.model.discord.DiscordCommandChannelMessageSupplier;
 import com.github.maxopoly.kira.command.model.top.InputSupplier;
 import com.github.maxopoly.kira.user.KiraUser;
-
-
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
+
+import java.util.EnumSet;
 
 
 public class CreateRelayChannelHereCommand extends ArgumentBasedCommand {
@@ -37,12 +35,6 @@ public class CreateRelayChannelHereCommand extends ArgumentBasedCommand {
 
 	@Override
 	public String handle(InputSupplier sender, String[] args) {
-		if (!(sender instanceof DiscordCommandChannelMessageSupplier)) {
-			return "Something went wrong, tell an admin";
-		}
-
-		DiscordCommandChannelMessageSupplier supplier = (DiscordCommandChannelMessageSupplier) sender;
-
 		KiraUser user = sender.getUser();
 		long channelID = sender.getChannelID();
 		if (channelID <= -1) {
@@ -55,12 +47,18 @@ public class CreateRelayChannelHereCommand extends ArgumentBasedCommand {
 		if (channel.getGuild().getIdLong() == KiraMain.getInstance().getGuild().getIdLong()) {
 			return "You can't create relays here";
 		}
-		EnumSet<Permission> perms = supplier.getMessage().getMember().getPermissions(channel);
-		if (!perms.contains(Permission.MANAGE_CHANNEL)) {
-			return "You need the 'MANAGE_CHANNEL' permission to add a relay to this channel";
+
+		try {
+			Member member  = channel.getGuild().retrieveMemberById(sender.getUser().getDiscordID()).complete();
+			EnumSet<Permission> perms = member.getPermissions(channel);
+			if (!perms.contains(Permission.MANAGE_CHANNEL)) {
+				return "You need the 'MANAGE_CHANNEL' permission to add a relay to this channel";
+			}
+			KiraMain.getInstance().getMCRabbitGateway().requestRelayCreation(user, args [0], channel);
+			return "Checking permissions for channel handling...";
+		} catch (Exception e) {
+			return "Something went wrong, tell and admin.";
 		}
-		KiraMain.getInstance().getMCRabbitGateway().requestRelayCreation(user, args [0], channel);
-		return "Checking permissions for channel handling...";
 	}
 }
 

@@ -2,15 +2,13 @@ package com.github.maxopoly.kira.listener;
 
 import com.github.maxopoly.kira.KiraMain;
 import com.github.maxopoly.kira.command.model.discord.CommandHandler;
-import com.github.maxopoly.kira.command.model.discord.DiscordCommandChannelMessageSupplier;
+import com.github.maxopoly.kira.command.model.discord.DiscordCommandChannelSupplier;
 import com.github.maxopoly.kira.command.model.discord.DiscordCommandPMSupplier;
 import com.github.maxopoly.kira.command.model.top.InputSupplier;
 import com.github.maxopoly.kira.relay.GroupChat;
 import com.github.maxopoly.kira.relay.GroupChatManager;
 import com.github.maxopoly.kira.user.KiraUser;
 import com.github.maxopoly.kira.user.UserManager;
-import java.util.Set;
-import javax.annotation.Nonnull;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
@@ -18,6 +16,9 @@ import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.apache.logging.log4j.Logger;
+
+import javax.annotation.Nonnull;
+import java.util.Set;
 
 public class DiscordMessageListener extends ListenerAdapter {
 
@@ -44,7 +45,7 @@ public class DiscordMessageListener extends ListenerAdapter {
 		String content = event.getMessage().getContentRaw();
 		if (event.isFromType(ChannelType.PRIVATE)) {
 			user.setCurrentDiscordUser(event.getAuthor());
-			logger.info(String.format("CHAT [PM] %s: %s", event.getAuthor().getName(),
+			logger.info(String.format("PM [%s -> Kira]: %s", event.getAuthor().getName(),
 					event.getMessage().getContentDisplay()));
 			cmdHandler.handle(content, new DiscordCommandPMSupplier(user));
 		} else {
@@ -52,8 +53,8 @@ public class DiscordMessageListener extends ListenerAdapter {
 				logger.info(
 						String.format("CHAT [%s][%s] %s: %s", event.getGuild().getName(), event.getTextChannel().getName(),
 								event.getMember().getEffectiveName(), event.getMessage().getContentDisplay()));
-				InputSupplier supplier = new DiscordCommandChannelMessageSupplier(user, event.getGuild().getIdLong(),
-						event.getChannel().getIdLong(), event.getMessage());
+				InputSupplier supplier = new DiscordCommandChannelSupplier(user, event.getGuild().getIdLong(),
+						event.getChannel().getIdLong());
 				cmdHandler.handle(content.substring(keyWord.length()), supplier);
 				return;
 			}
@@ -87,7 +88,7 @@ public class DiscordMessageListener extends ListenerAdapter {
 		}
 		KiraUser user = userManager.getOrCreateUserByDiscordID(event.getUser().getIdLong());
 		if (user.hasIngameAccount()) {
-			KiraMain.getInstance().getDiscordRoleManager().giveDiscordRole(user);
+			KiraMain.getInstance().getDiscordRoleManager().giveDiscordRole(KiraMain.getInstance().getGuild(), user);
 		}
 	}
 

@@ -1,22 +1,19 @@
 package com.github.maxopoly.kira.rabbit.input;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import com.github.maxopoly.kira.KiraMain;
 import com.github.maxopoly.kira.rabbit.RabbitInputSupplier;
 import com.github.maxopoly.kira.relay.GroupChat;
 import com.github.maxopoly.kira.relay.GroupChatManager;
 import com.github.maxopoly.kira.user.KiraUser;
 import com.github.maxopoly.kira.user.UserManager;
-
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 public class CreateGroupChatMessage extends RabbitMessage {
 
@@ -80,8 +77,15 @@ public class CreateGroupChatMessage extends RabbitMessage {
 		JDA jda = KiraMain.getInstance().getJDA();
 		TextChannel channel = jda.getTextChannelById(chat.getDiscordChannelId());
 		if (channel != null) {
-			Member mem = channel.getGuild().getMemberById(creator.getDiscordID());
-			channel.sendMessage("Channel is ready " + mem.getAsMention()).queue();
+			channel.getGuild().retrieveMemberById(creator.getDiscordID()).submit()
+					.whenComplete((mem, error) -> {
+						if (error != null) {
+							logger.error("Failed to get user to notify of channel creation");
+							return;
+						}
+
+						channel.sendMessage("Channel is ready " + mem.getAsMention()).queue();
+					});
 		}
 	}
 
