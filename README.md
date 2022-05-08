@@ -181,7 +181,10 @@ Note that some features are broken and updates to Discord API's can cause furthe
 			"sslCertPassword": null,
 			"sslCertPath": null
 		},
-		"consoleforward": {},
+		"consoleforward": {
+		"anticheat":584794001215979521,
+		"bans":585524000092848129
+		},
 		"apirate": "500ms",
 		"commandprefix": "!kira",
 		"relayCategory": 0
@@ -209,7 +212,9 @@ Note that some features are broken and updates to Discord API's can cause furthe
 
 		* `db.password` should be your system account's password.
 
-		* `consoleforward` and `relayCategory` are unknown for the time being.
+		* `consoleforward` are a key and the channel ID's you are relaying data to and relate to the 'key' values in KiraBukkitRelay
+		
+		* `relayCategory` is the ID of the category the relay channels are in, although I don't know why or for what purpose
 
 	* Setup Kira's database:
 
