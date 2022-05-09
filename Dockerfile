@@ -1,10 +1,10 @@
-FROM openjdk:11-alpine as build
+FROM openjdk:11 as build
 WORKDIR /app
 
 COPY . .
 RUN ./mvnw install
 
-FROM openjdk:11-alpine as run
+FROM openjdk:11 as run
 WORKDIR /app
 
 # TODO: Determine this jar name...
