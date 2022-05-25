@@ -5,3 +5,5 @@ logs/
 .project
 .idea
 *.iml
+
+config.json
