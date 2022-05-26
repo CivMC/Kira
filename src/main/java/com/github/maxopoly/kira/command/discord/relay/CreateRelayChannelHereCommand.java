@@ -44,7 +44,7 @@ public class CreateRelayChannelHereCommand extends ArgumentBasedCommand {
 		if (channel == null) {
 			return "Something went wrong, tell an admin";
 		}
-		if (channel.getGuild().getIdLong() == KiraMain.getInstance().getGuild().getIdLong()) {
+		if (channel.getGuild().getIdLong() == KiraMain.getInstance().getGuild().getIdLong() && !sender.hasPermission("admin")) {
 			return "You can't create relays here";
 		}
 
