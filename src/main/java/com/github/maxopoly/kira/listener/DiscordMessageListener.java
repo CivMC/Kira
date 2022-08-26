@@ -34,6 +34,10 @@ public class DiscordMessageListener extends ListenerAdapter {
 		this.ownID = ownID;
 		this.userManager = userManager;
 		this.keyWord = KiraMain.getInstance().getConfig().getCommandPrefix();
+		// Temporary hack
+		if (!this.keyWord.endsWith(" ")) {
+			this.keyWord = this.keyWord + " ";
+		}
 	}
 
 	@Override

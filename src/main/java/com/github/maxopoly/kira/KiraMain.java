@@ -17,6 +17,7 @@ import com.github.maxopoly.kira.user.DiscordRoleManager;
 import com.github.maxopoly.kira.user.KiraUser;
 import com.github.maxopoly.kira.user.UserManager;
 import com.rabbitmq.client.ConnectionFactory;
+import net.civmc.kira.KiraConfig;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Guild;
@@ -39,9 +40,7 @@ public class KiraMain {
 
 	public static void main(String[] args) {
 		instance = new KiraMain();
-		if (!instance.loadConfig()) {
-			return;
-		}
+		instance.loadConfig();
 		instance.authManager = new AuthManager();
 		instance.userManager = new UserManager(instance.logger);
 		if (!instance.loadDatabase()) {
@@ -80,7 +79,7 @@ public class KiraMain {
 	private CommandHandler commandHandler;
 	private long guildId;
 	private UserManager userManager;
-	private ConfigManager configManager;
+	private KiraConfig configManager;
 	private DiscordRoleManager roleManager;
 	private DAO dao;
 	private RabbitHandler rabbit;
@@ -104,7 +103,7 @@ public class KiraMain {
 		return commandHandler;
 	}
 
-	public ConfigManager getConfig() {
+	public KiraConfig getConfig() {
 		return configManager;
 	}
 
@@ -156,9 +155,8 @@ public class KiraMain {
 		return userManager;
 	}
 
-	private boolean loadConfig() {
-		configManager = new ConfigManager(logger);
-		return configManager.reload();
+	private void loadConfig() {
+		configManager = new KiraConfig(logger);
 	}
 
 	private boolean loadDatabase() {
@@ -266,6 +264,7 @@ public class KiraMain {
 		}
 		rabbit = new RabbitHandler(connFac, incomingQueue, outgoingQueue, logger);
 		if (!rabbit.setup()) {
+
 			return false;
 		}
 		mcRabbit = new MinecraftRabbitGateway(rabbit);
