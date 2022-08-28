@@ -33,7 +33,7 @@ public class DiscordMessageListener extends ListenerAdapter {
 		this.logger = logger;
 		this.ownID = ownID;
 		this.userManager = userManager;
-		this.keyWord = KiraMain.getInstance().getConfig().getCommandPrefix();
+		this.keyWord = KiraMain.getInstance().getConfig().getDiscordCommandPrefix();
 		// Temporary hack
 		if (!this.keyWord.endsWith(" ")) {
 			this.keyWord = this.keyWord + " ";

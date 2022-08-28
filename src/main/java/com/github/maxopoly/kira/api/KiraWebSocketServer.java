@@ -61,7 +61,7 @@ public class KiraWebSocketServer extends WebSocketServer {
 	private Logger logger;
 
 	public KiraWebSocketServer(Logger logger, KiraConfig config) {
-		super(new InetSocketAddress(config.getAPIInetAdress(),config.getAPIPort()));
+		super(new InetSocketAddress(config.getApiAddress(), Integer.parseInt(config.getApiPort())));
 		this.logger = logger;
 		connections = new HashMap<>();
 		logger.info("Starting Web socket API server");
@@ -78,8 +78,8 @@ public class KiraWebSocketServer extends WebSocketServer {
 
 	private SSLContext genSSLContext() {
 		KiraConfig config = KiraMain.getInstance().getConfig();
-		String path = config.getAPISSLCertPath();
-		String pw = config.getAPISSLCertPassword();
+		String path = config.getApiSslCertPath();
+		String pw = config.getApiSslCertPassword();
 		if (path == null || pw == null) {
 			return null;
 		}

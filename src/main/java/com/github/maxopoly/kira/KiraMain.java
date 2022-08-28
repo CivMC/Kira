@@ -18,6 +18,7 @@ import com.github.maxopoly.kira.user.KiraUser;
 import com.github.maxopoly.kira.user.UserManager;
 import com.rabbitmq.client.ConnectionFactory;
 import net.civmc.kira.KiraConfig;
+import net.civmc.kira.command.HelpCommand;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Guild;
@@ -172,11 +173,11 @@ public class KiraMain {
 	}
 
 	private boolean loadGroupChats() {
-		if (configManager.getRelaySectionID() == -1) {
+		if (Long.parseLong(configManager.getDiscordRelaySectionId()) == -1) {
 			return false;
 		}
 		relayConfigManager = new RelayConfigManager(dao);
-		groupChatManager = new GroupChatManager(logger, dao, configManager.getRelaySectionID(), relayConfigManager);
+		groupChatManager = new GroupChatManager(logger, dao, Long.parseLong(configManager.getDiscordRelaySectionId()), relayConfigManager);
 		return true;
 	}
 
@@ -207,18 +208,26 @@ public class KiraMain {
 	}
 
 	private boolean setupAuthManager() {
-		roleManager = new DiscordRoleManager(configManager.getAuthroleID(), logger, userManager);
+		roleManager = new DiscordRoleManager(Long.parseLong(configManager.getDiscordAuthRoleId()), logger, userManager);
 		return true;
 	}
 
 	private boolean setupListeners() {
+		HelpCommand helpCommand = new HelpCommand(logger, userManager);
+
+		jda.upsertCommand(helpCommand.getCommandData()).queue();
+
+		jda.addEventListener(
+				helpCommand
+		);
+
 		jda.addEventListener(
 				new DiscordMessageListener(commandHandler, logger, userManager, jda.getSelfUser().getIdLong()));
 		return true;
 	}
 
 	private boolean startJDA() {
-		String token = configManager.getBotToken();
+		String token = configManager.getDiscordBotToken();
 		if (token == null) {
 			logger.error("No bot token was supplied");
 			return false;
@@ -231,7 +240,7 @@ public class KiraMain {
 			logger.error("Failed to start jda", e);
 			return false;
 		}
-		long serverID = configManager.getServerID();
+		long serverID = Long.parseLong(configManager.getDiscordServerId());
 		if (serverID == -1L) {
 			logger.error("No server id was provided");
 			return false;
@@ -242,7 +251,7 @@ public class KiraMain {
 			return false;
 		}
 		this.guildId = serverID;
-		long authID = configManager.getAuthroleID();
+		long authID = Long.parseLong(configManager.getDiscordAuthRoleId());
 		if (authID == -1L) {
 			logger.error("No auth role id was provided");
 			return false;
@@ -256,8 +265,8 @@ public class KiraMain {
 	}
 
 	private boolean startRabbit() {
-		String incomingQueue = configManager.getIncomingQueueName();
-		String outgoingQueue = configManager.getOutgoingQueueName();
+		String incomingQueue = configManager.getRabbitIncomingQueueName();
+		String outgoingQueue = configManager.getRabbitOutgoingQueueName();
 		ConnectionFactory connFac = configManager.getRabbitConfig();
 		if (incomingQueue == null || outgoingQueue == null || connFac == null) {
 			return false;
