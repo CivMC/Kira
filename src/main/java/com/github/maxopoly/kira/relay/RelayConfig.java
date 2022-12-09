@@ -132,6 +132,7 @@ public class RelayConfig {
 		output = output.replace("%X%", String.valueOf(loc.getX()));
 		output = output.replace("%Y%", String.valueOf(loc.getY()));
 		output = output.replace("%Z%", String.valueOf(loc.getZ()));
+		output = output.replace("%WORLD%", String.valueOf(loc.getWorld()));
 		output = output.replace("%SNITCH%", action.getSnitchName());
 		output = output.replaceAll("%PLAYER%", action.getPlayerName());
 		output = output.replace("%GROUP%", action.getGroupName());
