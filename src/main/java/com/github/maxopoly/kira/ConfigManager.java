@@ -79,8 +79,8 @@ public class ConfigManager {
 			return "!kira ";
 		}
 	}
-	
-	
+
+
 	public Map<String, Long> getConsoleForwardingMapping() {
 		JSONObject json = config.getJSONObject("consoleforward");
 		Map <String, Long> result = new TreeMap<>();
@@ -90,7 +90,7 @@ public class ConfigManager {
 		}
 		return result;
 	}
-	
+
 	public DBConnection getDatabase() {
 		try {
 			JSONObject json = config.getJSONObject("db");
@@ -105,7 +105,7 @@ public class ConfigManager {
 			return null;
 		}
 	}
-	
+
 	public String getIncomingQueueName() {
 		try {
 			JSONObject json = config.getJSONObject("rabbitmq");
@@ -115,7 +115,7 @@ public class ConfigManager {
 			return null;
 		}
 	}
-	
+
 	public String getOutgoingQueueName() {
 		try {
 			JSONObject json = config.getJSONObject("rabbitmq");
@@ -125,7 +125,7 @@ public class ConfigManager {
 			return null;
 		}
 	}
-	
+
 	public ConnectionFactory getRabbitConfig() {
 		try {
 			JSONObject json = config.getJSONObject("rabbitmq");
@@ -152,7 +152,7 @@ public class ConfigManager {
 			return null;
 		}
 	}
-	
+
 	public long getRelaySectionID() {
 		try {
 			return config.getLong("relayCategory");
@@ -161,7 +161,7 @@ public class ConfigManager {
 			return -1L;
 		}
 	}
-	
+
 	public long getServerID() {
 		try {
 			return config.getJSONObject("bot").getLong("serverid");
@@ -174,6 +174,7 @@ public class ConfigManager {
 	public boolean reload() {
 		final StringBuilder sb = new StringBuilder();
 		try {
+            logger.info(new File(configFileName).toPath());
 			Files.readAllLines(new File(configFileName).toPath()).forEach(sb::append);
 			config = new JSONObject(sb.toString());
 			return true;

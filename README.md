@@ -5,6 +5,8 @@ Kira allows you to seamlessly communicate with your Minecraft server on Discord.
 
 Note that some features are broken and updates to Discord API's can cause further issues. Kira is also restricted by Discord's rules around gateway intents and bot permissions. 
 
+Note that all Kotlin code is licensed under MIT, while Java code is licenced under BSD-3
+
 ## Setting up a Kira development environment
 
 1. Install Java 11: `https://www.oracle.com/java/technologies/javase-jdk11-downloads.html` (Recommended, login necessary)

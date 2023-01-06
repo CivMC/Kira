@@ -1,14 +1,10 @@
 package com.github.maxopoly.kira.api;
 
-import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.net.InetSocketAddress;
-import java.net.URLDecoder;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.net.ssl.SSLContext;
-
+import com.github.maxopoly.kira.KiraMain;
+import com.github.maxopoly.kira.api.input.APISupplier;
+import com.github.maxopoly.kira.api.token.APIToken;
+import com.github.maxopoly.kira.api.token.APITokenManager;
+import com.github.maxopoly.kira.ConfigManager;
 import org.apache.logging.log4j.Logger;
 import org.java_websocket.WebSocket;
 import org.java_websocket.framing.CloseFrame;
@@ -16,11 +12,13 @@ import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.DefaultSSLWebSocketServerFactory;
 import org.java_websocket.server.WebSocketServer;
 
-import com.github.maxopoly.kira.ConfigManager;
-import com.github.maxopoly.kira.KiraMain;
-import com.github.maxopoly.kira.api.input.APISupplier;
-import com.github.maxopoly.kira.api.token.APIToken;
-import com.github.maxopoly.kira.api.token.APITokenManager;
+import javax.net.ssl.SSLContext;
+import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.InetSocketAddress;
+import java.net.URLDecoder;
+import java.util.HashMap;
+import java.util.Map;
 
 public class KiraWebSocketServer extends WebSocketServer {
 
@@ -62,8 +60,8 @@ public class KiraWebSocketServer extends WebSocketServer {
 
 	private Logger logger;
 
-	public KiraWebSocketServer(Logger logger, ConfigManager config) {
-		super(new InetSocketAddress(config.getAPIInetAdress(),config.getAPIPort()));
+    public KiraWebSocketServer(Logger logger, ConfigManager config) {
+		super(new InetSocketAddress(config.getAPIInetAdress(), config.getAPIPort()));
 		this.logger = logger;
 		connections = new HashMap<>();
 		logger.info("Starting Web socket API server");
@@ -79,7 +77,7 @@ public class KiraWebSocketServer extends WebSocketServer {
 	}
 
 	private SSLContext genSSLContext() {
-		ConfigManager config = KiraMain.getInstance().getConfig();
+        ConfigManager config = KiraMain.getInstance().getConfig();
 		String path = config.getAPISSLCertPath();
 		String pw = config.getAPISSLCertPassword();
 		if (path == null || pw == null) {
