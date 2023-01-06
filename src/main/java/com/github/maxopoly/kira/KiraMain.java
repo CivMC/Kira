@@ -17,7 +17,6 @@ import com.github.maxopoly.kira.user.DiscordRoleManager;
 import com.github.maxopoly.kira.user.KiraUser;
 import com.github.maxopoly.kira.user.UserManager;
 import com.rabbitmq.client.ConnectionFactory;
-import net.civmc.kira.KiraConfig;
 import net.civmc.kira.command.HelpCommand;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -41,7 +40,9 @@ public class KiraMain {
 
 	public static void main(String[] args) {
 		instance = new KiraMain();
-		instance.loadConfig();
+        if (!instance.loadConfig()) {
+            return;
+        }
 		instance.authManager = new AuthManager();
 		instance.userManager = new UserManager(instance.logger);
 		if (!instance.loadDatabase()) {
@@ -80,7 +81,7 @@ public class KiraMain {
 	private CommandHandler commandHandler;
 	private long guildId;
 	private UserManager userManager;
-	private KiraConfig configManager;
+	private ConfigManager configManager;
 	private DiscordRoleManager roleManager;
 	private DAO dao;
 	private RabbitHandler rabbit;
@@ -104,7 +105,7 @@ public class KiraMain {
 		return commandHandler;
 	}
 
-	public KiraConfig getConfig() {
+    public ConfigManager getConfig() {
 		return configManager;
 	}
 
@@ -156,8 +157,9 @@ public class KiraMain {
 		return userManager;
 	}
 
-	private void loadConfig() {
-		configManager = new KiraConfig(logger);
+	private boolean loadConfig() {
+        configManager = new ConfigManager(logger);
+        return configManager.reload();
 	}
 
 	private boolean loadDatabase() {
@@ -173,11 +175,11 @@ public class KiraMain {
 	}
 
 	private boolean loadGroupChats() {
-		if (Long.parseLong(configManager.getDiscordRelaySectionId()) == -1) {
+		if (configManager.getRelaySectionID() == -1) {
 			return false;
 		}
 		relayConfigManager = new RelayConfigManager(dao);
-		groupChatManager = new GroupChatManager(logger, dao, Long.parseLong(configManager.getDiscordRelaySectionId()), relayConfigManager);
+		groupChatManager = new GroupChatManager(logger, dao, configManager.getRelaySectionID(), relayConfigManager);
 		return true;
 	}
 
@@ -208,7 +210,7 @@ public class KiraMain {
 	}
 
 	private boolean setupAuthManager() {
-		roleManager = new DiscordRoleManager(Long.parseLong(configManager.getDiscordAuthRoleId()), logger, userManager);
+		roleManager = new DiscordRoleManager(configManager.getAuthroleID(), logger, userManager);
 		return true;
 	}
 
@@ -227,7 +229,7 @@ public class KiraMain {
 	}
 
 	private boolean startJDA() {
-		String token = configManager.getDiscordBotToken();
+		String token = configManager.getBotToken();
 		if (token == null) {
 			logger.error("No bot token was supplied");
 			return false;
@@ -240,7 +242,7 @@ public class KiraMain {
 			logger.error("Failed to start jda", e);
 			return false;
 		}
-		long serverID = Long.parseLong(configManager.getDiscordServerId());
+		long serverID = configManager.getServerID();
 		if (serverID == -1L) {
 			logger.error("No server id was provided");
 			return false;
@@ -251,7 +253,7 @@ public class KiraMain {
 			return false;
 		}
 		this.guildId = serverID;
-		long authID = Long.parseLong(configManager.getDiscordAuthRoleId());
+		long authID = configManager.getAuthroleID();
 		if (authID == -1L) {
 			logger.error("No auth role id was provided");
 			return false;
@@ -265,8 +267,8 @@ public class KiraMain {
 	}
 
 	private boolean startRabbit() {
-		String incomingQueue = configManager.getRabbitIncomingQueueName();
-		String outgoingQueue = configManager.getRabbitOutgoingQueueName();
+		String incomingQueue = configManager.getIncomingQueueName();
+		String outgoingQueue = configManager.getOutgoingQueueName();
 		ConnectionFactory connFac = configManager.getRabbitConfig();
 		if (incomingQueue == null || outgoingQueue == null || connFac == null) {
 			return false;

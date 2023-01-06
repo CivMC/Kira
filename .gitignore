@@ -1,6 +1,6 @@
 # Kira
 logs/
-private.env
+config.json
 local/
 
 # Editors

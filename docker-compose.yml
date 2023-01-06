@@ -42,18 +42,5 @@ services:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
-    environment:
-      KIRA_DB_HOST: postgres
-      KIRA_DB_PORT: 5432
-      KIRA_DB_DATABASE: postgres
-      KIRA_DB_USER: postgres
-      KIRA_DB_PASSWORD: postgres
-
-      KIRA_RABBIT_USER: rabbitmq
-      KIRA_RABBIT_PASSWORD: rabbitmq
-      KIRA_RABBIT_HOST: rabbitmq
-      KIRA_RABBIT_PORT: 5672
-    env_file:
-      - private.env
     volumes:
       - ./config.json:/app/config.json

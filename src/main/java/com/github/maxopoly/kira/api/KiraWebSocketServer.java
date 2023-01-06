@@ -4,7 +4,7 @@ import com.github.maxopoly.kira.KiraMain;
 import com.github.maxopoly.kira.api.input.APISupplier;
 import com.github.maxopoly.kira.api.token.APIToken;
 import com.github.maxopoly.kira.api.token.APITokenManager;
-import net.civmc.kira.KiraConfig;
+import com.github.maxopoly.kira.ConfigManager;
 import org.apache.logging.log4j.Logger;
 import org.java_websocket.WebSocket;
 import org.java_websocket.framing.CloseFrame;
@@ -60,8 +60,8 @@ public class KiraWebSocketServer extends WebSocketServer {
 
 	private Logger logger;
 
-	public KiraWebSocketServer(Logger logger, KiraConfig config) {
-		super(new InetSocketAddress(config.getApiAddress(), Integer.parseInt(config.getApiPort())));
+    public KiraWebSocketServer(Logger logger, ConfigManager config) {
+		super(new InetSocketAddress(config.getAPIInetAdress(), config.getAPIPort()));
 		this.logger = logger;
 		connections = new HashMap<>();
 		logger.info("Starting Web socket API server");
@@ -77,9 +77,9 @@ public class KiraWebSocketServer extends WebSocketServer {
 	}
 
 	private SSLContext genSSLContext() {
-		KiraConfig config = KiraMain.getInstance().getConfig();
-		String path = config.getApiSslCertPath();
-		String pw = config.getApiSslCertPassword();
+        ConfigManager config = KiraMain.getInstance().getConfig();
+		String path = config.getAPISSLCertPath();
+		String pw = config.getAPISSLCertPassword();
 		if (path == null || pw == null) {
 			return null;
 		}
