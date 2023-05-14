@@ -132,7 +132,11 @@ public class GroupChatManager {
 			// already deleted
 			isManaged = false;
 		} else {
-			isManaged = channel.getGuild().getIdLong() == KiraMain.getInstance().getGuild().getIdLong();
+			Category category = channel.getParent();
+			boolean isInMainGuild = channel.getGuild().getIdLong() == KiraMain.getInstance().getGuild().getIdLong();
+			boolean isInRelaySection = category != null && category.getIdLong() == KiraMain.getInstance().getConfig().getRelaySectionID();
+
+			isManaged = isInMainGuild && isInRelaySection;
 		}
 		logger.info("Deleting channel for " + chat.getName());
 		if (isManaged) {
