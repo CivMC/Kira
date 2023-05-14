@@ -43,6 +43,10 @@ public class DeleteRelayCommand extends ArgumentBasedCommand {
 
 			@Override
 			public void handlePermissionReply(boolean hasPerm) {
+				if (!hasPerm) {
+					sender.reportBack("You do not have permission to delete this relay");
+				}
+
 				GroupChat chat = man.getGroupChat(args[0]);
 				if (chat == null) {
 					logger.warn("Failed to delete group chat"+ args[0] + ", it was already gone");
