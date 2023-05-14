@@ -49,6 +49,7 @@ public class TieRelayConfigCommand extends ArgumentBasedCommand {
 			public void handlePermissionReply(boolean hasPerm) {
 				if (!hasPerm) {
 					sender.reportBack("You do not have permission to set the config for this relay");
+					return;
 				}
 
 				KiraMain.getInstance().getGroupChatManager().setConfig(chat, config);
