@@ -15,10 +15,11 @@ abstract class Command(val logger: Logger, val userManager: UserManager) : Liste
     open val requireUser = false
     open val requireIngameAccount = false
     open val requiredPermission = "default"
+    open val global = true
 
     abstract fun getCommandData(): CommandData
 
-    abstract fun dispatchCommand(event: SlashCommandEvent, sender: InputSupplier, options: List<OptionMapping>)
+    abstract fun dispatchCommand(event: SlashCommandEvent, sender: InputSupplier)
 
     override fun onSlashCommand(event: SlashCommandEvent) {
         if (event.name != name) {
@@ -30,21 +31,21 @@ abstract class Command(val logger: Logger, val userManager: UserManager) : Liste
                 event.channel.idLong)
 
         if (requireUser && supplier.user == null) {
-            supplier.reportBack("You have to be a user to run this command")
+            event.reply("You have to be a user to run this command").queue()
             return
         }
 
         if (requireIngameAccount && !supplier.user.hasIngameAccount()) {
-            supplier.reportBack("You need to have an ingame account linked to use this command")
+            event.reply("You need to have an ingame account linked to use this command").queue()
             return
         }
 
         if (!supplier.hasPermission(requiredPermission)) {
-            supplier.reportBack("You don't have the required permission to do this")
+            event.reply("You don't have the required permission to do this").queue()
             logger.info(supplier.identifier + " attempted to run forbidden command: " + name)
             return
         }
 
-        dispatchCommand(event, supplier, event.options)
+        dispatchCommand(event, supplier)
     }
 }

@@ -17,7 +17,7 @@ import com.github.maxopoly.kira.user.DiscordRoleManager;
 import com.github.maxopoly.kira.user.KiraUser;
 import com.github.maxopoly.kira.user.UserManager;
 import com.rabbitmq.client.ConnectionFactory;
-import net.civmc.kira.command.HelpCommand;
+import net.civmc.kira.command.CommandManager;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Guild;
@@ -70,6 +70,8 @@ public class KiraMain {
 		if (!instance.setupListeners()) {
 			return;
 		}
+		CommandManager.INSTANCE.registerCommands();
+
 		instance.apiSessionManager = new APISessionManager(instance.logger, 500);
 		instance.rabbit.beginAsyncListen();
 		instance.parseInput();
@@ -215,14 +217,6 @@ public class KiraMain {
 	}
 
 	private boolean setupListeners() {
-		HelpCommand helpCommand = new HelpCommand(logger, userManager);
-
-		jda.upsertCommand(helpCommand.getCommandData()).queue();
-
-		jda.addEventListener(
-				helpCommand
-		);
-
 		jda.addEventListener(
 				new DiscordMessageListener(commandHandler, logger, userManager, jda.getSelfUser().getIdLong()));
 		return true;
