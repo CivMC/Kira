@@ -47,7 +47,7 @@ public class TieRelayConfigCommand extends ArgumentBasedCommand {
 
 			@Override
 			public void handlePermissionReply(boolean hasPerm) {
-				if (!hasPerm) {
+				if (!hasPerm && !sender.hasPermission("admin")) {
 					sender.reportBack("You do not have permission to set the config for this relay");
 					return;
 				}

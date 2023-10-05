@@ -43,7 +43,7 @@ public class DeleteRelayCommand extends ArgumentBasedCommand {
 
 			@Override
 			public void handlePermissionReply(boolean hasPerm) {
-				if (!hasPerm) {
+				if (!hasPerm && !sender.hasPermission("admin")) {
 					sender.reportBack("You do not have permission to delete this relay");
 					return;
 				}
