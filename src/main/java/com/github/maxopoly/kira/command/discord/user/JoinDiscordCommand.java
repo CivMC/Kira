@@ -8,6 +8,7 @@ public class JoinDiscordCommand extends Command {
 	public JoinDiscordCommand() {
 		super("invite");
 		doesRequireIngameAccount();
+		this.deprecated = true;
 	}
 
 	@Override

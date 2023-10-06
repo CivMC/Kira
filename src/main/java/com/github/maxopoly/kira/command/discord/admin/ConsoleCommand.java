@@ -1,4 +1,4 @@
-package com.github.maxopoly.kira.command.discord.ingame;
+package com.github.maxopoly.kira.command.discord.admin;
 
 import com.github.maxopoly.kira.KiraMain;
 import com.github.maxopoly.kira.command.model.discord.Command;

@@ -8,10 +8,13 @@ public abstract class Command extends TextInput<String, InputSupplier> {
 	private boolean requireUser;
 	private boolean requireIngameAccount;
 
+	protected boolean deprecated;
+
 	public Command(String identifier, String... alt) {
 		super(identifier, alt);
 		this.requireUser = false;
 		this.requireIngameAccount = false;
+		this.deprecated = false;
 	}
 
 	public boolean doesRequireIngameAccount() {
@@ -44,6 +47,11 @@ public abstract class Command extends TextInput<String, InputSupplier> {
 			return;
 		}
 		String reply = handleInternal(argument, supplier);
+
+		if(deprecated) {
+			reply +="\n\n**This command format is deprecated and will soon cease functioning!**\n**Please use the equivalent slash command.**";
+		}
+
 		supplier.reportBack(reply);
 	}
 

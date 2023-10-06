@@ -8,6 +8,7 @@ public class UpdateRolesCommand extends Command {
 
     public UpdateRolesCommand() {
         super("updateroles");
+        this.deprecated = true;
     }
 
     @Override

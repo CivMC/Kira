@@ -1,20 +1,21 @@
 package com.github.maxopoly.kira.command.discord.user;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
-
 import com.github.maxopoly.kira.KiraMain;
 import com.github.maxopoly.kira.command.model.discord.ArgumentBasedCommand;
 import com.github.maxopoly.kira.command.model.discord.Command;
 import com.github.maxopoly.kira.command.model.discord.CommandHandler;
 import com.github.maxopoly.kira.command.model.top.InputSupplier;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
+
 public class HelpCommand extends ArgumentBasedCommand {
 
 	public HelpCommand() {
 		super("help", 0, 1, "commands", "list");
+		this.deprecated = true;
 	}
 
 	@Override

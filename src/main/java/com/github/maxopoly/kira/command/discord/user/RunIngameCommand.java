@@ -1,13 +1,13 @@
-package com.github.maxopoly.kira.command.discord.ingame;
-
-import java.util.Arrays;
-import java.util.UUID;
-import java.util.regex.Pattern;
+package com.github.maxopoly.kira.command.discord.user;
 
 import com.github.maxopoly.kira.KiraMain;
 import com.github.maxopoly.kira.command.model.discord.ArgumentBasedCommand;
 import com.github.maxopoly.kira.command.model.top.InputSupplier;
 import com.github.maxopoly.kira.rabbit.session.SendIngameCommandSession;
+
+import java.util.Arrays;
+import java.util.UUID;
+import java.util.regex.Pattern;
 
 public class RunIngameCommand extends ArgumentBasedCommand {
 
@@ -16,6 +16,7 @@ public class RunIngameCommand extends ArgumentBasedCommand {
 	public RunIngameCommand() {
 		super("ingame", 1, 100, "mc");
 		doesRequireIngameAccount();
+		this.deprecated = true;
 	}
 
 	@Override

@@ -1,9 +1,9 @@
 package net.civmc.kira.command
 
 import com.github.maxopoly.kira.KiraMain
-import net.civmc.kira.command.user.HelpCommand
-import net.civmc.kira.command.user.InviteCommand
+import net.civmc.kira.command.user.*
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction
+import kotlin.math.log
 
 object CommandManager {
 
@@ -17,8 +17,19 @@ object CommandManager {
     val devMode = true
 
     val commands = listOf(
+            // Admin Commands
+            // TODO
+            // User Commands
+            AuthCommand(logger, userManager),
             HelpCommand(logger, userManager),
+            IngameCommand(logger, userManager),
             InviteCommand(logger, userManager),
+            UpdateRolesCommand(logger, userManager),
+            WhoAmICommand(logger, userManager),
+            // Relay Commands
+            // TODO
+            // API Commands
+            // TODO
     )
 
     fun registerCommands() {

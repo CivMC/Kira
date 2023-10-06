@@ -7,6 +7,7 @@ public class InfoCommand extends Command {
 
 	public InfoCommand() {
 		super("info", "identify");
+		this.deprecated = true;
 	}
 
 	@Override

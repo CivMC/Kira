@@ -36,7 +36,7 @@ abstract class Command(val logger: Logger, val userManager: UserManager) : Liste
         }
 
         if (requireIngameAccount && !supplier.user.hasIngameAccount()) {
-            event.reply("You need to have an ingame account linked to use this command").queue()
+            event.reply("You need to have an in-game account linked to use this command").queue()
             return
         }
 

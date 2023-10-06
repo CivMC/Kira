@@ -6,7 +6,7 @@ import com.github.maxopoly.kira.KiraMain;
 import com.github.maxopoly.kira.api.input.APIInput;
 import com.github.maxopoly.kira.api.input.APISupplier;
 import com.github.maxopoly.kira.api.sessions.APIIngameCommandSession;
-import com.github.maxopoly.kira.command.discord.ingame.RunIngameCommand;
+import com.github.maxopoly.kira.command.discord.user.RunIngameCommand;
 
 public class RunIngameAPICommand extends APIInput {
 

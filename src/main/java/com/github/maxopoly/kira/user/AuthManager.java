@@ -1,5 +1,6 @@
 package com.github.maxopoly.kira.user;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -18,6 +19,7 @@ public class AuthManager {
 		return playerNames.get(uuid);
 	}
 
+	@Nullable
 	public UUID getUserForCode(String code) {
 		return pendingAuths.get(code.toLowerCase());
 	}

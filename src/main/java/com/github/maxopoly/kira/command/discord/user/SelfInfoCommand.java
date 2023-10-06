@@ -7,6 +7,7 @@ public class SelfInfoCommand extends Command {
 
 	public SelfInfoCommand() {
 		super("whoami");
+		this.deprecated = true;
 	}
 
 	@Override

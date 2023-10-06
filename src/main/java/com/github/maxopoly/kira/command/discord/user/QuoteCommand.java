@@ -12,6 +12,7 @@ public class QuoteCommand extends Command {
 	public QuoteCommand() {
 		super("quote", "advice");
 		quoteHandler = new QuoteHandler();
+		this.deprecated = true;
 	}
 
 	@Override

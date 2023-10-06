@@ -15,6 +15,7 @@ public class AuthCommand extends ArgumentBasedCommand {
 	public AuthCommand() {
 		super("auth", 1);
 		setRequireUser();
+		this.deprecated = true;
 	}
 
 	@Override
