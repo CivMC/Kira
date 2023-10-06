@@ -14,7 +14,7 @@ object CommandManager {
     private val jda = KiraMain.getInstance().jda
 
     // TODO: Move this to config
-    val devMode = true
+    val devMode = false
 
     val commands = listOf(
             // Admin Commands
