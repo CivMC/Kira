@@ -109,7 +109,7 @@ class ProximityChatChannelManager(
                     } >= 2
                 } ?: Kira.instance?.jda?.getCategoryById(configService.config.proximityChat.categoryId)?.createVoiceChannel(randomChannelName())?.complete()
 
-                targetChannel?.createPermissionOverride(member.voiceState!!.guild.publicRole)?.setDeny(Permission.VIEW_CHANNEL)?.complete()
+                targetChannel?.upsertPermissionOverride(member.voiceState!!.guild.publicRole)?.setDeny(Permission.VIEW_CHANNEL)?.complete()
 
                 // If we found a channel, send them in.
                 member.voiceState?.guild?.moveVoiceMember(member, targetChannel)?.queue()
