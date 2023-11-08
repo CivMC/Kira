@@ -32,7 +32,7 @@ class RabbitService(
     private val connection = ConnectionFactory().apply {
         username = rabbitConfig.username
         password = rabbitConfig.password
-        host = rabbitConfig.password
+        host = rabbitConfig.host
         port = rabbitConfig.port
     }.newConnection()
 
