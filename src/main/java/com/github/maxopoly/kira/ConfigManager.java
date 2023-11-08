@@ -1,18 +1,17 @@
 package com.github.maxopoly.kira;
 
+import com.github.maxopoly.kira.database.DBConnection;
+import com.github.maxopoly.kira.util.ParsingUtils;
+import com.rabbitmq.client.ConnectionFactory;
+import org.apache.logging.log4j.Logger;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Map;
 import java.util.TreeMap;
-
-import org.apache.logging.log4j.Logger;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.github.maxopoly.kira.database.DBConnection;
-import com.github.maxopoly.kira.util.ParsingUtils;
-import com.rabbitmq.client.ConnectionFactory;
 
 public class ConfigManager {
 

@@ -1,6 +1,6 @@
 package com.github.maxopoly.kira.command.model.discord;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.command.discord.admin.*;
 import com.github.maxopoly.kira.command.discord.api.GenerateAPIToken;
 import com.github.maxopoly.kira.command.discord.api.ListTokens;
@@ -55,7 +55,7 @@ public class CommandHandler extends TextInputHandler<Command, String, InputSuppl
 	@Override
 	public void registerCommand(Command command) {
 		if (command.getRequiredPermission() != null) {
-			KiraMain.getInstance().getKiraRoleManager().getOrCreatePermission(command.getRequiredPermission());
+			Kira.Companion.getInstance().getKiraRoleManager().getOrCreatePermission(command.getRequiredPermission());
 		}
 		super.registerCommand(command);
 	}

@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import org.json.JSONObject;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.command.model.discord.DiscordCommandChannelSupplier;
 import com.github.maxopoly.kira.command.model.discord.DiscordCommandPMSupplier;
 import com.github.maxopoly.kira.rabbit.RabbitInputSupplier;
@@ -25,11 +25,11 @@ public class ReplyToUserMessage extends RabbitMessage {
 		long channelId = json.getLong("channel");
 		TextChannel channel = null;
 		if (channelId != -1) {
-			channel = KiraMain.getInstance().getJDA().getTextChannelById(channelId);
+			channel = Kira.Companion.getInstance().getJda().getTextChannelById(channelId);
 		}
-		KiraUser user = KiraMain.getInstance().getUserManager().getUserByIngameUUID(uuid);
+		KiraUser user = Kira.Companion.getInstance().getUserManager().getUserByIngameUUID(uuid);
 		if (user == null)  {
-			KiraMain.getInstance().getLogger().warn("Failed to find user with uuid " + uuid + " for message  " + msg);
+			Kira.Companion.getInstance().getLogger().warn("Failed to find user with uuid " + uuid + " for message  " + msg);
 			return;
 		}
 		if (channel == null) {

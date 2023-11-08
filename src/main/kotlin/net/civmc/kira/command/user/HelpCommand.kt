@@ -1,6 +1,6 @@
 package net.civmc.kira.command.user
 
-import com.github.maxopoly.kira.KiraMain
+import net.civmc.kira.Kira
 import com.github.maxopoly.kira.command.model.top.InputSupplier
 import com.github.maxopoly.kira.user.UserManager
 import net.civmc.kira.command.Command

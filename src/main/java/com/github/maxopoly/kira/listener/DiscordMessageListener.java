@@ -1,6 +1,6 @@
 package com.github.maxopoly.kira.listener;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.command.model.discord.CommandHandler;
 import com.github.maxopoly.kira.command.model.discord.DiscordCommandChannelSupplier;
 import com.github.maxopoly.kira.command.model.discord.DiscordCommandPMSupplier;
@@ -33,7 +33,7 @@ public class DiscordMessageListener extends ListenerAdapter {
 		this.logger = logger;
 		this.ownID = ownID;
 		this.userManager = userManager;
-		this.keyWord = KiraMain.getInstance().getConfig().getCommandPrefix();
+		this.keyWord = Kira.Companion.getInstance().getConfig().getCommandPrefix();
 		// Temporary hack
 		if (!this.keyWord.endsWith(" ")) {
 			this.keyWord = this.keyWord + " ";
@@ -62,7 +62,7 @@ public class DiscordMessageListener extends ListenerAdapter {
 				cmdHandler.handle(content.substring(keyWord.length()), supplier);
 				return;
 			}
-			GroupChatManager chatMan = KiraMain.getInstance().getGroupChatManager();
+			GroupChatManager chatMan = Kira.Companion.getInstance().getGroupChatManager();
 			Set<GroupChat> chats = chatMan.getChatByChannelID(event.getChannel().getIdLong());
 			if (!chats.isEmpty() && user.hasIngameAccount()) {
 				String message = event.getMessage().getContentDisplay();
@@ -71,7 +71,7 @@ public class DiscordMessageListener extends ListenerAdapter {
 				if (!message.equals("")) {
 					for (GroupChat chat : chats) {
 						if (chat.getConfig().shouldRelayFromDiscord()) {
-							KiraMain.getInstance().getMCRabbitGateway().sendGroupChatMessage(user, chat, message);
+							Kira.Companion.getInstance().getMcRabbitGateway().sendGroupChatMessage(user, chat, message);
 						}
 						if (chat.getConfig().shouldDeleteDiscordMessage()) {
 							delete = true;
@@ -92,7 +92,7 @@ public class DiscordMessageListener extends ListenerAdapter {
 		}
 		KiraUser user = userManager.getOrCreateUserByDiscordID(event.getUser().getIdLong());
 		if (user.hasIngameAccount()) {
-			KiraMain.getInstance().getDiscordRoleManager().giveDiscordRole(KiraMain.getInstance().getGuild(), user);
+			Kira.Companion.getInstance().getDiscordRoleManager().giveDiscordRole(Kira.Companion.getInstance().getGuild(), user);
 		}
 	}
 
@@ -119,7 +119,7 @@ public class DiscordMessageListener extends ListenerAdapter {
 	@Override
 	public void onGuildJoin(@Nonnull final GuildJoinEvent event) {
 		final var discordServer = event.getGuild();
-		if (KiraMain.getInstance().getDAO().isServerBanned(discordServer.getIdLong())) {
+		if (Kira.Companion.getInstance().getDao().isServerBanned(discordServer.getIdLong())) {
 			discordServer.leave().queue();
 		}
 	}

@@ -5,7 +5,7 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.regex.Pattern;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.relay.actions.GroupChatMessageAction;
 import com.github.maxopoly.kira.relay.actions.MinecraftLocation;
 import com.github.maxopoly.kira.relay.actions.NewPlayerAction;
@@ -234,7 +234,7 @@ public class RelayConfig {
 
 	public void setSnitchFormat(String snitchFormat) {
 		this.snitchHitFormat = snitchFormat;
-		KiraMain.getInstance().getDAO().updateRelayConfig(this);
+		Kira.Companion.getInstance().getDao().updateRelayConfig(this);
 	}
 
 	public boolean shouldDeleteDiscordMessage() {
@@ -259,95 +259,95 @@ public class RelayConfig {
 
 	public void updateChatFormat(String chatFormat) {
 		this.chatFormat = chatFormat;
-		KiraMain.getInstance().getDAO().updateRelayConfig(this);
+		Kira.Companion.getInstance().getDao().updateRelayConfig(this);
 	}
 
 	public void updateDeleteDiscordMessages(boolean deleteDiscordMessages) {
 		this.deleteDiscordMessages = deleteDiscordMessages;
-		KiraMain.getInstance().getDAO().updateRelayConfig(this);
+		Kira.Companion.getInstance().getDao().updateRelayConfig(this);
 	}
 
 	public void updateEnterAction(String enterString) {
 		this.snitchEnterString = enterString;
-		KiraMain.getInstance().getDAO().updateRelayConfig(this);
+		Kira.Companion.getInstance().getDao().updateRelayConfig(this);
 	}
 
 	public void updateEveryoneFormat(String everyoneFormat) {
 		this.everyoneFormat = everyoneFormat;
 		this.everyonePattern = Pattern.compile(everyoneFormat);
-		KiraMain.getInstance().getDAO().updateRelayConfig(this);
+		Kira.Companion.getInstance().getDao().updateRelayConfig(this);
 	}
 
 	public void updateHereFormat(String hereFormat) {
 		this.hereFormat = hereFormat;
 		this.herePattern = Pattern.compile(hereFormat);
-		KiraMain.getInstance().getDAO().updateRelayConfig(this);
+		Kira.Companion.getInstance().getDao().updateRelayConfig(this);
 	}
 
 	public void updateLoginAction(String loginString) {
 		this.snitchLoginString = loginString;
-		KiraMain.getInstance().getDAO().updateRelayConfig(this);
+		Kira.Companion.getInstance().getDao().updateRelayConfig(this);
 	}
 
 	public void updateLogoutAction(String logoutString) {
 		this.snitchLogoutString = logoutString;
-		KiraMain.getInstance().getDAO().updateRelayConfig(this);
+		Kira.Companion.getInstance().getDao().updateRelayConfig(this);
 	}
 
 	public void updateNewPlayerEnabled(boolean newPlayerEnabled) {
 		this.newPlayerEnabled = newPlayerEnabled;
-		KiraMain.getInstance().getDAO().updateRelayConfig(this);
+		Kira.Companion.getInstance().getDao().updateRelayConfig(this);
 	}
 
 	public void updateNewPlayerFormat(String newPlayerFormat) {
 		this.newPlayerFormat = newPlayerFormat;
-		KiraMain.getInstance().getDAO().updateRelayConfig(this);
+		Kira.Companion.getInstance().getDao().updateRelayConfig(this);
 	}
 
 	public void updateRelayFromDiscord(boolean relayFromDiscord) {
 		this.relayFromDiscord = relayFromDiscord;
-		KiraMain.getInstance().getDAO().updateRelayConfig(this);
+		Kira.Companion.getInstance().getDao().updateRelayConfig(this);
 	}
 
 	public void updateRelayToDiscord(boolean relayToDiscord) {
 		this.relayToDiscord = relayToDiscord;
-		KiraMain.getInstance().getDAO().updateRelayConfig(this);
+		Kira.Companion.getInstance().getDao().updateRelayConfig(this);
 	}
 
 	public void updateShouldPing(boolean shouldPing) {
 		this.shouldPing = shouldPing;
-		KiraMain.getInstance().getDAO().updateRelayConfig(this);
+		Kira.Companion.getInstance().getDao().updateRelayConfig(this);
 	}
 
 	public void updateShowSnitches(boolean showSnitches) {
 		this.showSnitches = showSnitches;
-		KiraMain.getInstance().getDAO().updateRelayConfig(this);
+		Kira.Companion.getInstance().getDao().updateRelayConfig(this);
 	}
 
 	public void updateSkynetEnabled(boolean skynetEnabled) {
 		this.skynetEnabled = skynetEnabled;
-		KiraMain.getInstance().getDAO().updateRelayConfig(this);
+		Kira.Companion.getInstance().getDao().updateRelayConfig(this);
 	}
 
 	public void updateSkynetFormat(String skynetFormat) {
 		this.skynetFormat = skynetFormat;
-		KiraMain.getInstance().getDAO().updateRelayConfig(this);
+		Kira.Companion.getInstance().getDao().updateRelayConfig(this);
 	}
 
 	public void updateSkynetLoginString(String skynetLoginString) {
 		this.skynetLoginString = skynetLoginString;
-		KiraMain.getInstance().getDAO().updateRelayConfig(this);
+		Kira.Companion.getInstance().getDao().updateRelayConfig(this);
 	}
 
 	public void updateSkynetLogoutString(String skynetLogoutString) {
 		this.skynetLogoutString = skynetLogoutString;
-		KiraMain.getInstance().getDAO().updateRelayConfig(this);
+		Kira.Companion.getInstance().getDao().updateRelayConfig(this);
 	}
 
 	public void updateTimeFormat(String timeFormat) {
 		this.timeFormat = timeFormat;
 		this.timeFormatter = DateTimeFormatter.ofPattern(timeFormat);
-		KiraMain.getInstance().getDAO().updateRelayConfig(this);
+		Kira.Companion.getInstance().getDao().updateRelayConfig(this);
 	}
 
 }

@@ -7,7 +7,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 
 public class WebUtil {
 
@@ -18,7 +18,7 @@ public class WebUtil {
 		try {
 			url = new URL(stringURL);
 		} catch (MalformedURLException e) {
-			KiraMain.getInstance().getLogger().error("Malformed URL", e);
+			Kira.Companion.getInstance().getLogger().error("Malformed URL", e);
 			return "";
 		}
 		String line;
@@ -30,7 +30,7 @@ public class WebUtil {
 				sb.append(line);
 			}
 		} catch (IOException ioe) {
-			KiraMain.getInstance().getLogger().error("Failed to read web page", ioe);
+			Kira.Companion.getInstance().getLogger().error("Failed to read web page", ioe);
 		}
 		return sb.toString();
 	}

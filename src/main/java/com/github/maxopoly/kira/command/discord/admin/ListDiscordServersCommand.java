@@ -1,6 +1,6 @@
 package com.github.maxopoly.kira.command.discord.admin;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.command.model.discord.ArgumentBasedCommand;
 import com.github.maxopoly.kira.command.model.top.InputSupplier;
 import net.dv8tion.jda.api.entities.Guild;
@@ -29,7 +29,7 @@ public class ListDiscordServersCommand extends ArgumentBasedCommand {
 
 	@Override
 	public String handle(final InputSupplier sender, final String[] arguments) {
-		final var discordBot = KiraMain.getInstance().getJDA();
+		final var discordBot = Kira.Companion.getInstance().getJda();
 		final var botServers = discordBot.getGuilds();
 		if (CollectionUtils.isEmpty(botServers)) {
 			return "Kira is not in any Discord servers.";

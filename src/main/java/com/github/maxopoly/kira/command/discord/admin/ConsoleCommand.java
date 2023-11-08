@@ -1,6 +1,6 @@
 package com.github.maxopoly.kira.command.discord.admin;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.command.model.discord.Command;
 import com.github.maxopoly.kira.command.model.top.InputSupplier;
 import com.github.maxopoly.kira.rabbit.session.RunConsoleCommandRequest;
@@ -29,7 +29,7 @@ public class ConsoleCommand extends Command {
 
 	@Override
 	protected String handleInternal(String argument, InputSupplier sender) {
-		KiraMain.getInstance().getRequestSessionManager()
+		Kira.Companion.getInstance().getRequestSessionManager()
 				.request(new RunConsoleCommandRequest(argument, sender.getUser().getIngameUUID(), sender));
 		return "Running command `" + argument + "` as console";
 	}

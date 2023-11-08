@@ -1,6 +1,6 @@
 package com.github.maxopoly.kira.command.discord.user;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.command.model.discord.ArgumentBasedCommand;
 import com.github.maxopoly.kira.command.model.top.InputSupplier;
 import com.github.maxopoly.kira.permission.KiraRole;
@@ -40,7 +40,7 @@ public class AuthCommand extends ArgumentBasedCommand {
 			return "You already have a linked ingame account";
 		}
 		String code = args[0];
-		AuthManager authMan = KiraMain.getInstance().getAuthManager();
+		AuthManager authMan = Kira.Companion.getInstance().getAuthManager();
 		UUID uuid = authMan.getUserForCode(code);
 		if (uuid == null) {
 			return "Invalid auth code";
@@ -48,12 +48,12 @@ public class AuthCommand extends ArgumentBasedCommand {
 		String name = authMan.getName(uuid);
 		logger.info("Adding " + name + ":" + uuid.toString() + " as ingame account for " + user.toString());
 		user.updateIngame(uuid, name);
-		KiraRoleManager kiraRoleMan = KiraMain.getInstance().getKiraRoleManager();
-		KiraMain.getInstance().getUserManager().addUser(user);
-		KiraMain.getInstance().getDiscordRoleManager().giveDiscordRole(KiraMain.getInstance().getGuild(), user);
-		KiraMain.getInstance().getDiscordRoleManager().setName(KiraMain.getInstance().getGuild(), user);
-		KiraMain.getInstance().getDAO().updateUser(user);
-		KiraMain.getInstance().getDiscordRoleManager().syncUser(user);
+		KiraRoleManager kiraRoleMan = Kira.Companion.getInstance().getKiraRoleManager();
+		Kira.Companion.getInstance().getUserManager().addUser(user);
+		Kira.Companion.getInstance().getDiscordRoleManager().giveDiscordRole(Kira.Companion.getInstance().getGuild(), user);
+		Kira.Companion.getInstance().getDiscordRoleManager().setName(Kira.Companion.getInstance().getGuild(), user);
+		Kira.Companion.getInstance().getDao().updateUser(user);
+		Kira.Companion.getInstance().getDiscordRoleManager().syncUser(user);
 		KiraRole authRole = kiraRoleMan.getRole("auth");
 		if (authRole != null) {
 			kiraRoleMan.giveRoleToUser(user, authRole);

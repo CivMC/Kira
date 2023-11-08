@@ -7,7 +7,7 @@ import java.util.UUID;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.rabbit.RabbitInputSupplier;
 import com.github.maxopoly.kira.relay.GroupChat;
 import com.github.maxopoly.kira.relay.GroupChatManager;
@@ -25,16 +25,16 @@ public class SyncGroupChatMembers extends RabbitMessage {
 		JSONArray memberArray = json.getJSONArray("members");
 		String group = json.getString("group");
 		UUID sender = UUID.fromString(json.getString("sender"));
-		GroupChatManager man = KiraMain.getInstance().getGroupChatManager();
-		UserManager userMan = KiraMain.getInstance().getUserManager();
+		GroupChatManager man = Kira.Companion.getInstance().getGroupChatManager();
+		UserManager userMan = Kira.Companion.getInstance().getUserManager();
 		GroupChat chat = man.getGroupChat(group);
 		if (chat == null) {
-			KiraMain.getInstance().getMCRabbitGateway().sendMessage(sender,
+			Kira.Companion.getInstance().getMcRabbitGateway().sendMessage(sender,
 					"That group does not have a relay setup");
 			return;
 		}
-		if (KiraMain.getInstance().getGuild().getIdLong() != chat.getGuildId()) {
-			KiraMain.getInstance().getMCRabbitGateway().sendMessage(sender,
+		if (Kira.Companion.getInstance().getGuild().getIdLong() != chat.getGuildId()) {
+			Kira.Companion.getInstance().getMcRabbitGateway().sendMessage(sender,
 					"This relay is not managed by Kira, it can not be synced");
 			return;
 		}

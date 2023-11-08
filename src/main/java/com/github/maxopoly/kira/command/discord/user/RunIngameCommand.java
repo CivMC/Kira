@@ -1,6 +1,6 @@
 package com.github.maxopoly.kira.command.discord.user;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.command.model.discord.ArgumentBasedCommand;
 import com.github.maxopoly.kira.command.model.top.InputSupplier;
 import com.github.maxopoly.kira.rabbit.session.SendIngameCommandSession;
@@ -53,7 +53,7 @@ public class RunIngameCommand extends ArgumentBasedCommand {
 		if (commandString.length() > 255) {
 			return "Your command is too long";
 		}
-		KiraMain.getInstance().getRequestSessionManager()
+		Kira.Companion.getInstance().getRequestSessionManager()
 		.request(new SendIngameCommandSession(sender, commandString));
 		return "Running command `" + commandString + "` as `" + sender.getUser().getName() + "`";
 	}

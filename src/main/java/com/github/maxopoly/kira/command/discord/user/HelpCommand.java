@@ -1,6 +1,6 @@
 package com.github.maxopoly.kira.command.discord.user;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.command.model.discord.ArgumentBasedCommand;
 import com.github.maxopoly.kira.command.model.discord.Command;
 import com.github.maxopoly.kira.command.model.discord.CommandHandler;
@@ -35,7 +35,7 @@ public class HelpCommand extends ArgumentBasedCommand {
 
 	@Override
 	public String handle(InputSupplier sender, String[] args) {
-		CommandHandler cmdHandler = KiraMain.getInstance().getCommandHandler();
+		CommandHandler cmdHandler = Kira.Companion.getInstance().getCommandHandler();
 		StringBuilder sb = new StringBuilder();
 		if (args.length == 0) {
 			List<Command> commands = new LinkedList<>(cmdHandler.getAllInputs());

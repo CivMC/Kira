@@ -1,6 +1,6 @@
 package com.github.maxopoly.kira.command.discord.admin;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.command.model.discord.Command;
 import com.github.maxopoly.kira.command.model.top.InputSupplier;
 
@@ -27,7 +27,7 @@ public class StopCommand extends Command {
 
 	@Override
 	public String handleInternal(String argument, InputSupplier sender) {
-		KiraMain.getInstance().stop();
+		Kira.Companion.getInstance().stop();
 		return "Thank you and good bye";
 	}
 

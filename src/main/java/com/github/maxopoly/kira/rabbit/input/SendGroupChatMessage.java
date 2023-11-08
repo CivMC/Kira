@@ -2,7 +2,7 @@ package com.github.maxopoly.kira.rabbit.input;
 
 import org.json.JSONObject;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.rabbit.RabbitInputSupplier;
 import com.github.maxopoly.kira.relay.GroupChat;
 import com.github.maxopoly.kira.relay.GroupChatManager;
@@ -21,8 +21,8 @@ public class SendGroupChatMessage extends RabbitMessage {
 		String group = json.getString("group");
 		long timestamp = json.optLong("timestamp", System.currentTimeMillis());
 		GroupChatMessageAction action = new GroupChatMessageAction(timestamp, group, sender, msg);
-		KiraMain.getInstance().getAPISessionManager().handleGroupMessage(action);
-		GroupChatManager man = KiraMain.getInstance().getGroupChatManager();
+		Kira.Companion.getInstance().getApiSessionManager().handleGroupMessage(action);
+		GroupChatManager man = Kira.Companion.getInstance().getGroupChatManager();
 		GroupChat chat = man.getGroupChat(group);
 		if (chat != null && chat.getConfig().shouldRelayToDiscord()) {
 			chat.sendMessage(action);

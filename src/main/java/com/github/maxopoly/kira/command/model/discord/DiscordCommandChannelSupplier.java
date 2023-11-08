@@ -1,6 +1,6 @@
 package com.github.maxopoly.kira.command.model.discord;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.user.KiraUser;
 import com.github.maxopoly.kira.util.DiscordMessageSender;
 
@@ -26,7 +26,7 @@ public class DiscordCommandChannelSupplier extends DiscordCommandSupplier {
 
 	@Override
 	public void reportBack(String msg) {
-		JDA jda = KiraMain.getInstance().getJDA();
+		JDA jda = Kira.Companion.getInstance().getJda();
 		Guild guild = jda.getGuildById(guildID);
 		if (guild == null) {
 			return;

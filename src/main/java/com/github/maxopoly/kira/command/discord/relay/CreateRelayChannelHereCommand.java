@@ -1,6 +1,6 @@
 package com.github.maxopoly.kira.command.discord.relay;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.command.model.discord.ArgumentBasedCommand;
 import com.github.maxopoly.kira.command.model.top.InputSupplier;
 import com.github.maxopoly.kira.user.KiraUser;
@@ -40,11 +40,11 @@ public class CreateRelayChannelHereCommand extends ArgumentBasedCommand {
 		if (channelID <= -1) {
 			return "You can't do this from here";
 		}
-		TextChannel channel = KiraMain.getInstance().getJDA().getTextChannelById(channelID);
+		TextChannel channel = Kira.Companion.getInstance().getJda().getTextChannelById(channelID);
 		if (channel == null) {
 			return "Something went wrong, tell an admin";
 		}
-		if (channel.getGuild().getIdLong() == KiraMain.getInstance().getGuild().getIdLong() && !sender.hasPermission("admin")) {
+		if (channel.getGuild().getIdLong() == Kira.Companion.getInstance().getGuild().getIdLong() && !sender.hasPermission("admin")) {
 			return "You can't create relays here";
 		}
 
@@ -54,7 +54,7 @@ public class CreateRelayChannelHereCommand extends ArgumentBasedCommand {
 			if (!perms.contains(Permission.MANAGE_CHANNEL)) {
 				return "You need the 'MANAGE_CHANNEL' permission to add a relay to this channel";
 			}
-			KiraMain.getInstance().getMCRabbitGateway().requestRelayCreation(user, args [0], channel);
+			Kira.Companion.getInstance().getMcRabbitGateway().requestRelayCreation(user, args [0], channel);
 			return "Checking permissions for channel handling...";
 		} catch (Exception e) {
 			return "Something went wrong, tell and admin.";

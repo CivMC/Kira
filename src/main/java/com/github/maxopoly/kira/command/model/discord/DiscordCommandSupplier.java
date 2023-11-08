@@ -1,6 +1,6 @@
 package com.github.maxopoly.kira.command.model.discord;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.command.model.top.InputSupplier;
 import com.github.maxopoly.kira.user.KiraUser;
 
@@ -27,7 +27,7 @@ public abstract class DiscordCommandSupplier implements InputSupplier {
 
 	@Override
 	public boolean hasPermission(String perm) {
-		return KiraMain.getInstance().getKiraRoleManager().hasPermission(user, perm);
+		return Kira.Companion.getInstance().getKiraRoleManager().hasPermission(user, perm);
 	}
 
 }

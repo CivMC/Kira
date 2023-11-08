@@ -1,6 +1,6 @@
 package net.civmc.kira.command.user
 
-import com.github.maxopoly.kira.KiraMain
+import net.civmc.kira.Kira
 import com.github.maxopoly.kira.command.model.top.InputSupplier
 import com.github.maxopoly.kira.user.UserManager
 import net.civmc.kira.command.Command
@@ -17,7 +17,7 @@ class AuthCommand(logger: Logger, userManager: UserManager): Command(logger, use
     override val global = false
 
     override fun dispatchCommand(event: SlashCommandEvent, sender: InputSupplier) {
-        val authManager = KiraMain.getInstance().authManager
+        val authManager = Kira.instance!!.authManager
 
         val code = event.getOption("code")?.asString
 
@@ -31,7 +31,7 @@ class AuthCommand(logger: Logger, userManager: UserManager): Command(logger, use
             return
         }
 
-        val uuid = authManager.getUserForCode(code)
+        val uuid = authManager!!.getUserForCode(code)
         if (uuid == null) {
             event.reply("Invalid auth code. Please check that you have copied it correctly.").queue()
             return
@@ -40,12 +40,12 @@ class AuthCommand(logger: Logger, userManager: UserManager): Command(logger, use
         val name = authManager.getName(uuid)
         logger.info("Adding $name:$uuid as in-game account for ${sender.user}")
         sender.user.updateIngame(uuid, name)
-        KiraMain.getInstance().userManager.addUser(sender.user)
-        KiraMain.getInstance().discordRoleManager.giveDiscordRole(KiraMain.getInstance().guild, sender.user)
-        KiraMain.getInstance().discordRoleManager.setName(KiraMain.getInstance().guild, sender.user)
-        KiraMain.getInstance().dao.updateUser(sender.user)
-        KiraMain.getInstance().discordRoleManager.syncUser(sender.user)
-        KiraMain.getInstance().kiraRoleManager.giveRoleToUser(sender.user, KiraMain.getInstance().kiraRoleManager.getRole("auth"))
+        Kira.instance!!.userManager!!.addUser(sender.user)
+        Kira.instance!!.discordRoleManager!!.giveDiscordRole(Kira.instance!!.guild, sender.user)
+        Kira.instance!!.discordRoleManager!!.setName(Kira.instance!!.guild, sender.user)
+        Kira.instance!!.dao!!.updateUser(sender.user)
+        Kira.instance!!.discordRoleManager!!.syncUser(sender.user)
+        Kira.instance!!.kiraRoleManager!!.giveRoleToUser(sender.user, Kira.instance!!.kiraRoleManager!!.getRole("auth"))
         authManager.removeCode(code)
 
         event.reply("Successfully authenticated as $name").queue()

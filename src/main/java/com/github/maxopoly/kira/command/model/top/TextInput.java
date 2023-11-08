@@ -2,7 +2,7 @@ package com.github.maxopoly.kira.command.model.top;
 
 import org.apache.logging.log4j.Logger;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 
 public abstract class TextInput <A, S extends InputSupplier> {
 
@@ -13,7 +13,7 @@ public abstract class TextInput <A, S extends InputSupplier> {
 	public TextInput(String identifier, String... alt) {
 		this.identifier = identifier;
 		this.alternativeIdentifiers = alt;
-		this.logger = KiraMain.getInstance().getLogger();
+		this.logger = Kira.Companion.getInstance().getLogger();
 	}
 
 	/**

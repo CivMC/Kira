@@ -1,6 +1,6 @@
 package com.github.maxopoly.kira.command.discord.admin;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.command.model.discord.ArgumentBasedCommand;
 import com.github.maxopoly.kira.command.model.top.InputSupplier;
 
@@ -27,7 +27,7 @@ public class LeaveDiscordServerCommand extends ArgumentBasedCommand {
 
 	@Override
 	public String handle(final InputSupplier sender, final String[] arguments) {
-		final var discordBot = KiraMain.getInstance().getJDA();
+		final var discordBot = Kira.Companion.getInstance().getJda();
 		final var foundServer = discordBot.getGuildById(arguments[0]);
 		if (foundServer == null) {
 			return "Kira is not in that server.";

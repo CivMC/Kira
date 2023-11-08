@@ -2,7 +2,7 @@ package com.github.maxopoly.kira.command.discord.api;
 
 import java.util.Collection;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.api.token.APIToken;
 import com.github.maxopoly.kira.command.model.discord.Command;
 import com.github.maxopoly.kira.command.model.top.InputSupplier;
@@ -32,7 +32,7 @@ public class ListTokens extends Command {
 
 	@Override
 	protected String handleInternal(String argument, InputSupplier sender) {
-		Collection<APIToken> tokens = KiraMain.getInstance().getAPISessionManager().getTokenManager()
+		Collection<APIToken> tokens = Kira.Companion.getInstance().getApiSessionManager().getTokenManager()
 				.getTokensForUser(sender.getUser());
 		if (tokens.isEmpty()) {
 			return "You have no open tokens";

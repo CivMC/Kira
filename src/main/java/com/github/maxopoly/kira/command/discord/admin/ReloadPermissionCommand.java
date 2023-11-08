@@ -1,6 +1,6 @@
 package com.github.maxopoly.kira.command.discord.admin;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.command.model.discord.Command;
 import com.github.maxopoly.kira.command.model.top.InputSupplier;
 import com.github.maxopoly.kira.permission.KiraRoleManager;
@@ -28,8 +28,8 @@ public class ReloadPermissionCommand extends Command {
 
 	@Override
 	public String handleInternal(String argument, InputSupplier sender) {
-		KiraRoleManager roleMan = KiraMain.getInstance().getDAO().loadAllRoles();
-		KiraMain.getInstance().getKiraRoleManager().reload(roleMan);
+		KiraRoleManager roleMan = Kira.Companion.getInstance().getDao().loadAllRoles();
+		Kira.Companion.getInstance().getKiraRoleManager().reload(roleMan);
 		return "Successfully reloaded permissions";
 	}
 }

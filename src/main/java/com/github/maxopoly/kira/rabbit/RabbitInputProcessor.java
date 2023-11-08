@@ -3,7 +3,7 @@ package com.github.maxopoly.kira.rabbit;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.command.model.json.JsonInputHandler;
 import com.github.maxopoly.kira.rabbit.input.AddAuthMessage;
 import com.github.maxopoly.kira.rabbit.input.ConsoleForwardMessage;
@@ -30,7 +30,7 @@ public class RabbitInputProcessor extends JsonInputHandler<RabbitInputSupplier> 
 
 	@Override
 	protected void handleError(RabbitInputSupplier supplier, JSONObject input) {
-		logger.error("Unknown id received in rabbit message: " + input.toString());
+		// logger.error("Unknown id received in rabbit message: " + input.toString()); TODO
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public class RabbitInputProcessor extends JsonInputHandler<RabbitInputSupplier> 
 		registerCommand(new RequestSessionReplyMessage());
 		registerCommand(new SkynetMessage());
 		registerCommand(new NewPlayerMessage());
-		registerCommand(new ConsoleForwardMessage(KiraMain.getInstance().getConfig().getConsoleForwardingMapping()));
+		registerCommand(new ConsoleForwardMessage(Kira.Companion.getInstance().getConfig().getConsoleForwardingMapping()));
 	}
 
 }

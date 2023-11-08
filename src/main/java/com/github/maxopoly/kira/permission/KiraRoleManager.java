@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.user.KiraUser;
 
 public class KiraRoleManager {
@@ -33,7 +33,7 @@ public class KiraRoleManager {
 		}
 		role.addPermission(perm);
 		if (writeToDb) {
-			KiraMain.getInstance().getDAO().addPermissionToRole(perm, role);
+			Kira.Companion.getInstance().getDao().addPermissionToRole(perm, role);
 		}
 	}
 
@@ -44,7 +44,7 @@ public class KiraRoleManager {
 		}
 		existingRoles.add(role);
 		if (saveToDb) {
-			KiraMain.getInstance().getDAO().addUserToRole(KiraMain.getInstance().getUserManager().getUser(userID),
+			Kira.Companion.getInstance().getDao().addUserToRole(Kira.Companion.getInstance().getUserManager().getUser(userID),
 					role);
 		}
 	}
@@ -56,7 +56,7 @@ public class KiraRoleManager {
 			roles.remove(role);
 		}
 		if (writeToDb) {
-			KiraMain.getInstance().getDAO().deleteRole(role);
+			Kira.Companion.getInstance().getDao().deleteRole(role);
 		}
 	}
 
@@ -70,7 +70,7 @@ public class KiraRoleManager {
 		if (perm != null) {
 			return perm;
 		}
-		perm = KiraMain.getInstance().getDAO().retrieveOrCreatePermission(name);
+		perm = Kira.Companion.getInstance().getDao().retrieveOrCreatePermission(name);
 		if (perm != null) {
 			registerPermission(perm);
 		}
@@ -83,7 +83,7 @@ public class KiraRoleManager {
 		if (role != null) {
 			return role;
 		}
-		role = KiraMain.getInstance().getDAO().retrieveOrCreateRole(name);
+		role = Kira.Companion.getInstance().getDao().retrieveOrCreateRole(name);
 		if (role != null) {
 			registerRole(role);
 		}
@@ -166,6 +166,6 @@ public class KiraRoleManager {
 			return;
 		}
 		existingRoles.remove(role);
-		KiraMain.getInstance().getDAO().takeRoleFromUser(user, role);
+		Kira.Companion.getInstance().getDao().takeRoleFromUser(user, role);
 	}
 }

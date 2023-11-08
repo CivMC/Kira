@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.json.JSONObject;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.rabbit.RabbitInputSupplier;
 import com.github.maxopoly.kira.util.DiscordMessageSender;
 
@@ -29,12 +29,12 @@ public class ConsoleForwardMessage extends RabbitMessage {
 		String msg = argument.getString("message");
 		Long channelIdObj = forwards.get(key);
 		if (channelIdObj == null) {
-			KiraMain.getInstance().getLogger().warn("Unknown console key " + key);
+			Kira.Companion.getInstance().getLogger().warn("Unknown console key " + key);
 			return;
 		}
-		TextChannel channel = KiraMain.getInstance().getGuild().getTextChannelById(channelIdObj);
+		TextChannel channel = Kira.Companion.getInstance().getGuild().getTextChannelById(channelIdObj);
 		if (channel == null ) {
-			KiraMain.getInstance().getLogger().warn("Unknown channel id " + channelIdObj);
+			Kira.Companion.getInstance().getLogger().warn("Unknown channel id " + channelIdObj);
 			return;
 		}
 		String cleanedUp = String.format("**[%s] **`%s`", timeFormat.format(LocalTime.now()),

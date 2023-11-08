@@ -1,6 +1,6 @@
 package com.github.maxopoly.kira.api;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.api.input.APISupplier;
 import com.github.maxopoly.kira.api.token.APIToken;
 import com.github.maxopoly.kira.api.token.APITokenManager;
@@ -77,7 +77,7 @@ public class KiraWebSocketServer extends WebSocketServer {
 	}
 
 	private SSLContext genSSLContext() {
-        ConfigManager config = KiraMain.getInstance().getConfig();
+        ConfigManager config = Kira.Companion.getInstance().getConfig();
 		String path = config.getAPISSLCertPath();
 		String pw = config.getAPISSLCertPassword();
 		if (path == null || pw == null) {
@@ -92,13 +92,13 @@ public class KiraWebSocketServer extends WebSocketServer {
 
 	@Override
 	public void onClose(WebSocket conn, int code, String reason, boolean remote) {
-		KiraMain.getInstance().getLogger().warn("Closing connection with " + conn.getRemoteSocketAddress() + ", because of: " + reason);
+		Kira.Companion.getInstance().getLogger().warn("Closing connection with " + conn.getRemoteSocketAddress() + ", because of: " + reason);
 	}
 
 	@Override
 	public void onError(WebSocket conn, Exception ex) {
 		String remoteAddr = conn == null ? "(no connection)" : conn.getRemoteSocketAddress().toString();
-		KiraMain.getInstance().getLogger().warn("Error occured in API handling of " + remoteAddr, ex);
+		Kira.Companion.getInstance().getLogger().warn("Error occured in API handling of " + remoteAddr, ex);
 		if (conn != null) {
 			conn.close(CloseFrame.UNEXPECTED_CONDITION);
 		}
@@ -106,7 +106,7 @@ public class KiraWebSocketServer extends WebSocketServer {
 
 	@Override
 	public void onMessage(WebSocket conn, String message) {
-		KiraMain.getInstance().getAPISessionManager().getInputHandler().handle(message, new APISupplier(getAPISession(conn)));
+		Kira.Companion.getInstance().getApiSessionManager().getInputHandler().handle(message, new APISupplier(getAPISession(conn)));
 	}
 
 	@Override
@@ -114,7 +114,7 @@ public class KiraWebSocketServer extends WebSocketServer {
 		APISession session = setupSession(conn, handshake);
 		if (session != null) {
 			logger.info("Set up API session with " + conn.getRemoteSocketAddress());
-			KiraMain.getInstance().getAPISessionManager().registerSession(session);
+			Kira.Companion.getInstance().getApiSessionManager().registerSession(session);
 			connections.put(conn, session);
 			session.sendAuthMessage();
 		}
@@ -159,7 +159,7 @@ public class KiraWebSocketServer extends WebSocketServer {
 			conn.close(CloseFrame.POLICY_VALIDATION, "Outdated version, newest one is " + API_VERSION);
 			return null;
 		}
-		APITokenManager tokenMan = KiraMain.getInstance().getAPISessionManager().getTokenManager();
+		APITokenManager tokenMan = Kira.Companion.getInstance().getApiSessionManager().getTokenManager();
 		APIToken token = tokenMan.getToken(tokenString);
 		if (token == null) {
 			logger.info("Closing connection with " + conn.getRemoteSocketAddress() + ", because they supplied an invalid token");
