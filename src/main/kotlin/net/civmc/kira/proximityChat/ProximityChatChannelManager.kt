@@ -98,7 +98,7 @@ class ProximityChatChannelManager(
                     return@forEach
                 }
 
-                // We'll send them into an existing channel if it already has at least two members in their group.
+                // We'll send them into an existing channel if it already has at least one member in their group.
                 // Otherwise, we'll make a new channel for them
                 // This will almost certainly result in moving some single users around annoyingly.
                 val targetChannel = validChannels.find { voiceChannel ->
@@ -106,13 +106,15 @@ class ProximityChatChannelManager(
 
                     channelKiraUsers.count {
                         user -> group.map { it.name }.contains(user?.name)
-                    } >= 2
+                    } >= 1
                 } ?: Kira.instance?.jda?.getCategoryById(configService.config.proximityChat.categoryId)?.createVoiceChannel(randomChannelName())?.complete()
 
                 targetChannel?.upsertPermissionOverride(member.voiceState!!.guild.publicRole)?.setDeny(Permission.VIEW_CHANNEL)?.complete()
 
                 // If we found a channel, send them in.
-                member.voiceState?.guild?.moveVoiceMember(member, targetChannel)?.queue()
+                if (targetChannel != member.voiceState?.channel) {
+                    member.voiceState?.guild?.moveVoiceMember(member, targetChannel)?.queue()
+                }
             } catch (e: Error) {
                 println(e)
                 // TODO
