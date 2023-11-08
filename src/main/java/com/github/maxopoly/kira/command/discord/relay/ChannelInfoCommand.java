@@ -1,6 +1,6 @@
 package com.github.maxopoly.kira.command.discord.relay;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.command.model.discord.ArgumentBasedCommand;
 import com.github.maxopoly.kira.command.model.top.InputSupplier;
 import com.github.maxopoly.kira.relay.GroupChat;
@@ -36,7 +36,7 @@ public class ChannelInfoCommand extends ArgumentBasedCommand {
 		if (channelID <= -1) {
 			return "You can't do this from here";
 		}
-		Set <GroupChat> chats = KiraMain.getInstance().getGroupChatManager().getChatByChannelID(channelID);
+		Set <GroupChat> chats = Kira.Companion.getInstance().getGroupChatManager().getChatByChannelID(channelID);
 		reply.append("A total of " + chats.size() + " relays are setup for this channel\n");
 		reply.append("Channel id: " + channelID + "\n---\n");
 		for(GroupChat chat : chats) {

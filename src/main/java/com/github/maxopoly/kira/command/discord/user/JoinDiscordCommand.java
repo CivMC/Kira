@@ -1,6 +1,6 @@
 package com.github.maxopoly.kira.command.discord.user;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.command.model.discord.Command;
 import com.github.maxopoly.kira.command.model.top.InputSupplier;
 
@@ -28,6 +28,6 @@ public class JoinDiscordCommand extends Command {
 
 	@Override
 	public String handleInternal(String argument, InputSupplier sender) {
-		return KiraMain.getInstance().getJDA().getInviteUrl();
+		return Kira.Companion.getInstance().getJda().getInviteUrl();
 	}
 }

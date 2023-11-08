@@ -1,6 +1,6 @@
 package com.github.maxopoly.kira.user;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
@@ -25,7 +25,7 @@ public class DiscordRoleManager {
 	}
 
 	public void syncUser(KiraUser user) {
-		Guild guild = KiraMain.getInstance().getGuild();
+		Guild guild = Kira.Companion.getInstance().getGuild();
 
 		guild.retrieveMemberById(user.getDiscordID()).submit()
 				.whenComplete((member, error) -> {
@@ -42,7 +42,7 @@ public class DiscordRoleManager {
 	 * Take the auth role from them if they shouldn't have it.
 	 */
 	public void syncMember(Member member) {
-		Guild guild = KiraMain.getInstance().getGuild();
+		Guild guild = Kira.Companion.getInstance().getGuild();
 
 		// We don't want to update any roles for the owner of the guild. Trust me.
 		if (member.isOwner()) {
@@ -77,7 +77,7 @@ public class DiscordRoleManager {
 	 * This is here for the future for when we do get over that bridge.
 	 */
 	public void syncAllMembers() {
-		KiraMain.getInstance().getGuild().loadMembers().
+		Kira.Companion.getInstance().getGuild().loadMembers().
 				onSuccess(members -> members.forEach(this::syncMember));
 	}
 

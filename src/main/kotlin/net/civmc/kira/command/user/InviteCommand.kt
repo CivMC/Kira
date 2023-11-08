@@ -1,6 +1,6 @@
 package net.civmc.kira.command.user
 
-import com.github.maxopoly.kira.KiraMain
+import net.civmc.kira.Kira
 import com.github.maxopoly.kira.command.model.top.InputSupplier
 import com.github.maxopoly.kira.user.UserManager
 import net.civmc.kira.command.Command
@@ -15,7 +15,7 @@ class InviteCommand(logger: Logger, userManager: UserManager): Command(logger, u
     override val requiredPermission = "isauth"
 
     override fun dispatchCommand(event: SlashCommandEvent, sender: InputSupplier) {
-        event.reply(KiraMain.getInstance().jda.getInviteUrl())
+        event.reply(Kira.instance!!.jda!!.getInviteUrl())
     }
 
     override fun getCommandData() = CommandData("invite", "Get an invite link for Kira")

@@ -1,6 +1,6 @@
 package com.github.maxopoly.kira.command.discord.admin;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.command.model.discord.ArgumentBasedCommand;
 import com.github.maxopoly.kira.command.model.top.InputSupplier;
 import com.github.maxopoly.kira.relay.GroupChat;
@@ -28,12 +28,12 @@ public class ListDiscordRelaysCommand extends ArgumentBasedCommand {
 
 	@Override
 	public String handle(final InputSupplier sender, final String[] arguments) {
-		final var groupChatManager = KiraMain.getInstance().getGroupChatManager();
+		final var groupChatManager = Kira.Companion.getInstance().getGroupChatManager();
 		final var groupChats = groupChatManager.getGroupChats();
 		if (groupChats.isEmpty()) {
 			return "Kira is not serving any relays.";
 		}
-		final var discordBot = KiraMain.getInstance().getJDA();
+		final var discordBot = Kira.Companion.getInstance().getJda();
 		final var response = new StringBuilder("Kira is currently serving relays:");
 		for (final GroupChat groupChat : groupChats) {
 			final var server = discordBot.getGuildById(groupChat.getGuildId());

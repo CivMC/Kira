@@ -7,7 +7,7 @@ import java.util.UUID;
 
 import org.json.JSONObject;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.api.token.APIDataType;
 import com.github.maxopoly.kira.api.token.APIToken;
 import com.github.maxopoly.kira.command.model.top.InputSupplier;
@@ -47,7 +47,7 @@ public class APIPermissionRequest extends RequestSession {
 		}
 		boolean skynet = dataRequested.contains(APIDataType.SKYNET);
 		APIToken token = APIToken.generate(supplier.getUser(), snitchGroups, chatGroups, skynet, expirationTime);
-		KiraMain.getInstance().getAPISessionManager().getTokenManager().registerToken(token);
+		Kira.Companion.getInstance().getApiSessionManager().getTokenManager().registerToken(token);
 		supplier.reportBack("Your token is: " + token.getSecret());
 	}
 

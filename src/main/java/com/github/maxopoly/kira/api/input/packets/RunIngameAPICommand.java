@@ -2,7 +2,7 @@ package com.github.maxopoly.kira.api.input.packets;
 
 import org.json.JSONObject;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.api.input.APIInput;
 import com.github.maxopoly.kira.api.input.APISupplier;
 import com.github.maxopoly.kira.api.sessions.APIIngameCommandSession;
@@ -28,7 +28,7 @@ public class RunIngameAPICommand extends APIInput {
 			return;
 		}
 		APIIngameCommandSession cmd = new APIIngameCommandSession(supplier, command, id);
-		KiraMain.getInstance().getRequestSessionManager().request(cmd);
+		Kira.Companion.getInstance().getRequestSessionManager().request(cmd);
 	}
 
 }

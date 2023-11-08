@@ -2,7 +2,7 @@ package com.github.maxopoly.kira.rabbit.input;
 
 import org.json.JSONObject;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.rabbit.RabbitInputSupplier;
 
 public class RequestSessionReplyMessage extends RabbitMessage {
@@ -13,6 +13,6 @@ public class RequestSessionReplyMessage extends RabbitMessage {
 
 	@Override
 	public void handle(JSONObject json, RabbitInputSupplier supplier) {
-		KiraMain.getInstance().getRequestSessionManager().handleReply(json);
+		Kira.Companion.getInstance().getRequestSessionManager().handleReply(json);
 	}
 }

@@ -1,6 +1,6 @@
 package com.github.maxopoly.kira.command.discord.relay;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.command.model.discord.ArgumentBasedCommand;
 import com.github.maxopoly.kira.command.model.top.InputSupplier;
 import com.github.maxopoly.kira.rabbit.session.PermissionCheckSession;
@@ -33,12 +33,12 @@ public class DeleteRelayCommand extends ArgumentBasedCommand {
 	@Override
 	public String handle(InputSupplier sender, String[] args) {
 		KiraUser user = sender.getUser();
-		GroupChatManager man = KiraMain.getInstance().getGroupChatManager();
+		GroupChatManager man = Kira.Companion.getInstance().getGroupChatManager();
 		GroupChat chat = man.getGroupChat(args[0]);
 		if (chat == null) {
 			return "No group chat with the name " + args[0] + " is known";
 		}
-		KiraMain.getInstance().getRequestSessionManager().request(new PermissionCheckSession(user.getIngameUUID(),
+		Kira.Companion.getInstance().getRequestSessionManager().request(new PermissionCheckSession(user.getIngameUUID(),
 				chat.getName(), GroupChatManager.getNameLayerManageChannelPermission()) {
 
 			@Override
@@ -55,7 +55,7 @@ public class DeleteRelayCommand extends ArgumentBasedCommand {
 					return;
 				}
 				logger.info("Attempting to delete group of chat for " + chat.getName() + " as initiated by " + user.toString());
-				KiraMain.getInstance().getGroupChatManager().deleteGroupChat(chat);
+				Kira.Companion.getInstance().getGroupChatManager().deleteGroupChat(chat);
 				sender.reportBack("Successfully removed relay for group " + chat.getName());
 			}
 		});

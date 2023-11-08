@@ -1,6 +1,6 @@
 package com.github.maxopoly.kira.util;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.user.KiraUser;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
@@ -15,7 +15,7 @@ public class DiscordMessageSender {
 
 	private static final int MAX_MSG_LENGTH = 1950;
 
-	private static final Logger logger = KiraMain.getInstance().getLogger();
+	private static final Logger logger = Kira.Companion.getInstance().getLogger();
 
 	/**
 	 * Splits up arbitrary messages into ones not exceeding the character limit of
@@ -89,7 +89,7 @@ public class DiscordMessageSender {
 	}
 
 	public static void sendPrivateMessage(KiraUser user, String msg) {
-		JDA jda = KiraMain.getInstance().getJDA();
+		JDA jda = Kira.Companion.getInstance().getJda();
 
 		jda.retrieveUserById(user.getDiscordID()).submit()
 				.whenComplete((discordUser, error) -> {

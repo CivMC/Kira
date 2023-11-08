@@ -2,7 +2,7 @@ package com.github.maxopoly.kira.rabbit.input;
 
 import org.json.JSONObject;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.rabbit.RabbitInputSupplier;
 import com.github.maxopoly.kira.relay.GroupChat;
 import com.github.maxopoly.kira.relay.GroupChatManager;
@@ -20,7 +20,7 @@ public class SnitchHitMessage extends RabbitMessage {
 	@Override
 	public void handle(JSONObject json, RabbitInputSupplier supplier) {
 		String groupName = json.getString("groupName");
-		GroupChatManager man = KiraMain.getInstance().getGroupChatManager();
+		GroupChatManager man = Kira.Companion.getInstance().getGroupChatManager();
 		GroupChat chat = man.getGroupChat(groupName);
 		if (chat == null || !chat.getConfig().shouldShowSnitches()) {
 			return;
@@ -37,9 +37,9 @@ public class SnitchHitMessage extends RabbitMessage {
 		long timestamp = json.optLong("timestamp", System.currentTimeMillis());
 		PlayerHitSnitchAction snitchAction = new PlayerHitSnitchAction(timestamp, victimName, snitchName, groupName,
 				new MinecraftLocation(world, x, y, z), hitType, snitchType);
-		KiraMain.getInstance().getAPISessionManager().handleSnitchHit(snitchAction);
+		Kira.Companion.getInstance().getApiSessionManager().handleSnitchHit(snitchAction);
 		if (!chat.sendSnitchHit(snitchAction)) {
-			KiraMain.getInstance().getLogger()
+			Kira.Companion.getInstance().getLogger()
 					.info("Failed to send snitch hit to group " + groupName + ". Channel did not exist");
 		}
 	}

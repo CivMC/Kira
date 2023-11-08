@@ -1,6 +1,6 @@
 package com.github.maxopoly.kira.database;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.permission.KiraPermission;
 import com.github.maxopoly.kira.permission.KiraRole;
 import com.github.maxopoly.kira.permission.KiraRoleManager;
@@ -335,8 +335,8 @@ public class DAO {
 
 	public Collection<GroupChat> loadGroupChats(RelayConfigManager relayConfigs) {
 		List<GroupChat> result = new LinkedList<>();
-		KiraRoleManager roleMan = KiraMain.getInstance().getKiraRoleManager();
-		UserManager userMan = KiraMain.getInstance().getUserManager();
+		KiraRoleManager roleMan = Kira.Companion.getInstance().getKiraRoleManager();
+		UserManager userMan = Kira.Companion.getInstance().getUserManager();
 		try (Connection conn = db.getConnection();
 				PreparedStatement prep = conn.prepareStatement(
 						"select id, channel_id, guild_id, name, role_id, creator_id, config_id from group_chats;");

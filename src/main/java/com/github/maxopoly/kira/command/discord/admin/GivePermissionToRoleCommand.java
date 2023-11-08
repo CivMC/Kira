@@ -1,6 +1,6 @@
 package com.github.maxopoly.kira.command.discord.admin;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.command.model.discord.ArgumentBasedCommand;
 import com.github.maxopoly.kira.command.model.top.InputSupplier;
 import com.github.maxopoly.kira.permission.KiraPermission;
@@ -30,7 +30,7 @@ public class GivePermissionToRoleCommand extends ArgumentBasedCommand {
 
 	@Override
 	protected String handle(InputSupplier sender, String[] args) {
-		KiraRoleManager roleMan = KiraMain.getInstance().getKiraRoleManager();
+		KiraRoleManager roleMan = Kira.Companion.getInstance().getKiraRoleManager();
 		KiraRole role = roleMan.getRole(args[0]);
 		if (role == null) {
 			return "Role " + args[0] + " not found";

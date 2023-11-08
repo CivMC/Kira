@@ -1,6 +1,6 @@
 package com.github.maxopoly.kira.relay;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.permission.KiraRole;
 import com.github.maxopoly.kira.relay.actions.GroupChatMessageAction;
 import com.github.maxopoly.kira.relay.actions.NewPlayerAction;
@@ -65,14 +65,14 @@ public class GroupChat {
 	}
 
 	public float getWeight() {
-		if (guildId == KiraMain.getInstance().getGuild().getIdLong()) {
+		if (guildId == Kira.Companion.getInstance().getGuild().getIdLong()) {
 			return internalWeight;
 		}
 		return externalWeight;
 	}
 
 	public boolean sendMessage(GroupChatMessageAction action) {
-		JDA jda = KiraMain.getInstance().getJDA();
+		JDA jda = Kira.Companion.getInstance().getJda();
 		Guild guild = jda.getGuildById(guildId);
 		if (guild == null) {
 			return false;
@@ -90,7 +90,7 @@ public class GroupChat {
 		if (!config.isNewPlayerEnabled()) {
 			return true;
 		}
-		JDA jda = KiraMain.getInstance().getJDA();
+		JDA jda = Kira.Companion.getInstance().getJda();
 		Guild guild = jda.getGuildById(guildId);
 		if (guild == null) {
 			return false;
@@ -108,7 +108,7 @@ public class GroupChat {
 		if (!config.isSkynetEnabled()) {
 			return true;
 		}
-		JDA jda = KiraMain.getInstance().getJDA();
+		JDA jda = Kira.Companion.getInstance().getJda();
 		Guild guild = jda.getGuildById(guildId);
 		if (guild == null) {
 			return false;
@@ -123,7 +123,7 @@ public class GroupChat {
 	}
 
 	public boolean sendSnitchHit(PlayerHitSnitchAction action) {
-		JDA jda = KiraMain.getInstance().getJDA();
+		JDA jda = Kira.Companion.getInstance().getJda();
 		Guild guild = jda.getGuildById(guildId);
 		if (guild == null) {
 			return false;

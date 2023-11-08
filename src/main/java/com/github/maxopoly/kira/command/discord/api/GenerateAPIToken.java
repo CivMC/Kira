@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.api.token.APIDataType;
 import com.github.maxopoly.kira.command.model.discord.ArgumentBasedCommand;
 import com.github.maxopoly.kira.command.model.top.InputSupplier;
@@ -45,7 +45,7 @@ public class GenerateAPIToken extends ArgumentBasedCommand {
 				return arg + " is not a valid data type, allowed ones are: " + Arrays.asList(APIDataType.values());
 			}
 		}
-		KiraMain.getInstance().getRequestSessionManager()
+		Kira.Companion.getInstance().getRequestSessionManager()
 				.request(new APIPermissionRequest(user.getIngameUUID(), sender, requestedData, -1));
 		return "Contacting ingame server to retrieve group permission data";
 

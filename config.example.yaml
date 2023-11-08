@@ -1,0 +1,10 @@
+rabbit:
+  username: "rabbitmq"
+  password: "rabbitmq"
+  host: "rabbitmq"
+  port: 5672
+
+proximityChat:
+  enabled: "true"
+  categoryId: ""
+  lobbyChannelId: ""

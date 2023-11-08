@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import org.json.JSONObject;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.rabbit.RabbitInputSupplier;
 
 public class AddAuthMessage extends RabbitMessage {
@@ -18,7 +18,7 @@ public class AddAuthMessage extends RabbitMessage {
 		UUID uuid = UUID.fromString(json.getString("uuid"));
 		String code = json.getString("code");
 		String name = json.getString("name");
-		KiraMain.getInstance().getAuthManager().putCode(uuid, name, code);
+		Kira.Companion.getInstance().getAuthManager().putCode(uuid, name, code);
 	}
 
 }

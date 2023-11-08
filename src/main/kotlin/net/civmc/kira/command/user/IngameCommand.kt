@@ -1,6 +1,6 @@
 package net.civmc.kira.command.user
 
-import com.github.maxopoly.kira.KiraMain
+import net.civmc.kira.Kira
 import com.github.maxopoly.kira.command.model.top.InputSupplier
 import com.github.maxopoly.kira.rabbit.session.SendIngameCommandSession
 import com.github.maxopoly.kira.user.UserManager
@@ -38,7 +38,7 @@ class IngameCommand(logger: Logger, userManager: UserManager): Command(logger, u
         }
 
         // TODO: Reply to command by event
-        KiraMain.getInstance().requestSessionManager.request(SendIngameCommandSession(sender, command))
+        Kira.instance!!.requestSessionManager!!.request(SendIngameCommandSession(sender, command))
         event.reply("Running command `$command` as `${sender.user.name}`").queue()
     }
 

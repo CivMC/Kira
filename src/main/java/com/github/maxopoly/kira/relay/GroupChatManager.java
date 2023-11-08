@@ -1,6 +1,6 @@
 package com.github.maxopoly.kira.relay;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.database.DAO;
 import com.github.maxopoly.kira.permission.KiraRole;
 import com.github.maxopoly.kira.permission.KiraRoleManager;
@@ -56,14 +56,14 @@ public class GroupChatManager {
 	}
 
 	public void addMember(GroupChat chat, KiraUser user) {
-		KiraRoleManager roleMan = KiraMain.getInstance().getKiraRoleManager();
+		KiraRoleManager roleMan = Kira.Companion.getInstance().getKiraRoleManager();
 		if (!roleMan.getRoles(user).contains(chat.getTiedRole())) {
 			logger.info("Giving tied role for chat " + chat.getName() + " to " + user.toString());
-			KiraMain.getInstance().getKiraRoleManager().giveRoleToUser(user, chat.getTiedRole());
+			Kira.Companion.getInstance().getKiraRoleManager().giveRoleToUser(user, chat.getTiedRole());
 		}
-		Guild guild = KiraMain.getInstance().getGuild();
+		Guild guild = Kira.Companion.getInstance().getGuild();
 		if (guild.getIdLong() == chat.getGuildId()) {
-			TextChannel channel = KiraMain.getInstance().getJDA().getTextChannelById(chat.getDiscordChannelId());
+			TextChannel channel = Kira.Companion.getInstance().getJda().getTextChannelById(chat.getDiscordChannelId());
 
 			if (channel == null) {
 				logger.error(
@@ -97,7 +97,7 @@ public class GroupChatManager {
 	}
 
 	public GroupChat createGroupChat(String name, KiraUser creator) {
-		Guild guild = KiraMain.getInstance().getGuild();
+		Guild guild = Kira.Companion.getInstance().getGuild();
 		Category cat = guild.getCategoryById(sectionID);
 		if (cat == null) {
 			logger.warn("Tried to create channel, but category for it could not be found");
@@ -112,7 +112,7 @@ public class GroupChatManager {
 	}
 
 	public GroupChat createGroupChat(String name, long guildID, long channelID, KiraUser creator) {
-		KiraRole role = KiraMain.getInstance().getKiraRoleManager().getOrCreateRole(name + ACCESS_PERM_SUFFIX);
+		KiraRole role = Kira.Companion.getInstance().getKiraRoleManager().getOrCreateRole(name + ACCESS_PERM_SUFFIX);
 		int id = databaseManager.createGroupChat(guildID, channelID, name, role, creator.getID(),
 				relayConfigManager.getDefaultConfig());
 		if (id == -1) {
@@ -126,15 +126,15 @@ public class GroupChatManager {
 	}
 
 	public void deleteGroupChat(GroupChat chat) {
-		TextChannel channel = KiraMain.getInstance().getJDA().getTextChannelById(chat.getDiscordChannelId());
+		TextChannel channel = Kira.Companion.getInstance().getJda().getTextChannelById(chat.getDiscordChannelId());
 		boolean isManaged;
 		if (channel == null) {
 			// already deleted
 			isManaged = false;
 		} else {
 			Category category = channel.getParent();
-			boolean isInMainGuild = channel.getGuild().getIdLong() == KiraMain.getInstance().getGuild().getIdLong();
-			boolean isInRelaySection = category != null && category.getIdLong() == KiraMain.getInstance().getConfig().getRelaySectionID();
+			boolean isInMainGuild = channel.getGuild().getIdLong() == Kira.Companion.getInstance().getGuild().getIdLong();
+			boolean isInRelaySection = category != null && category.getIdLong() == Kira.Companion.getInstance().getConfig().getRelaySectionID();
 
 			isManaged = isInMainGuild && isInRelaySection;
 		}
@@ -152,7 +152,7 @@ public class GroupChatManager {
 			channels.remove(chat);
 		}
 		// db clean up is done by deleting the chat via foreign keys
-		KiraMain.getInstance().getKiraRoleManager().deleteRole(chat.getTiedRole(), false);
+		Kira.Companion.getInstance().getKiraRoleManager().deleteRole(chat.getTiedRole(), false);
 		databaseManager.deleteGroupChat(chat);
 		if (!isManaged && channel != null) {
 			channel.sendMessage("Relay " + chat.getName()
@@ -197,7 +197,7 @@ public class GroupChatManager {
 	}
 
 	public void removeMember(GroupChat chat, KiraUser user) {
-		KiraMain.getInstance().getKiraRoleManager().takeRoleFromUser(user, chat.getTiedRole());
+		Kira.Companion.getInstance().getKiraRoleManager().takeRoleFromUser(user, chat.getTiedRole());
 		logger.info("Taking tied role for chat " + chat.getName() + " from " + user.toString());
 		// TODO
 	}
@@ -208,7 +208,7 @@ public class GroupChatManager {
 	}
 
 	public void syncAccess(GroupChat chat, Set<Integer> intendedMembers) {
-		UserManager userMan = KiraMain.getInstance().getUserManager();
+		UserManager userMan = Kira.Companion.getInstance().getUserManager();
 		Set<Integer> currentMembers = databaseManager.getGroupChatMembers(chat);
 		// remove all members that shouldnt be there
 		currentMembers.removeIf(Predicate.not(intendedMembers::contains));

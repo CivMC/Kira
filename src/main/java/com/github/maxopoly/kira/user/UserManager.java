@@ -1,6 +1,6 @@
 package com.github.maxopoly.kira.user;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.permission.KiraRoleManager;
 import net.dv8tion.jda.api.JDA;
 import org.apache.logging.log4j.Logger;
@@ -38,14 +38,14 @@ public class UserManager {
 
 	public KiraUser createUser(long discordID) {
 		logger.info("Creating db entry for user with discord id " + discordID);
-		int userID = KiraMain.getInstance().getDAO().createUser(discordID);
+		int userID = Kira.Companion.getInstance().getDao().createUser(discordID);
 		if (userID == -1) {
 			logger.error("Failed to create user with discord id " + discordID);
 			return null;
 		}
 		KiraUser user = new KiraUser(userID, null, discordID, null, null);
 		addUser(user);
-		KiraRoleManager roleMan = KiraMain.getInstance().getKiraRoleManager();
+		KiraRoleManager roleMan = Kira.Companion.getInstance().getKiraRoleManager();
 		roleMan.giveRoleToUser(user, roleMan.getDefaultRole());
 		return user;
 	}
@@ -89,7 +89,7 @@ public class UserManager {
 				feedback.append("Could not partse discord user, invalid name format\n");
 				return null;
 			}
-			JDA jda = KiraMain.getInstance().getJDA();
+			JDA jda = Kira.Companion.getInstance().getJda();
 			List<net.dv8tion.jda.api.entities.User> users = jda.getUsersByName(parts[0], true);
 			for (net.dv8tion.jda.api.entities.User discordUser : users) {
 				if (discordUser.getDiscriminator().equals(parts[1])) {

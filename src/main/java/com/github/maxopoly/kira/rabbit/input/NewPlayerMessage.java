@@ -2,7 +2,7 @@ package com.github.maxopoly.kira.rabbit.input;
 
 import org.json.JSONObject;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.rabbit.RabbitInputSupplier;
 import com.github.maxopoly.kira.relay.actions.NewPlayerAction;
 
@@ -17,8 +17,8 @@ public class NewPlayerMessage extends RabbitMessage {
         String player = json.getString("player");
         long timestamp = json.optLong("timestamp", System.currentTimeMillis());
         NewPlayerAction action = new NewPlayerAction(timestamp, player);
-        KiraMain.getInstance().getAPISessionManager().handleNewPlayerMessage(action);
-        KiraMain.getInstance().getGroupChatManager().applyToAll(chat -> {
+        Kira.Companion.getInstance().getApiSessionManager().handleNewPlayerMessage(action);
+        Kira.Companion.getInstance().getGroupChatManager().applyToAll(chat -> {
             chat.sendNewPlayer(action);
         });
     }

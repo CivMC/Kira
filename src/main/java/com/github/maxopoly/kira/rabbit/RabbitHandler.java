@@ -6,7 +6,7 @@ import java.util.concurrent.TimeoutException;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
@@ -33,7 +33,7 @@ public class RabbitHandler {
 
 	public void beginAsyncListen() {
 		new Thread(() -> {
-			KiraMain.getInstance().getLogger().info("Beginning to listen for rabbit input...");
+			Kira.Companion.getInstance().getLogger().info("Beginning to listen for rabbit input...");
 			DeliverCallback deliverCallback = (consumerTag, delivery) -> {
 				try {
 					String message = new String(delivery.getBody(), "UTF-8");

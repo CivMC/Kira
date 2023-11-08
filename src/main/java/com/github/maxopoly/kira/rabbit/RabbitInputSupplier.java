@@ -1,6 +1,6 @@
 package com.github.maxopoly.kira.rabbit;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.command.model.top.InputSupplier;
 import com.github.maxopoly.kira.user.KiraUser;
 
@@ -28,7 +28,7 @@ public class RabbitInputSupplier implements InputSupplier {
 
 	@Override
 	public void reportBack(String msg) {
-		KiraMain.getInstance().getLogger().info(msg);
+		Kira.Companion.getInstance().getLogger().info(msg);
 	}
 
 }

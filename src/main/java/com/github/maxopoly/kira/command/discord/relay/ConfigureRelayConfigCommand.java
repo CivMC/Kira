@@ -4,7 +4,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.command.model.discord.ArgumentBasedCommand;
 import com.github.maxopoly.kira.command.model.top.InputSupplier;
 import com.github.maxopoly.kira.relay.RelayConfig;
@@ -104,12 +104,12 @@ public class ConfigureRelayConfigCommand extends ArgumentBasedCommand {
 		if (!user.hasIngameAccount()) {
 			return "You need to link an ingame account first";
 		}
-		RelayConfigManager relayMan = KiraMain.getInstance().getRelayConfigManager();
+		RelayConfigManager relayMan = Kira.Companion.getInstance().getRelayConfigManager();
 		RelayConfig relay = relayMan.getByName(args[0]);
 		if (relay == null) {
 			return "No relay config with this name is known";
 		}
-		KiraUser owner = KiraMain.getInstance().getUserManager().getUser(relay.getOwnerID());
+		KiraUser owner = Kira.Companion.getInstance().getUserManager().getUser(relay.getOwnerID());
 		if (args.length < 3) {
 			reply.append("Relay config **" + relay.getName() + "** is owned by ");
 			if (owner == null) {

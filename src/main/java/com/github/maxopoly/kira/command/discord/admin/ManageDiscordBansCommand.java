@@ -1,6 +1,6 @@
 package com.github.maxopoly.kira.command.discord.admin;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.command.model.discord.ArgumentBasedCommand;
 import com.github.maxopoly.kira.command.model.top.InputSupplier;
 
@@ -48,7 +48,7 @@ public class ManageDiscordBansCommand extends ArgumentBasedCommand {
 		catch (final NumberFormatException ignored) {
 			return "That Discord server ID was invalid.";
 		}
-		final var databaseManager = KiraMain.getInstance().getDAO();
+		final var databaseManager = Kira.Companion.getInstance().getDao();
 		if (databaseManager.isServerBanned(serverID)) {
 			return "That Discord server is banned.";
 		}
@@ -63,8 +63,8 @@ public class ManageDiscordBansCommand extends ArgumentBasedCommand {
 		catch (final NumberFormatException ignored) {
 			return "That Discord server ID was invalid.";
 		}
-		KiraMain.getInstance().getDAO().banServer(serverID);
-		final var discordServer = KiraMain.getInstance().getJDA().getGuildById(serverID);
+		Kira.Companion.getInstance().getDao().banServer(serverID);
+		final var discordServer = Kira.Companion.getInstance().getJda().getGuildById(serverID);
 		if (discordServer != null) {
 			discordServer.leave().queue(
 					(success) -> sender.reportBack("Kira has also left that server."),
@@ -81,7 +81,7 @@ public class ManageDiscordBansCommand extends ArgumentBasedCommand {
 		catch (final NumberFormatException ignored) {
 			return "That Discord server ID was invalid.";
 		}
-		KiraMain.getInstance().getDAO().unbanServer(serverID);
+		Kira.Companion.getInstance().getDao().unbanServer(serverID);
 		return "That Discord server has now been unbanned.";
 	}
 

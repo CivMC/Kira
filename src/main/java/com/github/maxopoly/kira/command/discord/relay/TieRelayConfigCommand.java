@@ -1,6 +1,6 @@
 package com.github.maxopoly.kira.command.discord.relay;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.command.model.discord.ArgumentBasedCommand;
 import com.github.maxopoly.kira.command.model.top.InputSupplier;
 import com.github.maxopoly.kira.rabbit.session.PermissionCheckSession;
@@ -34,15 +34,15 @@ public class TieRelayConfigCommand extends ArgumentBasedCommand {
 	@Override
 	public String handle(InputSupplier sender, String[] args) {
 		KiraUser user = sender.getUser();
-		GroupChat chat = KiraMain.getInstance().getGroupChatManager().getGroupChat(args[0]);
+		GroupChat chat = Kira.Companion.getInstance().getGroupChatManager().getGroupChat(args[0]);
 		if (chat == null) {
 			return "No group chat with the name " + args[0] + " is known";
 		}
-		RelayConfig config = KiraMain.getInstance().getRelayConfigManager().getByName(args[1]);
+		RelayConfig config = Kira.Companion.getInstance().getRelayConfigManager().getByName(args[1]);
 		if (config == null) {
 			return "No relay config with the name " + args[0] + " is known";
 		}
-		KiraMain.getInstance().getRequestSessionManager().request(new PermissionCheckSession(user.getIngameUUID(),
+		Kira.Companion.getInstance().getRequestSessionManager().request(new PermissionCheckSession(user.getIngameUUID(),
 				chat.getName(), GroupChatManager.getNameLayerManageChannelPermission()) {
 
 			@Override
@@ -52,7 +52,7 @@ public class TieRelayConfigCommand extends ArgumentBasedCommand {
 					return;
 				}
 
-				KiraMain.getInstance().getGroupChatManager().setConfig(chat, config);
+				Kira.Companion.getInstance().getGroupChatManager().setConfig(chat, config);
 				sender.reportBack("Successfully set relay config for " + chat.getName() + " to " + config.getName());
 			}
 		});

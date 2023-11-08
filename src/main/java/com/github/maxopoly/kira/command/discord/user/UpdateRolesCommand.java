@@ -1,6 +1,6 @@
 package com.github.maxopoly.kira.command.discord.user;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.command.model.discord.Command;
 import com.github.maxopoly.kira.command.model.top.InputSupplier;
 
@@ -30,7 +30,7 @@ public class UpdateRolesCommand extends Command {
     public String handleInternal(String argument, InputSupplier sender) {
 
         if (sender != null) {
-            KiraMain.getInstance().getDiscordRoleManager().syncUser(sender.getUser());
+            Kira.Companion.getInstance().getDiscordRoleManager().syncUser(sender.getUser());
             return "Your roles have been updated";
         }
 

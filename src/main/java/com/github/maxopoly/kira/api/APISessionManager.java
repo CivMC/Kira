@@ -15,7 +15,7 @@ import java.util.function.Consumer;
 
 import org.apache.logging.log4j.Logger;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.api.input.APIInputHandler;
 import com.github.maxopoly.kira.api.token.APIToken;
 import com.github.maxopoly.kira.api.token.APITokenManager;
@@ -43,7 +43,7 @@ public class APISessionManager {
 		this.skynetTakers = new LinkedList<>();
 		this.inputHandler = new APIInputHandler(logger);
 		this.tokenManager = new APITokenManager(logger);
-		this.socketServer = new KiraWebSocketServer(logger, KiraMain.getInstance().getConfig());
+		this.socketServer = new KiraWebSocketServer(logger, Kira.Companion.getInstance().getConfig());
 		ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 		scheduler.scheduleAtFixedRate(() -> {
 			sendUpdates();

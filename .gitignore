@@ -1,6 +1,7 @@
 # Kira
 logs/
 config.json
+config.yaml
 local/
 
 # Editors

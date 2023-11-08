@@ -1,6 +1,6 @@
 package com.github.maxopoly.kira.command.discord.relay;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.command.model.discord.ArgumentBasedCommand;
 import com.github.maxopoly.kira.command.model.top.InputSupplier;
 import com.github.maxopoly.kira.relay.RelayConfig;
@@ -32,7 +32,7 @@ public class CreateRelayConfig extends ArgumentBasedCommand {
 	@Override
 	public String handle(InputSupplier sender, String[] args) {
 		KiraUser user = sender.getUser();
-		RelayConfigManager configMan = KiraMain.getInstance().getRelayConfigManager();
+		RelayConfigManager configMan = Kira.Companion.getInstance().getRelayConfigManager();
 		RelayConfig config = configMan.getByName(args [0]);
 		if (config != null) {
 			return "A relay config with the given name already exists";

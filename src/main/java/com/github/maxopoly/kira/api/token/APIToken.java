@@ -8,7 +8,7 @@ import org.java_websocket.WebSocket;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.github.maxopoly.kira.KiraMain;
+import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.api.APISession;
 import com.github.maxopoly.kira.user.KiraUser;
 
@@ -19,7 +19,7 @@ public class APIToken {
 
 	public static APIToken fromJSON(JSONObject json) {
 		String token = json.getString("token");
-		KiraUser user = KiraMain.getInstance().getUserManager().getUser(json.getInt("user"));
+		KiraUser user = Kira.Companion.getInstance().getUserManager().getUser(json.getInt("user"));
 		List<String> snitchGroups = parseStringList(json.getJSONArray("snitch"));
 		List<String> chatGroups = parseStringList(json.getJSONArray("chat"));
 		boolean skyNet = json.getBoolean("skynet");
