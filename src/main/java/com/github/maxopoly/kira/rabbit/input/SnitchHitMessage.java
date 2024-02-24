@@ -10,6 +10,7 @@ import com.github.maxopoly.kira.relay.actions.MinecraftLocation;
 import com.github.maxopoly.kira.relay.actions.PlayerHitSnitchAction;
 import com.github.maxopoly.kira.relay.actions.SnitchHitType;
 import com.github.maxopoly.kira.relay.actions.SnitchType;
+import java.util.UUID;
 
 public class SnitchHitMessage extends RabbitMessage {
 
@@ -26,7 +27,7 @@ public class SnitchHitMessage extends RabbitMessage {
 			return;
 		}
 		String snitchName = json.getString("snitchName");
-		// UUID victimUUID = UUID.fromString(json.getString("victimUUID"));
+		UUID victimUUID = UUID.fromString(json.getString("victimUUID"));
 		String victimName = json.getString("victimName");
 		int x = json.getInt("x");
 		int y = json.getInt("y");
@@ -35,7 +36,7 @@ public class SnitchHitMessage extends RabbitMessage {
 		SnitchHitType hitType = SnitchHitType.valueOf(json.optString("type", "ENTER"));
 		SnitchType snitchType = SnitchType.getType(json.optString("snitchtype", "ENTRY"));
 		long timestamp = json.optLong("timestamp", System.currentTimeMillis());
-		PlayerHitSnitchAction snitchAction = new PlayerHitSnitchAction(timestamp, victimName, snitchName, groupName,
+		PlayerHitSnitchAction snitchAction = new PlayerHitSnitchAction(timestamp, victimName, victimUUID, snitchName, groupName,
 				new MinecraftLocation(world, x, y, z), hitType, snitchType);
 		Kira.Companion.getInstance().getApiSessionManager().handleSnitchHit(snitchAction);
 		if (!chat.sendSnitchHit(snitchAction)) {
