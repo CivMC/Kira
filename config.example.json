@@ -1,13 +1,13 @@
 {
     "db": {
-        "host": "localhost",
+        "host": "postgres",
         "port": 5432,
         "database": "postgres",
         "user": "postgres",
         "password": "postgres"
     },
     "rabbitmq": {
-        "host": "localhost",
+        "host": "rabbitmq",
         "port": 5672,
         "user": "rabbitmq",
         "password": "rabbitmq",
