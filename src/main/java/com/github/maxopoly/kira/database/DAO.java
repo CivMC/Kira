@@ -210,7 +210,7 @@ public class DAO {
 			}
             try (PreparedStatement prep = conn.prepareStatement(
                     "ALTER TABLE group_chats ADD COLUMN IF NOT EXISTS " +
-                            "server varchar(255) not null default " + KiraMain.getInstance().getConfig().getServers()[0] + ";")) {
+                            "server varchar(255) not null default \"" + KiraMain.getInstance().getConfig().getServers()[0] + "\";")) {
                 prep.execute();
             }
 		}
