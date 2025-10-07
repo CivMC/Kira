@@ -374,7 +374,7 @@ public class DAO {
 				}
 				int configId = rs.getInt(7);
                 String server = rs.getString(8);
-				GroupChat group = new GroupChat(id, name, server, channelID, guildID, role, userMan.getUser(creatorID),
+				GroupChat group = new GroupChat(id, server, name, channelID, guildID, role, userMan.getUser(creatorID),
 						relayConfigs.getById(configId));
 				result.add(group);
 			}
