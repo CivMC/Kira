@@ -213,6 +213,18 @@ public class DAO {
                             "server varchar(255) not null default '" + KiraMain.getInstance().getConfig().getServers()[0] + "';")) {
                 prep.execute();
             }
+            try (PreparedStatement prep = conn.prepareStatement(
+                    "ALTER TABLE group_chats DROP CONSTRAINT IF EXISTS group_chats_name_key;")) {
+                prep.execute();
+            }
+            try (PreparedStatement prep = conn.prepareStatement(
+                    "ALTER TABLE group_chats DROP CONSTRAINT IF EXISTS group_chats_name_server_key;")) {
+                prep.execute();
+            }
+            try (PreparedStatement prep = conn.prepareStatement(
+                    "ALTER TABLE group_chats ADD CONSTRAINT group_chats_name_server_key UNIQUE (name, server);")) {
+                prep.execute();
+            }
 		}
 		catch (SQLException e) {
 			logger.error("Failed to create table", e);
