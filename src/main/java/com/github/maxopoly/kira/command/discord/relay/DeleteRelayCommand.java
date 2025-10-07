@@ -48,9 +48,10 @@ public class DeleteRelayCommand extends ArgumentBasedCommand {
         if (serverSelected && args.length < 2) {
             return "You provided a server name but no group name!";
         }
-		GroupChat chat = man.getGroupChat(new GroupId(server, args[0].toLowerCase()));
+        String group = args[serverSelected ? 1 : 0];
+		GroupChat chat = man.getGroupChat(new GroupId(server, group.toLowerCase()));
 		if (chat == null) {
-			return "No group chat with the name " + args[0] + " is known";
+			return "No group chat with the name " + group + " on server `" + server + "` is known";
 		}
         String fserver = server;
 		KiraMain.getInstance().getRequestSessionManager().request(server, new PermissionCheckSession(user.getIngameUUID(),
@@ -63,9 +64,9 @@ public class DeleteRelayCommand extends ArgumentBasedCommand {
 					return;
 				}
 
-				GroupChat chat = man.getGroupChat(new GroupId(fserver, args[0].toLowerCase()));
+				GroupChat chat = man.getGroupChat(new GroupId(fserver, group.toLowerCase()));
 				if (chat == null) {
-					logger.warn("Failed to delete group chat"+ args[0] + ", it was already gone");
+					logger.warn("Failed to delete group chat"+ group + ", it was already gone");
 					sender.reportBack("Channel deletion failed, channel was already gone");
 					return;
 				}
