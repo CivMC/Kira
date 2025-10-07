@@ -71,7 +71,7 @@ public class DiscordMessageListener extends ListenerAdapter {
 				if (!message.equals("")) {
 					for (GroupChat chat : chats) {
 						if (chat.getConfig().shouldRelayFromDiscord()) {
-							Kira.Companion.getInstance().getMcRabbitGateway().sendGroupChatMessage(user, chat, message);
+							Kira.Companion.getInstance().getMcRabbitGateway().sendGroupChatMessage(chat.getServer(), user, chat, message);
 						}
 						if (chat.getConfig().shouldDeleteDiscordMessage()) {
 							delete = true;

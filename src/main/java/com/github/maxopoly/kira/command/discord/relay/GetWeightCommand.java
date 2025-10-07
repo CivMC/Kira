@@ -1,5 +1,6 @@
 package com.github.maxopoly.kira.command.discord.relay;
 
+import com.github.maxopoly.kira.relay.GroupId;
 import net.civmc.kira.Kira;
 import com.github.maxopoly.kira.command.model.discord.Command;
 import com.github.maxopoly.kira.command.model.top.InputSupplier;
@@ -37,10 +38,10 @@ public class GetWeightCommand extends Command {
 	public String handleInternal(String argument, InputSupplier sender) {
 		StringBuilder reply = new StringBuilder();
 		KiraUser user = sender.getUser();
-		Set<String> ownedChats = Kira.Companion.getInstance().getDao().getGroupChatChannelIdByCreator(user);
+		Set<GroupId> ownedChats = Kira.Companion.getInstance().getDao().getGroupChatChannelIdByCreator(user);
 		float totalWeight = 0.0f;
 		int totalCount = 0;
-		for (String name : ownedChats) {
+		for (GroupId name : ownedChats) {
 			GroupChat chat = Kira.Companion.getInstance().getGroupChatManager().getGroupChat(name);
 			if (chat == null) {
 				continue;

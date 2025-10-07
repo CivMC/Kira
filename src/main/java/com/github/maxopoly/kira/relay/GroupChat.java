@@ -18,16 +18,17 @@ public class GroupChat {
 	private static final float externalWeight = 0.25f;
 
 	private final int id;
-	private final long channelId;
-	private final String name;
+    private final long channelId;
+    private final String server;
+    private final String name;
 	private final long guildId;
 	private final KiraRole role;
 	private final KiraUser creator;
 	private RelayConfig config;
 
-	public GroupChat(int id, String name, long channelId, long guildId, KiraRole role, KiraUser creator, RelayConfig config) {
+	public GroupChat(int id, String server, String name, long channelId, long guildId, KiraRole role, KiraUser creator, RelayConfig config) {
 		this.id = id;
-		this.config = config;
+        this.server = server;
 		this.name = name;
 		this.channelId = channelId;
 		this.guildId = guildId;
@@ -36,7 +37,11 @@ public class GroupChat {
 		this.config = config;
 	}
 
-	public RelayConfig getConfig() {
+    public String getServer() {
+        return server;
+    }
+
+    public RelayConfig getConfig() {
 		return config;
 	}
 
@@ -146,6 +151,8 @@ public class GroupChat {
 		StringBuilder result = new StringBuilder();
 		result.append("{id: ");
 		result.append(id);
+        result.append(", server: ");
+        result.append(server);
 		result.append(", name: ");
 		result.append(name);
 		result.append(", channelID: ");
