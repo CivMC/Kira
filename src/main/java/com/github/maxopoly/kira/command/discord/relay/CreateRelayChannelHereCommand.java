@@ -14,7 +14,7 @@ import java.util.EnumSet;
 public class CreateRelayChannelHereCommand extends ArgumentBasedCommand {
 
 	public CreateRelayChannelHereCommand() {
-		super("createrelayhere", 1, "createrelay", "makerelay", "setupsnitchchannel", "setuprelayhere");
+		super("createrelayhere", 1, 2, "createrelay", "makerelay", "setupsnitchchannel", "setuprelayhere");
 		doesRequireIngameAccount();
 	}
 

@@ -12,7 +12,7 @@ import com.github.maxopoly.kira.user.KiraUser;
 public class DeleteRelayCommand extends ArgumentBasedCommand {
 
 	public DeleteRelayCommand() {
-		super("deleterelay", 1);
+		super("deleterelay", 1, 2);
 		setRequireIngameAccount();
 	}
 

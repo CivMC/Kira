@@ -13,7 +13,7 @@ import com.github.maxopoly.kira.user.KiraUser;
 public class TieRelayConfigCommand extends ArgumentBasedCommand {
 
 	public TieRelayConfigCommand() {
-		super("setrelayconfig", 2);
+		super("setrelayconfig", 2, 3);
 		setRequireIngameAccount();
 	}
 
