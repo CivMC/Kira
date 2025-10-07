@@ -50,8 +50,6 @@ public class AuthCommand extends ArgumentBasedCommand {
 		user.updateIngame(uuid, name);
 		KiraRoleManager kiraRoleMan = KiraMain.getInstance().getKiraRoleManager();
 		KiraMain.getInstance().getUserManager().addUser(user);
-		KiraMain.getInstance().getDiscordRoleManager().giveDiscordRole(KiraMain.getInstance().getGuild(), user);
-		KiraMain.getInstance().getDiscordRoleManager().setName(KiraMain.getInstance().getGuild(), user);
 		KiraMain.getInstance().getDAO().updateUser(user);
 		KiraMain.getInstance().getDiscordRoleManager().syncUser(user);
 		KiraRole authRole = kiraRoleMan.getRole("auth");
