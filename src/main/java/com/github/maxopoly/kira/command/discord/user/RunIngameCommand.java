@@ -57,7 +57,7 @@ public class RunIngameCommand extends ArgumentBasedCommand {
 			return "Your command is too long";
 		}
         KiraMain.getInstance().getRequestSessionManager()
-                .request(route.server(), new SendIngameCommandSession(sender, commandString));
-		return "Running command `" + commandString + "` as `" + sender.getUser().getName() + "`";
+                .request(route.server(), new SendIngameCommandSession(sender, route.command()));
+		return "Running command `" + route.command() + "` as `" + sender.getUser().getName() + "` on server `" + route.server() + "`";
 	}
 }

@@ -34,7 +34,7 @@ public class ConsoleCommand extends Command {
 
         KiraMain.getInstance().getRequestSessionManager()
                 .request(route.server(), new RunConsoleCommandRequest(route.command(), sender.getUser().getIngameUUID(), sender));
-        return "Running command `" + argument + "` as console";
+        return "Running command `" + route.command() + "` as console on server `" + route.server() + "`";
 	}
 
 }
