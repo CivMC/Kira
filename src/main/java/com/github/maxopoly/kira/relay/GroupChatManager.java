@@ -146,7 +146,7 @@ public class GroupChatManager {
 		if (count != null) {
 			ownedChatsByUserId.put(chat.getCreator().getID(), Math.max(0, count - 1));
 		}
-		groupChatByName.remove(chat.getName().toLowerCase());
+		groupChatByName.remove(GroupId.fromGroupChat(chat));
 		Set<GroupChat> channels = chatsByChannelId.get(chat.getDiscordChannelId());
 		if (channels != null) {
 			channels.remove(chat);
