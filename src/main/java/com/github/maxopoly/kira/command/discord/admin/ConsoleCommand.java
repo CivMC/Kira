@@ -1,6 +1,7 @@
 package com.github.maxopoly.kira.command.discord.admin;
 
 import com.github.maxopoly.kira.KiraMain;
+import com.github.maxopoly.kira.util.CommandUtil;
 import com.github.maxopoly.kira.command.model.discord.Command;
 import com.github.maxopoly.kira.command.model.top.InputSupplier;
 import com.github.maxopoly.kira.rabbit.session.RunConsoleCommandRequest;
@@ -24,14 +25,16 @@ public class ConsoleCommand extends Command {
 
 	@Override
 	public String getUsage() {
-		return "console <console command>";
+		return "console [server] <console command>";
 	}
 
 	@Override
 	protected String handleInternal(String argument, InputSupplier sender) {
-		KiraMain.getInstance().getRequestSessionManager()
-				.request(new RunConsoleCommandRequest(argument, sender.getUser().getIngameUUID(), sender));
-		return "Running command `" + argument + "` as console";
+        CommandUtil.CommandRoute route = CommandUtil.getRoute(argument, KiraMain.getInstance().getConfig().getServers());
+
+        KiraMain.getInstance().getRequestSessionManager()
+                .request(route.server(), new RunConsoleCommandRequest(route.command(), sender.getUser().getIngameUUID(), sender));
+        return "Running command `" + argument + "` as console";
 	}
 
 }

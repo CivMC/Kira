@@ -1,5 +1,6 @@
 package com.github.maxopoly.kira.rabbit.input;
 
+import com.github.maxopoly.kira.relay.GroupId;
 import org.json.JSONObject;
 
 import com.github.maxopoly.kira.KiraMain;
@@ -19,9 +20,13 @@ public class SnitchHitMessage extends RabbitMessage {
 
 	@Override
 	public void handle(JSONObject json, RabbitInputSupplier supplier) {
+        String server = json.getString("server");
+        if (server == null) {
+            return;
+        }
 		String groupName = json.getString("groupName");
 		GroupChatManager man = KiraMain.getInstance().getGroupChatManager();
-		GroupChat chat = man.getGroupChat(groupName);
+		GroupChat chat = man.getGroupChat(new GroupId(server, groupName.toLowerCase()));
 		if (chat == null || !chat.getConfig().shouldShowSnitches()) {
 			return;
 		}

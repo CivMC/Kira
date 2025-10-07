@@ -8,6 +8,7 @@ import com.github.maxopoly.kira.KiraMain;
 import com.github.maxopoly.kira.rabbit.RabbitInputSupplier;
 import com.github.maxopoly.kira.relay.GroupChat;
 import com.github.maxopoly.kira.relay.GroupChatManager;
+import com.github.maxopoly.kira.relay.GroupId;
 import com.github.maxopoly.kira.user.KiraUser;
 
 public class DeleteGroupChatMessage extends RabbitMessage {
@@ -18,24 +19,28 @@ public class DeleteGroupChatMessage extends RabbitMessage {
 
 	@Override
 	public void handle(JSONObject json, RabbitInputSupplier supplier) {
-		UUID destroyerUUID = UUID.fromString(json.getString("sender"));
-		KiraUser destroyer = KiraMain.getInstance().getUserManager().getUserByIngameUUID(destroyerUUID);
+        String server = json.getString("server");
+        if (server == null) {
+            return;
+        }
+        UUID destroyerUUID = UUID.fromString(json.getString("sender"));
+        KiraUser destroyer = KiraMain.getInstance().getUserManager().getUserByIngameUUID(destroyerUUID);
 		if (destroyer == null) {
-			KiraMain.getInstance().getMCRabbitGateway().sendMessage(destroyerUUID, "Channel deletion failed, "
+			KiraMain.getInstance().getMCRabbitGateway().sendMessage(server, destroyerUUID, "Channel deletion failed, "
 					+ "no discord account tied");
 			return;
 		}
 		String group = json.getString("group");
 		GroupChatManager man = KiraMain.getInstance().getGroupChatManager();
-		GroupChat chat = man.getGroupChat(group);
+		GroupChat chat = man.getGroupChat(new GroupId(server, group.toLowerCase()));
 		if (chat == null) {
 			logger.warn("Failed to delete group chat"+ group + ", it was already gone");
-			KiraMain.getInstance().getMCRabbitGateway().sendMessage(destroyerUUID, "Channel deletion failed, no channel found");
+			KiraMain.getInstance().getMCRabbitGateway().sendMessage(server, destroyerUUID, "Channel deletion failed, no channel found");
 			return;
 		}
 		logger.info("Attempting delete group of chat for " + group + " as initiated by " + destroyer.toString());
 		man.deleteGroupChat(chat);
-		KiraMain.getInstance().getMCRabbitGateway().sendMessage(destroyerUUID, "Deleted channel successfully");
+		KiraMain.getInstance().getMCRabbitGateway().sendMessage(server, destroyerUUID, "Deleted channel successfully");
 	}
 
 }

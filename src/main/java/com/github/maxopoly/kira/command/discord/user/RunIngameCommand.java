@@ -1,6 +1,7 @@
 package com.github.maxopoly.kira.command.discord.user;
 
 import com.github.maxopoly.kira.KiraMain;
+import com.github.maxopoly.kira.util.CommandUtil;
 import com.github.maxopoly.kira.command.model.discord.ArgumentBasedCommand;
 import com.github.maxopoly.kira.command.model.top.InputSupplier;
 import com.github.maxopoly.kira.rabbit.session.SendIngameCommandSession;
@@ -46,15 +47,17 @@ public class RunIngameCommand extends ArgumentBasedCommand {
 		StringBuilder sb = new StringBuilder();
 		Arrays.stream(args).forEach(s -> sb.append(s + " "));
 		String commandString = sb.toString().trim();
-		
+
 		if (!commandPattern.matcher(commandString).matches()) {
 			return "Your command contained illegal characters";
 		}
-		if (commandString.length() > 255) {
+
+        CommandUtil.CommandRoute route = CommandUtil.getRoute(commandString, KiraMain.getInstance().getConfig().getServers());
+        if (route.command().length() > 255) {
 			return "Your command is too long";
 		}
-		KiraMain.getInstance().getRequestSessionManager()
-		.request(new SendIngameCommandSession(sender, commandString));
+        KiraMain.getInstance().getRequestSessionManager()
+                .request(route.server(), new SendIngameCommandSession(sender, commandString));
 		return "Running command `" + commandString + "` as `" + sender.getUser().getName() + "`";
 	}
 }

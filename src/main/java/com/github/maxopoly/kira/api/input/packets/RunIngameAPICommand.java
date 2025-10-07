@@ -8,6 +8,8 @@ import com.github.maxopoly.kira.api.input.APISupplier;
 import com.github.maxopoly.kira.api.sessions.APIIngameCommandSession;
 import com.github.maxopoly.kira.command.discord.user.RunIngameCommand;
 
+import java.util.Arrays;
+
 public class RunIngameAPICommand extends APIInput {
 
 	public RunIngameAPICommand() {
@@ -20,6 +22,17 @@ public class RunIngameAPICommand extends APIInput {
 		if (command == null) {
 			return;
 		}
+        String[] servers = KiraMain.getInstance().getConfig().getServers();
+        String server = servers[0];
+        String serverOption = argument.optString("server");
+        if (serverOption != null) {
+            for (String configServer : servers) {
+                if (configServer.equals(serverOption)) {
+                    server = configServer;
+                    break;
+                }
+            }
+        }
 		if (!RunIngameCommand.commandPattern.matcher(command).matches() || command.length() > 255) {
 			return;
 		}
@@ -28,7 +41,7 @@ public class RunIngameAPICommand extends APIInput {
 			return;
 		}
 		APIIngameCommandSession cmd = new APIIngameCommandSession(supplier, command, id);
-		KiraMain.getInstance().getRequestSessionManager().request(cmd);
+        KiraMain.getInstance().getRequestSessionManager().request(server, cmd);
 	}
 
 }

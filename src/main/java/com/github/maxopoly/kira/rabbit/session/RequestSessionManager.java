@@ -40,7 +40,7 @@ public class RequestSessionManager {
 		return counter++;
 	}
 
-	public void request(RequestSession session) {
+	public void request(String server, RequestSession session) {
 		JSONObject json = session.getRequest();
 		long id = pullTicket();
 		sessions.put(id, session);
@@ -49,6 +49,6 @@ public class RequestSessionManager {
 		if (session.getRequester() != null) {
 			json.put(channelField, session.getRequester().getChannelID());
 		}
-		rabbit.sendMessage("requestsession", json);
+		rabbit.sendMessage(server, "requestsession", json);
 	}
 }

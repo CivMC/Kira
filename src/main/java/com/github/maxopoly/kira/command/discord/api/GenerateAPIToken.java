@@ -30,7 +30,7 @@ public class GenerateAPIToken extends ArgumentBasedCommand {
 
 	@Override
 	public String getUsage() {
-		return "apitoken <SNITCH|CHAT|SKYNET>";
+		return "apitoken <server (optional)> <SNITCH|CHAT|SKYNET>";
 	}
 
 	@Override
@@ -45,8 +45,21 @@ public class GenerateAPIToken extends ArgumentBasedCommand {
 				return arg + " is not a valid data type, allowed ones are: " + Arrays.asList(APIDataType.values());
 			}
 		}
+        String[] servers = KiraMain.getInstance().getConfig().getServers();
+        String server = servers[0];
+        boolean serverSelected = false;
+        for (String configServer : servers) {
+            if (args[0].equalsIgnoreCase(configServer)) {
+                server = configServer;
+                serverSelected = true;
+                break;
+            }
+        }
+        if (serverSelected && args.length < 2) {
+            return "You provided a server name but no token type!";
+        }
 		KiraMain.getInstance().getRequestSessionManager()
-				.request(new APIPermissionRequest(user.getIngameUUID(), sender, requestedData, -1));
+				.request(server, new APIPermissionRequest(user.getIngameUUID(), sender, requestedData, -1));
 		return "Contacting ingame server to retrieve group permission data";
 
 	}

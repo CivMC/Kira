@@ -54,9 +54,9 @@ public class RabbitHandler {
 		}).start();
 	}
 
-	private boolean sendMessage(String msg) {
+	private boolean sendMessage(String server, String msg) {
 		try {
-			outgoingChannel.basicPublish("", outgoingQueue, null, msg.getBytes("UTF-8"));
+			outgoingChannel.basicPublish(outgoingQueue, server, null, msg.getBytes("UTF-8"));
 			return true;
 		} catch (Exception e) {
 			logger.error("Failed to send rabbit message", e);
@@ -64,8 +64,8 @@ public class RabbitHandler {
 		}
 	}
 
-	public boolean sendMessage(String id, JSONObject json) {
-		return sendMessage(id + " " + json.toString());
+	public boolean sendMessage(String server, String id, JSONObject json) {
+		return sendMessage(server, id + " " + json.toString());
 	}
 
 	public boolean setup() {
@@ -74,7 +74,7 @@ public class RabbitHandler {
 			incomingChannel = conn.createChannel();
 			incomingChannel.queueDeclare(incomingQueue, false, false, false, null);
 			outgoingChannel = conn.createChannel();
-			outgoingChannel.queueDeclare(outgoingQueue, false, false, false, null);
+			outgoingChannel.exchangeDeclare(outgoingQueue, "direct", false, false, null);
 			return true;
 		} catch (IOException | TimeoutException e) {
 			logger.error("Failed to setup rabbit connection", e);

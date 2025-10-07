@@ -17,28 +17,28 @@ public class MinecraftRabbitGateway {
 		this.rabbit = rabbit;
 	}
 
-	public void requestRelayCreation(KiraUser sender, String name, TextChannel channel) {
+	public void requestRelayCreation(String server, KiraUser sender, String name, TextChannel channel) {
 		JSONObject json = new JSONObject();
 		json.put("group", name);
 		json.put("sender", sender.getIngameUUID().toString());
 		json.put("channelID", channel.getId());
 		json.put("guildID", channel.getGuild().getId());
-		rabbit.sendMessage("requestrelaycreation", json);
+		rabbit.sendMessage( server, "requestrelaycreation", json);
 	}
 
-	public void sendGroupChatMessage(KiraUser sender, GroupChat chat, String msg) {
+	public void sendGroupChatMessage(String server, KiraUser sender, GroupChat chat, String msg) {
 		JSONObject json = new JSONObject();
 		json.put("group", chat.getName());
 		json.put("sender", sender.getIngameUUID().toString());
 		json.put("message", msg);
-		rabbit.sendMessage("sendgroupmessage", json);
+		rabbit.sendMessage(server, "sendgroupmessage", json);
 	}
 
-	public void sendMessage(UUID receiver, String msg) {
+	public void sendMessage(String server, UUID receiver, String msg) {
 		JSONObject json = new JSONObject();
 		json.put("receiver", receiver.toString());
 		json.put("message", msg);
-		rabbit.sendMessage("sendmessage", json);
+		rabbit.sendMessage(server, "sendmessage", json);
 	}
 
 }

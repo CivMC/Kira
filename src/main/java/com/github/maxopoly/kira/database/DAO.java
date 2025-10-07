@@ -1,6 +1,7 @@
 package com.github.maxopoly.kira.database;
 
 import com.github.maxopoly.kira.KiraMain;
+import com.github.maxopoly.kira.relay.GroupId;
 import com.github.maxopoly.kira.permission.KiraPermission;
 import com.github.maxopoly.kira.permission.KiraRole;
 import com.github.maxopoly.kira.permission.KiraRoleManager;
@@ -15,6 +16,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -66,11 +68,11 @@ public class DAO {
 	}
 
 	public int createGroupChat(long guildID, long channelID, String name, KiraRole tiedPerm, int creatorID,
-			RelayConfig config) {
+			RelayConfig config, String server) {
 		try (Connection conn = db.getConnection();
 				PreparedStatement prep = conn.prepareStatement(
 						"insert into group_chats (channel_id, guild_id, "
-								+ "role_id, name, creator_id, config_id) values (?,?,?,?,?,?);",
+								+ "role_id, name, creator_id, config_id, server) values (?,?,?,?,?,?,?);",
 						Statement.RETURN_GENERATED_KEYS)) {
 			prep.setLong(1, channelID);
 			prep.setLong(2, guildID);
@@ -78,6 +80,7 @@ public class DAO {
 			prep.setString(4, name);
 			prep.setInt(5, creatorID);
 			prep.setInt(6, config.getID());
+            prep.setString(7, server);
 			prep.execute();
 			try (ResultSet rs = prep.getGeneratedKeys()) {
 				if (!rs.next()) {
@@ -205,6 +208,11 @@ public class DAO {
 							TIMESTAMP_FIELD + ");")) {
 				prep.execute();
 			}
+            try (PreparedStatement prep = conn.prepareStatement(
+                    "ALTER TABLE group_chats ADD COLUMN IF NOT EXISTS " +
+                            "server varchar(255) not null default " + KiraMain.getInstance().getConfig().getServers()[0] + ";")) {
+                prep.execute();
+            }
 		}
 		catch (SQLException e) {
 			logger.error("Failed to create table", e);
@@ -247,15 +255,14 @@ public class DAO {
 		}
 	}
 
-	public Set<String> getGroupChatChannelIdByCreator(KiraUser user) {
-		Set<String> result = new TreeSet<>();
+	public Set<GroupId> getGroupChatChannelIdByCreator(KiraUser user) {
+		Set<GroupId> result = new TreeSet<>(Comparator.comparing(GroupId::server).thenComparing(GroupId::name));
 		try (Connection conn = db.getConnection();
-				PreparedStatement prep = conn.prepareStatement("select name from group_chats where creator_id = ?;")) {
+				PreparedStatement prep = conn.prepareStatement("select server, name from group_chats where creator_id = ?;")) {
 			prep.setInt(1, user.getID());
 			try (ResultSet rs = prep.executeQuery()) {
 				while (rs.next()) {
-					String name = rs.getString(1);
-					result.add(name);
+					result.add(new GroupId(rs.getString(1), rs.getString(2)));
 				}
 			}
 		} catch (SQLException e) {
@@ -339,7 +346,7 @@ public class DAO {
 		UserManager userMan = KiraMain.getInstance().getUserManager();
 		try (Connection conn = db.getConnection();
 				PreparedStatement prep = conn.prepareStatement(
-						"select id, channel_id, guild_id, name, role_id, creator_id, config_id from group_chats;");
+						"select id, channel_id, guild_id, name, role_id, creator_id, config_id, server from group_chats;");
 				ResultSet rs = prep.executeQuery()) {
 			while (rs.next()) {
 				int id = rs.getInt(1);
@@ -354,7 +361,8 @@ public class DAO {
 					continue;
 				}
 				int configId = rs.getInt(7);
-				GroupChat group = new GroupChat(id, name, channelID, guildID, role, userMan.getUser(creatorID),
+                String server = rs.getString(8);
+				GroupChat group = new GroupChat(id, name, server, channelID, guildID, role, userMan.getUser(creatorID),
 						relayConfigs.getById(configId));
 				result.add(group);
 			}

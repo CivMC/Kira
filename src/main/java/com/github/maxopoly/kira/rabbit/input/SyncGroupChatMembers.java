@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import com.github.maxopoly.kira.relay.GroupId;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -22,19 +23,20 @@ public class SyncGroupChatMembers extends RabbitMessage {
 
 	@Override
 	public void handle(JSONObject json, RabbitInputSupplier supplier) {
+        String server = json.getString("server");
 		JSONArray memberArray = json.getJSONArray("members");
 		String group = json.getString("group");
 		UUID sender = UUID.fromString(json.getString("sender"));
 		GroupChatManager man = KiraMain.getInstance().getGroupChatManager();
 		UserManager userMan = KiraMain.getInstance().getUserManager();
-		GroupChat chat = man.getGroupChat(group);
+		GroupChat chat = man.getGroupChat(new GroupId(server, group.toLowerCase()));
 		if (chat == null) {
-			KiraMain.getInstance().getMCRabbitGateway().sendMessage(sender,
+			KiraMain.getInstance().getMCRabbitGateway().sendMessage(server, sender,
 					"That group does not have a relay setup");
 			return;
 		}
 		if (KiraMain.getInstance().getGuild().getIdLong() != chat.getGuildId()) {
-			KiraMain.getInstance().getMCRabbitGateway().sendMessage(sender,
+			KiraMain.getInstance().getMCRabbitGateway().sendMessage(server, sender,
 					"This relay is not managed by Kira, it can not be synced");
 			return;
 		}

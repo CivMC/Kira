@@ -1,18 +1,18 @@
 package com.github.maxopoly.kira;
 
+import com.github.maxopoly.kira.database.DBConnection;
+import com.github.maxopoly.kira.util.ParsingUtils;
+import com.rabbitmq.client.ConnectionFactory;
+import org.apache.logging.log4j.Logger;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Map;
 import java.util.TreeMap;
-
-import org.apache.logging.log4j.Logger;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.github.maxopoly.kira.database.DBConnection;
-import com.github.maxopoly.kira.util.ParsingUtils;
-import com.rabbitmq.client.ConnectionFactory;
 
 public class ConfigManager {
 
@@ -27,6 +27,19 @@ public class ConfigManager {
 	public String getAPIInetAdress() {
 		return config.getJSONObject("api").getString("address");
 	}
+
+    public String[] getServers() {
+      JSONArray array = config.getJSONArray("servers");
+      String[] servers = new String[array.length()];
+      if (servers.length < 1) {
+        logger.error("No servers available");
+        return null;
+      }
+      for (int i = 0; i < servers.length; i++) {
+        servers[i] = array.getString(i);
+      }
+      return servers;
+    }
 
 	public int getAPIPort() {
 		return config.getJSONObject("api").getInt("port");

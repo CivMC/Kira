@@ -31,5 +31,6 @@
     },
     "apirate": "500ms",
     "commandprefix": "!kira ",
+    "servers": ["main"],
     "relayCategory": 0
 }

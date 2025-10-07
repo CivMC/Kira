@@ -1,6 +1,7 @@
 package com.github.maxopoly.kira.command.discord.relay;
 
 import com.github.maxopoly.kira.KiraMain;
+import com.github.maxopoly.kira.relay.GroupId;
 import com.github.maxopoly.kira.command.model.discord.ArgumentBasedCommand;
 import com.github.maxopoly.kira.command.model.top.InputSupplier;
 import com.github.maxopoly.kira.rabbit.session.PermissionCheckSession;
@@ -28,13 +29,26 @@ public class TieRelayConfigCommand extends ArgumentBasedCommand {
 
 	@Override
 	public String getUsage() {
-		return "setrelayconfig [group] [relay]";
+		return "setrelayconfig [server (optional] [group] [relay]";
 	}
 
 	@Override
 	public String handle(InputSupplier sender, String[] args) {
 		KiraUser user = sender.getUser();
-		GroupChat chat = KiraMain.getInstance().getGroupChatManager().getGroupChat(args[0]);
+        String[] servers = KiraMain.getInstance().getConfig().getServers();
+        String server = servers[0];
+        boolean serverSelected = false;
+        for (String configServer : servers) {
+            if (args[0].equalsIgnoreCase(configServer)) {
+                server = configServer;
+                serverSelected = true;
+                break;
+            }
+        }
+        if (serverSelected && args.length < 3) {
+            return "You provided a server name but not a group and relay!";
+        }
+		GroupChat chat = KiraMain.getInstance().getGroupChatManager().getGroupChat(new GroupId(server, args[0].toLowerCase()));
 		if (chat == null) {
 			return "No group chat with the name " + args[0] + " is known";
 		}
@@ -42,7 +56,7 @@ public class TieRelayConfigCommand extends ArgumentBasedCommand {
 		if (config == null) {
 			return "No relay config with the name " + args[0] + " is known";
 		}
-		KiraMain.getInstance().getRequestSessionManager().request(new PermissionCheckSession(user.getIngameUUID(),
+		KiraMain.getInstance().getRequestSessionManager().request(server, new PermissionCheckSession(user.getIngameUUID(),
 				chat.getName(), GroupChatManager.getNameLayerManageChannelPermission()) {
 
 			@Override

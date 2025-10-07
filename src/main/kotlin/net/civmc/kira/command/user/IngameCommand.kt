@@ -21,6 +21,19 @@ class IngameCommand(logger: Logger, userManager: UserManager): Command(logger, u
 
     override fun dispatchCommand(event: SlashCommandEvent, sender: InputSupplier) {
         val command = event.getOption("command")?.asString
+        var server = event.getOption("server")?.asString
+
+        var isPresent = false
+        for (configServer in KiraMain.getInstance().config.servers) {
+            if (configServer.equals(server, ignoreCase = true)) {
+                isPresent = true
+                server = configServer
+                break
+            }
+        }
+        if (!isPresent) {
+            return
+        }
 
         if (command == null) {
             event.reply("Command option is missing.").queue()
@@ -38,13 +51,14 @@ class IngameCommand(logger: Logger, userManager: UserManager): Command(logger, u
         }
 
         // TODO: Reply to command by event
-        KiraMain.getInstance().requestSessionManager.request(SendIngameCommandSession(sender, command))
+        KiraMain.getInstance().requestSessionManager.request(server, SendIngameCommandSession(sender, command))
         event.reply("Running command `$command` as `${sender.user.name}`").queue()
     }
 
     override fun getCommandData(): CommandData {
         return CommandData("in-game", "Allows you to run in-game commands from discord").apply {
             addOption(OptionType.STRING, "command", "The command to run in-game")
+            addOption(OptionType.STRING, "server", "The server to run the command on")
         }
     }
 }

@@ -6,6 +6,7 @@ import com.github.maxopoly.kira.command.model.top.InputSupplier;
 import com.github.maxopoly.kira.rabbit.session.PermissionCheckSession;
 import com.github.maxopoly.kira.relay.GroupChat;
 import com.github.maxopoly.kira.relay.GroupChatManager;
+import com.github.maxopoly.kira.relay.GroupId;
 import com.github.maxopoly.kira.user.KiraUser;
 
 public class DeleteRelayCommand extends ArgumentBasedCommand {
@@ -27,18 +28,32 @@ public class DeleteRelayCommand extends ArgumentBasedCommand {
 
 	@Override
 	public String getUsage() {
-		return "deleterelay [group]";
+		return "deleterelay [server (optional)] [group]";
 	}
 
 	@Override
 	public String handle(InputSupplier sender, String[] args) {
 		KiraUser user = sender.getUser();
 		GroupChatManager man = KiraMain.getInstance().getGroupChatManager();
-		GroupChat chat = man.getGroupChat(args[0]);
+        String[] servers = KiraMain.getInstance().getConfig().getServers();
+        String server = servers[0];
+        boolean serverSelected = false;
+        for (String configServer : servers) {
+            if (args[0].equalsIgnoreCase(configServer)) {
+                server = configServer;
+                serverSelected = true;
+                break;
+            }
+        }
+        if (serverSelected && args.length < 2) {
+            return "You provided a server name but no group name!";
+        }
+		GroupChat chat = man.getGroupChat(new GroupId(server, args[0].toLowerCase()));
 		if (chat == null) {
 			return "No group chat with the name " + args[0] + " is known";
 		}
-		KiraMain.getInstance().getRequestSessionManager().request(new PermissionCheckSession(user.getIngameUUID(),
+        String fserver = server;
+		KiraMain.getInstance().getRequestSessionManager().request(server, new PermissionCheckSession(user.getIngameUUID(),
 				chat.getName(), GroupChatManager.getNameLayerManageChannelPermission()) {
 
 			@Override
@@ -48,7 +63,7 @@ public class DeleteRelayCommand extends ArgumentBasedCommand {
 					return;
 				}
 
-				GroupChat chat = man.getGroupChat(args[0]);
+				GroupChat chat = man.getGroupChat(new GroupId(fserver, args[0].toLowerCase()));
 				if (chat == null) {
 					logger.warn("Failed to delete group chat"+ args[0] + ", it was already gone");
 					sender.reportBack("Channel deletion failed, channel was already gone");

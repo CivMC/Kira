@@ -4,6 +4,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
+import com.github.maxopoly.kira.util.DiscordMsgUtil;
 import org.json.JSONObject;
 
 import com.github.maxopoly.kira.KiraMain;
@@ -13,11 +14,11 @@ import com.github.maxopoly.kira.util.DiscordMessageSender;
 import net.dv8tion.jda.api.entities.TextChannel;
 
 public class ConsoleForwardMessage extends RabbitMessage {
-	
+
 	private static final DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("[HH:mm:ss]");
 
 	private Map<String, Long> forwards;
-	
+
 	public ConsoleForwardMessage(Map <String, Long> forwards) {
 		super("consolelog");
 		this.forwards = forwards;
@@ -26,7 +27,7 @@ public class ConsoleForwardMessage extends RabbitMessage {
 	@Override
 	public void handle(JSONObject argument, RabbitInputSupplier supplier) {
 		String key = argument.getString("consolekey");
-		String msg = argument.getString("message");
+		String msg = DiscordMsgUtil.escape(argument.getString("message"));
 		Long channelIdObj = forwards.get(key);
 		if (channelIdObj == null) {
 			KiraMain.getInstance().getLogger().warn("Unknown console key " + key);

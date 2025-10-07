@@ -30,7 +30,7 @@ public class CreateRelayChannelHereCommand extends ArgumentBasedCommand {
 
 	@Override
 	public String getUsage() {
-		return "createrelayhere [group]";
+		return "createrelayhere [server (optional)] [group]";
 	}
 
 	@Override
@@ -48,13 +48,28 @@ public class CreateRelayChannelHereCommand extends ArgumentBasedCommand {
 			return "You can't create relays here";
 		}
 
+        String[] servers = KiraMain.getInstance().getConfig().getServers();
+        String server = servers[0];
+        boolean serverSelected = false;
+        for (String configServer : servers) {
+            if (args[0].equalsIgnoreCase(configServer)) {
+                server = configServer;
+                serverSelected = true;
+                break;
+            }
+        }
+        if (serverSelected && args.length < 2) {
+            return "You provided a server name but no group name!";
+        }
+
 		try {
 			Member member  = channel.getGuild().retrieveMemberById(sender.getUser().getDiscordID()).complete();
 			EnumSet<Permission> perms = member.getPermissions(channel);
 			if (!perms.contains(Permission.MANAGE_CHANNEL)) {
 				return "You need the 'MANAGE_CHANNEL' permission to add a relay to this channel";
 			}
-			KiraMain.getInstance().getMCRabbitGateway().requestRelayCreation(user, args [0], channel);
+
+			KiraMain.getInstance().getMCRabbitGateway().requestRelayCreation(server, user, args[serverSelected ? 1 : 0], channel);
 			return "Checking permissions for channel handling...";
 		} catch (Exception e) {
 			return "Something went wrong, tell and admin.";

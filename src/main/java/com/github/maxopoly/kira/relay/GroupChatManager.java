@@ -32,7 +32,7 @@ public class GroupChatManager {
 	private final long sectionID;
 	private final RelayConfigManager relayConfigManager;
 
-	private final Map<String, GroupChat> groupChatByName;
+	private final Map<GroupId, GroupChat> groupChatByName;
 	private final Map<Long, Set<GroupChat>> chatsByChannelId;
 	private final Map<Integer, Float> ownedChatsByUserId;
 
@@ -96,7 +96,7 @@ public class GroupChatManager {
 		}
 	}
 
-	public GroupChat createGroupChat(String name, KiraUser creator) {
+	public GroupChat createGroupChat(String name, String server, KiraUser creator) {
 		Guild guild = KiraMain.getInstance().getGuild();
 		Category cat = guild.getCategoryById(sectionID);
 		if (cat == null) {
@@ -108,17 +108,17 @@ public class GroupChatManager {
 			logger.warn("Tried to create channel, but it didn't work");
 			return null;
 		}
-		return createGroupChat(name, guild.getIdLong(), channel.getIdLong(), creator);
+		return createGroupChat(name, server, guild.getIdLong(), channel.getIdLong(), creator);
 	}
 
-	public GroupChat createGroupChat(String name, long guildID, long channelID, KiraUser creator) {
+	public GroupChat createGroupChat(String name, String server, long guildID, long channelID, KiraUser creator) {
 		KiraRole role = KiraMain.getInstance().getKiraRoleManager().getOrCreateRole(name + ACCESS_PERM_SUFFIX);
 		int id = databaseManager.createGroupChat(guildID, channelID, name, role, creator.getID(),
-				relayConfigManager.getDefaultConfig());
+				relayConfigManager.getDefaultConfig(), server);
 		if (id == -1) {
 			return null;
 		}
-		GroupChat chat = new GroupChat(id, name, channelID, guildID, role, creator,
+		GroupChat chat = new GroupChat(id, server, name, channelID, guildID, role, creator,
 				relayConfigManager.getDefaultConfig());
 		putGroupChat(chat);
 		logger.info("Successfully created group chat for group " + chat.toString());
@@ -169,8 +169,8 @@ public class GroupChatManager {
 		return existing;
 	}
 
-	public GroupChat getGroupChat(String name) {
-		return groupChatByName.get(name.toLowerCase());
+	public GroupChat getGroupChat(GroupId id) {
+		return groupChatByName.get(id);
 	}
 
 	public float getOwnedChatCount(KiraUser user) {
@@ -182,7 +182,7 @@ public class GroupChatManager {
 	}
 
 	public void putGroupChat(GroupChat chat) {
-		groupChatByName.put(chat.getName().toLowerCase(), chat);
+		groupChatByName.put(GroupId.fromGroupChat(chat), chat);
 		Set<GroupChat> existing = chatsByChannelId.get(chat.getDiscordChannelId());
 		if (existing == null) {
 			existing = new HashSet<>();

@@ -1,6 +1,7 @@
 package com.github.maxopoly.kira.rabbit.input;
 
 import com.github.maxopoly.kira.KiraMain;
+import com.github.maxopoly.kira.relay.GroupId;
 import com.github.maxopoly.kira.rabbit.RabbitInputSupplier;
 import com.github.maxopoly.kira.relay.GroupChat;
 import com.github.maxopoly.kira.relay.GroupChatManager;
@@ -23,25 +24,29 @@ public class CreateGroupChatMessage extends RabbitMessage {
 
 	@Override
 	public void handle(JSONObject json, RabbitInputSupplier supplier) {
-		UUID creatorUUID = UUID.fromString(json.getString("creator"));
+        String server = json.getString("server");
+        if (server == null) {
+            return; // old message
+        }
+        UUID creatorUUID = UUID.fromString(json.getString("creator"));
 		KiraUser creator = KiraMain.getInstance().getUserManager().getUserByIngameUUID(creatorUUID);
 		if (creator == null) {
-			KiraMain.getInstance().getMCRabbitGateway().sendMessage(creatorUUID,
+			KiraMain.getInstance().getMCRabbitGateway().sendMessage(server, creatorUUID,
 					"Channel creation failed, " + "no discord account tied");
 			return;
 		}
 		String group = json.getString("group");
 		GroupChatManager man = KiraMain.getInstance().getGroupChatManager();
-		GroupChat chat = man.getGroupChat(group);
+		GroupChat chat = man.getGroupChat(new GroupId(server, group.toLowerCase()));
 		if (chat != null) {
-			KiraMain.getInstance().getMCRabbitGateway().sendMessage(creatorUUID,
+			KiraMain.getInstance().getMCRabbitGateway().sendMessage(server, creatorUUID,
 					"Channel creation failed, a channel for this group already exists");
 			return;
 		}
 		float alreadyOwned = man.getOwnedChatCount(creator);
 		float limit = GroupChatManager.getChatCountLimit();
 		if (alreadyOwned >= limit) {
-			KiraMain.getInstance().getMCRabbitGateway().sendMessage(creatorUUID,
+			KiraMain.getInstance().getMCRabbitGateway().sendMessage(server, creatorUUID,
 					"Channel creation failed, you have reached the maximum amount of linked channels possible ("
 							+ limit + ")");
 			return;
@@ -50,14 +55,19 @@ public class CreateGroupChatMessage extends RabbitMessage {
 		long guildID = json.optLong("guildID", -1L);
 		logger.info("Attempting creation of chat for " + group + " as initiated by " + creator.toString());
 		if (channelID == -1) {
+            if (!KiraMain.getInstance().getKiraRoleManager().hasPermission(creator, "admin")) {
+                KiraMain.getInstance().getMCRabbitGateway().sendMessage(server, creatorUUID,
+                        "You cannot create a chanel here.");
+                return;
+            }
 			// locally in own discord
-			chat = man.createGroupChat(group, creator);
+			chat = man.createGroupChat(group, server, creator);
 		} else {
 			// whereever requested
-			chat = man.createGroupChat(group, guildID, channelID, creator);
+			chat = man.createGroupChat(group, server, guildID, channelID, creator);
 		}
 		if (chat == null) {
-			KiraMain.getInstance().getMCRabbitGateway().sendMessage(creatorUUID,
+			KiraMain.getInstance().getMCRabbitGateway().sendMessage(server, creatorUUID,
 					"Channel creation failed, " + "ask an admin about this");
 			return;
 		}
@@ -73,7 +83,7 @@ public class CreateGroupChatMessage extends RabbitMessage {
 			shouldBeMembers.add(user.getID());
 		}
 		man.syncAccess(chat, shouldBeMembers);
-		KiraMain.getInstance().getMCRabbitGateway().sendMessage(creatorUUID, "Created channel successfully");
+		KiraMain.getInstance().getMCRabbitGateway().sendMessage(server, creatorUUID, "Created channel successfully");
 		JDA jda = KiraMain.getInstance().getJDA();
 		TextChannel channel = jda.getTextChannelById(chat.getDiscordChannelId());
 		if (channel != null) {
