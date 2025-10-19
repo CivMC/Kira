@@ -48,13 +48,14 @@ public class TieRelayConfigCommand extends ArgumentBasedCommand {
         if (serverSelected && args.length < 3) {
             return "You provided a server name but not a group and relay!";
         }
-		GroupChat chat = KiraMain.getInstance().getGroupChatManager().getGroupChat(new GroupId(server, args[0].toLowerCase()));
+        int offset = serverSelected ? 1 : 0;
+        GroupChat chat = KiraMain.getInstance().getGroupChatManager().getGroupChat(new GroupId(server, args[offset].toLowerCase()));
 		if (chat == null) {
-			return "No group chat with the name " + args[0] + " is known";
+			return "No group chat with the name " + args[offset] + " is known";
 		}
-		RelayConfig config = KiraMain.getInstance().getRelayConfigManager().getByName(args[1]);
+		RelayConfig config = KiraMain.getInstance().getRelayConfigManager().getByName(args[offset + 1]);
 		if (config == null) {
-			return "No relay config with the name " + args[0] + " is known";
+			return "No relay config with the name " + args[offset] + " is known";
 		}
 		KiraMain.getInstance().getRequestSessionManager().request(server, new PermissionCheckSession(user.getIngameUUID(),
 				chat.getName(), GroupChatManager.getNameLayerManageChannelPermission()) {
