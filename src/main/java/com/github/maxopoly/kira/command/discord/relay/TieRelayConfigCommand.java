@@ -55,7 +55,7 @@ public class TieRelayConfigCommand extends ArgumentBasedCommand {
 		}
 		RelayConfig config = KiraMain.getInstance().getRelayConfigManager().getByName(args[offset + 1]);
 		if (config == null) {
-			return "No relay config with the name " + args[offset] + " is known";
+			return "No relay config with the name " + args[offset + 1] + " is known";
 		}
 		KiraMain.getInstance().getRequestSessionManager().request(server, new PermissionCheckSession(user.getIngameUUID(),
 				chat.getName(), GroupChatManager.getNameLayerManageChannelPermission()) {
