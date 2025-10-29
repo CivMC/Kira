@@ -21,18 +21,14 @@ class IngameCommand(logger: Logger, userManager: UserManager): Command(logger, u
 
     override fun dispatchCommand(event: SlashCommandEvent, sender: InputSupplier) {
         val command = event.getOption("command")?.asString
-        var server = event.getOption("server")?.asString
+        val servers = KiraMain.getInstance().config.servers
+        var server = event.getOption("server")?.asString ?: servers[0]
 
-        var isPresent = false
-        for (configServer in KiraMain.getInstance().config.servers) {
+        for (configServer in servers) {
             if (configServer.equals(server, ignoreCase = true)) {
-                isPresent = true
                 server = configServer
                 break
             }
-        }
-        if (!isPresent) {
-            return
         }
 
         if (command == null) {
