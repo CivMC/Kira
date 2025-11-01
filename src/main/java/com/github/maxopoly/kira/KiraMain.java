@@ -230,7 +230,7 @@ public class KiraMain {
 		}
 		try {
 			jda = JDABuilder.create(token, GatewayIntent.GUILD_MESSAGES,
-					GatewayIntent.GUILD_INVITES, GatewayIntent.DIRECT_MESSAGES).build();
+					GatewayIntent.GUILD_INVITES, GatewayIntent.DIRECT_MESSAGES, GatewayIntent.MESSAGE_CONTENT).build();
 			jda.awaitReady();
 		} catch (InterruptedException e) {
 			logger.error("Failed to start jda", e);
