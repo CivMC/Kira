@@ -5,13 +5,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 import com.github.maxopoly.kira.util.DiscordMsgUtil;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import org.json.JSONObject;
 
 import com.github.maxopoly.kira.KiraMain;
 import com.github.maxopoly.kira.rabbit.RabbitInputSupplier;
 import com.github.maxopoly.kira.util.DiscordMessageSender;
-
-import net.dv8tion.jda.api.entities.TextChannel;
 
 public class ConsoleForwardMessage extends RabbitMessage {
 

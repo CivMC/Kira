@@ -9,15 +9,14 @@ import com.github.maxopoly.kira.relay.GroupChat;
 import com.github.maxopoly.kira.relay.GroupChatManager;
 import com.github.maxopoly.kira.user.KiraUser;
 import com.github.maxopoly.kira.user.UserManager;
-import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nonnull;
 import java.util.Set;
 
 public class DiscordMessageListener extends ListenerAdapter {
@@ -55,7 +54,7 @@ public class DiscordMessageListener extends ListenerAdapter {
 		} else {
 			if (content.startsWith(keyWord)) {
 				logger.info(
-						String.format("CHAT [%s][%s] %s: %s", event.getGuild().getName(), event.getTextChannel().getName(),
+						String.format("CHAT [%s][%s] %s: %s", event.getGuild().getName(), event.getChannel().asTextChannel().getName(),
 								event.getMember().getEffectiveName(), event.getMessage().getContentDisplay()));
 				InputSupplier supplier = new DiscordCommandChannelSupplier(user, event.getGuild().getIdLong(),
 						event.getChannel().getIdLong());
@@ -117,7 +116,7 @@ public class DiscordMessageListener extends ListenerAdapter {
 
 	// Refuse to join a Discord server if it's banned.
 	@Override
-	public void onGuildJoin(@Nonnull final GuildJoinEvent event) {
+	public void onGuildJoin(final GuildJoinEvent event) {
 		final var discordServer = event.getGuild();
 		if (KiraMain.getInstance().getDAO().isServerBanned(discordServer.getIdLong())) {
 			discordServer.leave().queue();

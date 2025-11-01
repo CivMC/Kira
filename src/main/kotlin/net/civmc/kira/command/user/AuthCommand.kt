@@ -4,9 +4,10 @@ import com.github.maxopoly.kira.KiraMain
 import com.github.maxopoly.kira.command.model.top.InputSupplier
 import com.github.maxopoly.kira.user.UserManager
 import net.civmc.kira.command.Command
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import net.dv8tion.jda.api.interactions.commands.OptionType
-import net.dv8tion.jda.api.interactions.commands.build.CommandData
+import net.dv8tion.jda.api.interactions.commands.build.Commands
+import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData
 import org.apache.logging.log4j.Logger
 
 class AuthCommand(logger: Logger, userManager: UserManager): Command(logger, userManager) {
@@ -16,7 +17,7 @@ class AuthCommand(logger: Logger, userManager: UserManager): Command(logger, use
     override val requiredPermission = "canauth"
     override val global = false
 
-    override fun dispatchCommand(event: SlashCommandEvent, sender: InputSupplier) {
+    override fun dispatchCommand(event: SlashCommandInteractionEvent, sender: InputSupplier) {
         val authManager = KiraMain.getInstance().authManager
 
         val code = event.getOption("code")?.asString
@@ -51,8 +52,11 @@ class AuthCommand(logger: Logger, userManager: UserManager): Command(logger, use
         event.reply("Successfully authenticated as $name").queue()
     }
 
-    override fun getCommandData(): CommandData {
-        return CommandData("auth", "Allows linking your discord account to an in-game account. Run '/discordauth' in-game to get a code.").apply {
+    override fun getCommandData(): SlashCommandData {
+        return Commands.slash(
+            "auth",
+            "Allows linking your discord account to an in-game account. Run '/discordauth' in-game to get a code."
+        ).apply {
             addOption(OptionType.STRING, "code", "Your auth code", true)
         }
     }

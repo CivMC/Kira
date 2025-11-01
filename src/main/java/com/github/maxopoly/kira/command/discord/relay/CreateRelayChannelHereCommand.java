@@ -6,7 +6,7 @@ import com.github.maxopoly.kira.command.model.top.InputSupplier;
 import com.github.maxopoly.kira.user.KiraUser;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
 import java.util.EnumSet;
 

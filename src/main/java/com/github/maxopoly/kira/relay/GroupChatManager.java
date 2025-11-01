@@ -7,6 +7,8 @@ import com.github.maxopoly.kira.permission.KiraRoleManager;
 import com.github.maxopoly.kira.user.KiraUser;
 import com.github.maxopoly.kira.user.UserManager;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.channel.concrete.Category;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import org.apache.logging.log4j.Logger;
 
 import java.util.*;
@@ -80,7 +82,7 @@ public class GroupChatManager {
 
 						PermissionOverride perm = channel.getPermissionOverride(member);
 						if (perm == null) {
-							perm = channel.createPermissionOverride(member).complete();
+							perm = channel.upsertPermissionOverride(member).complete();
 						}
 						if (perm.getAllowedRaw() != CHANNEL_PERMS) {
 							logger.info("Adjusting channel perms to " + chat.getName() + " for " + user.toString());
@@ -132,7 +134,7 @@ public class GroupChatManager {
 			// already deleted
 			isManaged = false;
 		} else {
-			Category category = channel.getParent();
+			Category category = channel.getParentCategory();
 			boolean isInMainGuild = channel.getGuild().getIdLong() == KiraMain.getInstance().getGuild().getIdLong();
 			boolean isInRelaySection = category != null && category.getIdLong() == KiraMain.getInstance().getConfig().getRelaySectionID();
 

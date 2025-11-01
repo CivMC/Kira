@@ -2,12 +2,11 @@ package com.github.maxopoly.kira.rabbit;
 
 import java.util.UUID;
 
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import org.json.JSONObject;
 
 import com.github.maxopoly.kira.relay.GroupChat;
 import com.github.maxopoly.kira.user.KiraUser;
-
-import net.dv8tion.jda.api.entities.TextChannel;
 
 public class MinecraftRabbitGateway {
 
