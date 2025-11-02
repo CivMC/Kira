@@ -1,15 +1,18 @@
 package com.github.maxopoly.kira.relay.actions;
 
 import org.json.JSONObject;
+import java.util.UUID;
 
 public class SkynetAction extends MinecraftAction {
 
 	private SkynetType type;
 	private String player;
+	private UUID playerUUID;
 
-	public SkynetAction(long timestamp, String player, SkynetType type) {
+	public SkynetAction(long timestamp, String player, UUID playerUUID, SkynetType type) {
 		super(timestamp);
 		this.player = player;
+		this.playerUUID = playerUUID;
 		this.type = type;
 	}
 
@@ -19,6 +22,10 @@ public class SkynetAction extends MinecraftAction {
 
 	public SkynetType getType() {
 		return type;
+	}
+
+	public UUID getPlayerUUID() {
+		return playerUUID;
 	}
 
 	@Override
