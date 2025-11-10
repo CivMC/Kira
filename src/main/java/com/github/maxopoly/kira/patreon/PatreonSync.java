@@ -91,9 +91,12 @@ public class PatreonSync implements Runnable {
                 JSONObject attributes = data.getJSONObject("attributes");
                 tierPrices.put(attributes.getString("title"), attributes.getInt("amount_cents"));
             } else if (type.equals("user")) {
-                JSONObject socialConnections = data.getJSONObject("attributes").getJSONObject("social_connections");
-                if (!socialConnections.isNull("discord")) {
-                    userDiscordId.put(data.getString("id"), Long.parseLong(socialConnections.getJSONObject("discord").getString("user_id")));
+                JSONObject attributes = data.getJSONObject("attributes");
+                if (attributes.has("social_connections")) {
+                    JSONObject socialConnections = attributes.getJSONObject("social_connections");
+                    if (socialConnections.has("discord") && !socialConnections.isNull("discord")) {
+                        userDiscordId.put(data.getString("id"), Long.parseLong(socialConnections.getJSONObject("discord").getString("user_id")));
+                    }
                 }
             }
         }
