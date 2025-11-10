@@ -58,6 +58,9 @@ public class PatreonSync implements Runnable {
 
         for (Map.Entry<String, Long> entry : userDiscordId.entrySet()) {
             KiraUser user = KiraMain.getInstance().getUserManager().getUserByDiscordID(entry.getValue());
+            if (user == null) {
+                continue;
+            }
             UUID uuid = user.getIngameUUID();
             if (uuid != null) {
                 playerTier.put(uuid, userTier.get(entry.getKey()));
@@ -70,7 +73,7 @@ public class PatreonSync implements Runnable {
     }
 
     private void checkPatreonRecursive(String url, Map<String, Long> userDiscordId, Map<String, String> userTier) throws IOException, InterruptedException {
-        HttpResponse<String> response = client.send(HttpRequest.newBuilder(URI.create(url))
+        HttpResponse<String> response = client.<String>send(HttpRequest.newBuilder(URI.create(url))
             .header("Authorization", "Bearer " + accessToken)
             .build(), HttpResponse.BodyHandlers.ofString());
 
