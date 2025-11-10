@@ -112,7 +112,7 @@ public class PatreonSync implements Runnable {
             }
 
             for (int t = 0; t < tiers.length(); t++) {
-                userTier.merge(id, tiers.getJSONObject(i).getString("id"),
+                userTier.merge(id, tiers.getJSONObject(t).getString("id"),
                     (oldValue, value) -> tierPrices.get(value) > tierPrices.get(oldValue) ? value : oldValue);
             }
         }
