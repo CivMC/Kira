@@ -122,7 +122,7 @@ public class PatreonSync implements Runnable {
         if (object.has("links")) {
             JSONObject links = object.getJSONObject("links");
             if (links.has("next")) {
-                checkPatreonRecursive(links.getJSONObject("next").getString("url"), userDiscordId, userTier);
+                checkPatreonRecursive(links.getString("next"), userDiscordId, userTier);
             }
         }
     }
