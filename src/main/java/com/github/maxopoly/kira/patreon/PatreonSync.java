@@ -67,8 +67,6 @@ public class PatreonSync implements Runnable {
             }
         }
 
-        System.out.println(playerTier);
-        playerTier.put(UUID.fromString("2dd2f992-32ab-4425-a0a8-e7209204a750"), "Civ Power Player");
         KiraMain.getInstance().getMCRabbitGateway().sendPatreon(this.server, playerTier);
     }
 
