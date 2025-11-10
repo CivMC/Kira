@@ -80,6 +80,7 @@ public class PatreonSync implements Runnable {
         }
 
         Map<String, Integer> tierPrices = new HashMap<>();
+        Map<String, String> tierNames = new HashMap<>();
 
         JSONObject object = new JSONObject(response.body());
 
@@ -89,6 +90,7 @@ public class PatreonSync implements Runnable {
             String type = data.getString("type");
             if (type.equals("tier")) {
                 JSONObject attributes = data.getJSONObject("attributes");
+                tierNames.put(data.getString("id"), attributes.getString("title"));
                 tierPrices.put(attributes.getString("title"), attributes.getInt("amount_cents"));
             } else if (type.equals("user")) {
                 JSONObject attributes = data.getJSONObject("attributes");
@@ -112,7 +114,7 @@ public class PatreonSync implements Runnable {
             }
 
             for (int t = 0; t < tiers.length(); t++) {
-                userTier.merge(id, tiers.getJSONObject(t).getString("id"),
+                userTier.merge(id, tierNames.get(tiers.getJSONObject(t).getString("id")),
                     (oldValue, value) -> tierPrices.get(value) > tierPrices.get(oldValue) ? value : oldValue);
             }
         }
