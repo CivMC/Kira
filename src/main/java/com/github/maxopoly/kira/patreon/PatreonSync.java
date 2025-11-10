@@ -92,7 +92,7 @@ public class PatreonSync implements Runnable {
                 tierPrices.put(attributes.getString("title"), attributes.getInt("amount_cents"));
             } else if (type.equals("user")) {
                 JSONObject socialConnections = data.getJSONObject("attributes").getJSONObject("social_connections");
-                if (socialConnections.has("discord")) {
+                if (!socialConnections.isNull("discord")) {
                     userDiscordId.put(data.getString("id"), Long.parseLong(socialConnections.getJSONObject("discord").getString("user_id")));
                 }
             }

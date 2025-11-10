@@ -79,7 +79,7 @@ public class KiraMain {
 
         if (instance.configManager.isPatreonEnabled()) {
             PatreonSync sync = new PatreonSync(instance.configManager.getPatreonAccessToken(), instance.configManager.getPatreonCampaign(), instance.configManager.getPatreonServer());
-            Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(sync, 10, 10, TimeUnit.MINUTES);
+            Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(sync, 1, 10, TimeUnit.MINUTES);
         }
 
 		instance.parseInput();
