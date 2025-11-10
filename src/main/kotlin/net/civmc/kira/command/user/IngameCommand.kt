@@ -7,7 +7,6 @@ import com.github.maxopoly.kira.user.UserManager
 import net.civmc.kira.command.Command
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import net.dv8tion.jda.api.interactions.commands.OptionType
-import net.dv8tion.jda.api.interactions.commands.build.CommandData
 import net.dv8tion.jda.api.interactions.commands.build.Commands
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData
 import org.apache.logging.log4j.Logger

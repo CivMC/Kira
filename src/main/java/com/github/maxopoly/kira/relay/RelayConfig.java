@@ -11,6 +11,7 @@ import com.github.maxopoly.kira.relay.actions.MinecraftLocation;
 import com.github.maxopoly.kira.relay.actions.NewPlayerAction;
 import com.github.maxopoly.kira.relay.actions.PlayerHitSnitchAction;
 import com.github.maxopoly.kira.relay.actions.SkynetAction;
+import com.github.maxopoly.kira.util.DiscordMsgUtil;
 
 public class RelayConfig {
 
@@ -75,8 +76,8 @@ public class RelayConfig {
 
 	public String formatChatMessage(GroupChatMessageAction action) {
 		String output = chatFormat;
-		output = output.replace("%PLAYER%", action.getSender());
-		output = output.replace("%MESSAGE%", action.getMessage());
+		output = output.replace("%PLAYER%", DiscordMsgUtil.escape(action.getSender()));
+		output = output.replace("%MESSAGE%", DiscordMsgUtil.escape(action.getMessage()));
 		output = output.replace("%GROUP%", action.getGroupName());
 		output = output.replace("%TIME%", getFormattedTime(action.getTimeStamp()));
 		output = reformatPings(output);
@@ -85,7 +86,7 @@ public class RelayConfig {
 
 	public String formatNewPlayerMessage(NewPlayerAction action) {
 		String output = newPlayerFormat;
-		output = output.replace("%PLAYER%", action.getPlayer());
+		output = output.replace("%PLAYER%", DiscordMsgUtil.escape(action.getPlayer()));
 		output = output.replace("%TIME%", getFormattedTime(action.getTimeStamp()));
 		output = reformatPings(output);
 		return output;
@@ -133,8 +134,8 @@ public class RelayConfig {
 		output = output.replace("%Y%", String.valueOf(loc.getY()));
 		output = output.replace("%Z%", String.valueOf(loc.getZ()));
 		output = output.replace("%WORLD%", String.valueOf(loc.getWorld()));
-		output = output.replace("%SNITCH%", action.getSnitchName());
-		output = output.replaceAll("%PLAYER%", action.getPlayerName());
+		output = output.replace("%SNITCH%", DiscordMsgUtil.escape(action.getSnitchName()));
+		output = output.replaceAll("%PLAYER%", DiscordMsgUtil.escape(action.getPlayerName()));
 		output = output.replace("%GROUP%", action.getGroupName());
 		output = output.replace("%TIME%", getFormattedTime(action.getTimeStamp()));
 		output = reformatPings(output);

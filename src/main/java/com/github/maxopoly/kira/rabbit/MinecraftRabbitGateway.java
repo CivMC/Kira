@@ -1,5 +1,6 @@
 package com.github.maxopoly.kira.rabbit;
 
+import java.util.Map;
 import java.util.UUID;
 
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -40,4 +41,11 @@ public class MinecraftRabbitGateway {
 		rabbit.sendMessage(server, "sendmessage", json);
 	}
 
+    public void sendPatreon(String server, Map<UUID, String> tiers) {
+        JSONObject json = new JSONObject();
+        for (Map.Entry<UUID, String> entry : tiers.entrySet()) {
+            json.put(entry.getKey().toString(), entry.getValue());
+        }
+        rabbit.sendMessage(server, "patreontiers", json);
+    }
 }

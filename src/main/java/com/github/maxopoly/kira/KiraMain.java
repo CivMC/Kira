@@ -6,6 +6,7 @@ import com.github.maxopoly.kira.command.model.discord.CommandLineInputSupplier;
 import com.github.maxopoly.kira.database.DAO;
 import com.github.maxopoly.kira.database.DBConnection;
 import com.github.maxopoly.kira.listener.DiscordMessageListener;
+import com.github.maxopoly.kira.patreon.PatreonSync;
 import com.github.maxopoly.kira.permission.KiraRoleManager;
 import com.github.maxopoly.kira.rabbit.MinecraftRabbitGateway;
 import com.github.maxopoly.kira.rabbit.RabbitHandler;
@@ -26,9 +27,10 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.security.auth.login.LoginException;
 import java.io.Console;
 import java.util.Scanner;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class KiraMain {
 
@@ -74,6 +76,12 @@ public class KiraMain {
 
 		instance.apiSessionManager = new APISessionManager(instance.logger, 500);
 		instance.rabbit.beginAsyncListen();
+
+        if (instance.configManager.isPatreonEnabled()) {
+            PatreonSync sync = new PatreonSync(instance.configManager.getPatreonAccessToken(), instance.configManager.getPatreonCampaign(), instance.configManager.getPatreonServer());
+            Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(sync, 10, 10, TimeUnit.MINUTES);
+        }
+
 		instance.parseInput();
 	}
 
