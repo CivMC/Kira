@@ -106,7 +106,7 @@ public class RelayConfig {
 			throw new IllegalArgumentException();
 		}
 		output = output.replace("%ACTION%", actionString);
-		output = output.replace("%PLAYER%", action.getPlayer());
+		output = output.replace("%PLAYER%", DiscordMsgUtil.escape(action.getPlayer()));
 		output = output.replace("%TIME%", getFormattedTime(action.getTimeStamp()));
 		output = reformatPings(output);
 		return output;
