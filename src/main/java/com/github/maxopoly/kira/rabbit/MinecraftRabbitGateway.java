@@ -1,5 +1,6 @@
 package com.github.maxopoly.kira.rabbit;
 
+import java.time.Duration;
 import java.util.Map;
 import java.util.UUID;
 
@@ -41,11 +42,11 @@ public class MinecraftRabbitGateway {
 		rabbit.sendMessage(server, "sendmessage", json);
 	}
 
-    public void sendPatreon(String server, Map<UUID, String> tiers) {
+    public void sendPatreon(String server, Map<UUID, String> tiers, Duration ttl) {
         JSONObject json = new JSONObject();
         for (Map.Entry<UUID, String> entry : tiers.entrySet()) {
             json.put(entry.getKey().toString(), entry.getValue());
         }
-        rabbit.sendMessage(server, "patreontiers", json);
+        rabbit.sendMessage(server, "patreontiers", json, ttl);
     }
 }

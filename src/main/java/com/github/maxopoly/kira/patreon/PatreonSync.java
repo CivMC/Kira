@@ -14,6 +14,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -67,7 +68,7 @@ public class PatreonSync implements Runnable {
             }
         }
 
-        KiraMain.getInstance().getMCRabbitGateway().sendPatreon(this.server, playerTier);
+        KiraMain.getInstance().getMCRabbitGateway().sendPatreon(this.server, playerTier, Duration.ofMinutes(10));
     }
 
     private void checkPatreonRecursive(String url, Map<String, Long> userDiscordId, Map<String, String> userTier) throws IOException, InterruptedException {
