@@ -49,11 +49,13 @@ public class PatreonSync implements Runnable {
         Map<String, Long> userDiscordId = new HashMap<>();
         Map<String, String> userTier = new HashMap<>();
 
-        checkPatreonRecursive("https://www.patreon.com/api/oauth2/v2/campaigns/" + campaignId + "/members" +
+        if (!checkPatreonRecursive("https://www.patreon.com/api/oauth2/v2/campaigns/" + campaignId + "/members" +
             "?include=currently_entitled_tiers,user" +
             "&" + URLEncoder.encode("fields[tier]", StandardCharsets.UTF_8) + "=title,amount_cents" +
             "&" + URLEncoder.encode("fields[user]", StandardCharsets.UTF_8) + "=social_connections" +
-            "&" + URLEncoder.encode("page[count]", StandardCharsets.UTF_8) + "=100", userDiscordId, userTier);
+            "&" + URLEncoder.encode("page[count]", StandardCharsets.UTF_8) + "=100", userDiscordId, userTier)) {
+            return;
+        }
 
         Map<UUID, String> playerTier = new HashMap<>();
 
@@ -71,14 +73,14 @@ public class PatreonSync implements Runnable {
         KiraMain.getInstance().getMCRabbitGateway().sendPatreon(this.server, playerTier, Duration.ofMinutes(10));
     }
 
-    private void checkPatreonRecursive(String url, Map<String, Long> userDiscordId, Map<String, String> userTier) throws IOException, InterruptedException {
+    private boolean checkPatreonRecursive(String url, Map<String, Long> userDiscordId, Map<String, String> userTier) throws IOException, InterruptedException {
         HttpResponse<String> response = client.send(HttpRequest.newBuilder(URI.create(url))
             .header("Authorization", "Bearer " + accessToken)
             .build(), HttpResponse.BodyHandlers.ofString());
 
         if (response.statusCode() != 200) {
             LOGGER.warn("Invalid status code handling response: {}", response);
-            return;
+            return false;
         }
 
         Map<String, Integer> tierPrices = new HashMap<>();
@@ -124,8 +126,9 @@ public class PatreonSync implements Runnable {
         if (object.has("links")) {
             JSONObject links = object.getJSONObject("links");
             if (links.has("next")) {
-                checkPatreonRecursive(links.getString("next"), userDiscordId, userTier);
+                return checkPatreonRecursive(links.getString("next"), userDiscordId, userTier);
             }
         }
+        return true;
     }
 }
