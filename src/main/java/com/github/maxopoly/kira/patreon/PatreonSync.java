@@ -53,7 +53,7 @@ public class PatreonSync implements Runnable {
             "?include=currently_entitled_tiers,user" +
             "&" + URLEncoder.encode("fields[tier]", StandardCharsets.UTF_8) + "=title,amount_cents" +
             "&" + URLEncoder.encode("fields[user]", StandardCharsets.UTF_8) + "=social_connections" +
-            "&" + URLEncoder.encode("page[count]", StandardCharsets.UTF_8) + "=100", userDiscordId, userTier)) {
+            "&" + URLEncoder.encode("page[count]", StandardCharsets.UTF_8) + "=500", userDiscordId, userTier)) {
             return;
         }
 
