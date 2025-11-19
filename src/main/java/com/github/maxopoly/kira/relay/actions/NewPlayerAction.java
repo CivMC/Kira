@@ -25,6 +25,7 @@ public class NewPlayerAction extends MinecraftAction {
 	@Override
 	protected void internalConstructJSON(JSONObject json) {
 		json.put("player", player);
+        json.put("playerUUID", playerUUID.toString());
 	}
 
 }

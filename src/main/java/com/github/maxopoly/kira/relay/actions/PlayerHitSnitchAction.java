@@ -51,6 +51,7 @@ public class PlayerHitSnitchAction extends MinecraftAction {
 	@Override
 	protected void internalConstructJSON(JSONObject json) {
 		json.put("player", playerName);
+        json.put("playerUUID", playerUUID.toString());
 		json.put("action", hitType.toString());
 		JSONObject snitch = new JSONObject();
 		snitch.put("name", snitchName);
