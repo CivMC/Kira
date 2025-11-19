@@ -4,8 +4,9 @@ import com.github.maxopoly.kira.KiraMain
 import com.github.maxopoly.kira.command.model.top.InputSupplier
 import com.github.maxopoly.kira.user.UserManager
 import net.civmc.kira.command.Command
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent
-import net.dv8tion.jda.api.interactions.commands.build.CommandData
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
+import net.dv8tion.jda.api.interactions.commands.build.Commands
+import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData
 import org.apache.logging.log4j.Logger
 
 class UpdateRolesCommand(logger: Logger, userManager: UserManager): Command(logger, userManager) {
@@ -15,12 +16,12 @@ class UpdateRolesCommand(logger: Logger, userManager: UserManager): Command(logg
     override val global = false
 
     // TODO: Check if anything actually happened and give more appropriate messages
-    override fun dispatchCommand(event: SlashCommandEvent, sender: InputSupplier) {
+    override fun dispatchCommand(event: SlashCommandInteractionEvent, sender: InputSupplier) {
         KiraMain.getInstance().discordRoleManager.syncUser(sender.user)
         event.reply("Your roles have been updated. If you did not get roles, you do not have a linked account").queue()
     }
 
-    override fun getCommandData(): CommandData {
-        return CommandData("updateroles", "Fixes your auth roles")
+    override fun getCommandData(): SlashCommandData {
+        return Commands.slash("updateroles", "Fixes your auth roles")
     }
 }

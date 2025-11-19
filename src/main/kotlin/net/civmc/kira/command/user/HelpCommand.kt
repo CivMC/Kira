@@ -1,22 +1,21 @@
 package net.civmc.kira.command.user
 
-import com.github.maxopoly.kira.KiraMain
 import com.github.maxopoly.kira.command.model.top.InputSupplier
 import com.github.maxopoly.kira.user.UserManager
 import net.civmc.kira.command.Command
 import net.civmc.kira.command.CommandManager
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent
-import net.dv8tion.jda.api.interactions.commands.OptionMapping
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import net.dv8tion.jda.api.interactions.commands.OptionType
 import net.dv8tion.jda.api.interactions.commands.build.CommandData
+import net.dv8tion.jda.api.interactions.commands.build.Commands
+import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData
 import org.apache.logging.log4j.Logger
-import java.util.*
 
 class HelpCommand(logger: Logger, userManager: UserManager) : Command(logger, userManager) {
 
     override val name = "help"
 
-    override fun dispatchCommand(event: SlashCommandEvent, sender: InputSupplier) {
+    override fun dispatchCommand(event: SlashCommandInteractionEvent, sender: InputSupplier) {
         val command = CommandManager.commands.find { it.name == event.getOption("command")?.asString }
 
         // TODO: Handle excluding commands without permissions better
@@ -31,7 +30,7 @@ class HelpCommand(logger: Logger, userManager: UserManager) : Command(logger, us
     }
 
     // TODO: A nicer format
-    private fun formatCommandData(commandData: CommandData): String {
+    private fun formatCommandData(commandData: SlashCommandData): String {
         val format = """
             - %command% - %description%
               %options%
@@ -53,8 +52,8 @@ class HelpCommand(logger: Logger, userManager: UserManager) : Command(logger, us
                 .replace("%options%", options)
     }
 
-    override fun getCommandData(): CommandData {
-        return CommandData("help", "Shows all available commands").apply {
+    override fun getCommandData(): SlashCommandData {
+        return Commands.slash("help", "Shows all available commands").apply {
             addOption(OptionType.STRING, "command", "The command to get help for")
         }
     }

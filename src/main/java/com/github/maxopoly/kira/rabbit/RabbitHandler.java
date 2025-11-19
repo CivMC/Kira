@@ -1,8 +1,10 @@
 package com.github.maxopoly.kira.rabbit;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.concurrent.TimeoutException;
 
+import com.rabbitmq.client.AMQP;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
@@ -67,6 +69,21 @@ public class RabbitHandler {
 	public boolean sendMessage(String server, String id, JSONObject json) {
 		return sendMessage(server, id + " " + json.toString());
 	}
+
+    private boolean sendMessage(String server, String msg, Duration ttl) {
+        try {
+            AMQP.BasicProperties props = new AMQP.BasicProperties.Builder().expiration(Long.toString(ttl.toMillis())).build();
+            outgoingChannel.basicPublish(outgoingQueue, server, props, msg.getBytes("UTF-8"));
+            return true;
+        } catch (Exception e) {
+            logger.error("Failed to send rabbit message", e);
+            return false;
+        }
+    }
+
+    public boolean sendMessage(String server, String id, JSONObject json, Duration ttl) {
+        return sendMessage(server, id + " " + json.toString(), ttl);
+    }
 
 	public boolean setup() {
 		try {

@@ -5,8 +5,8 @@ import com.github.maxopoly.kira.user.KiraUser;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.PrivateChannel;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.PrivateChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import org.apache.logging.log4j.Logger;
 
 import java.util.function.Consumer;
@@ -20,7 +20,7 @@ public class DiscordMessageSender {
 	/**
 	 * Splits up arbitrary messages into ones not exceeding the character limit of
 	 * 2000 per message and sends them
-	 * 
+	 *
 	 * @param user     User to ping at the beginning of each message, may be null
 	 *                 for no ping
 	 * @param guild    Guild sending to. May be null, but must not be null when

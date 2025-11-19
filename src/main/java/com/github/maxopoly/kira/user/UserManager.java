@@ -5,7 +5,6 @@ import com.github.maxopoly.kira.permission.KiraRoleManager;
 import net.dv8tion.jda.api.JDA;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nullable;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -54,7 +53,6 @@ public class UserManager {
 		return new HashSet<>(userByID.values());
 	}
 
-	@Nullable
 	public KiraUser getUserByDiscordID(long discordID) {
 		return userByDiscordID.get(discordID);
 	}

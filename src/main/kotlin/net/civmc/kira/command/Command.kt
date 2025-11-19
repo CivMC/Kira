@@ -3,10 +3,9 @@ package net.civmc.kira.command
 import com.github.maxopoly.kira.command.model.discord.DiscordCommandChannelSupplier
 import com.github.maxopoly.kira.command.model.top.InputSupplier
 import com.github.maxopoly.kira.user.UserManager
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
-import net.dv8tion.jda.api.interactions.commands.OptionMapping
-import net.dv8tion.jda.api.interactions.commands.build.CommandData
+import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData
 import org.apache.logging.log4j.Logger
 
 abstract class Command(val logger: Logger, val userManager: UserManager) : ListenerAdapter() {
@@ -17,11 +16,11 @@ abstract class Command(val logger: Logger, val userManager: UserManager) : Liste
     open val requiredPermission = "default"
     open val global = true
 
-    abstract fun getCommandData(): CommandData
+    abstract fun getCommandData(): SlashCommandData
 
-    abstract fun dispatchCommand(event: SlashCommandEvent, sender: InputSupplier)
+    abstract fun dispatchCommand(event: SlashCommandInteractionEvent, sender: InputSupplier)
 
-    override fun onSlashCommand(event: SlashCommandEvent) {
+    override fun onSlashCommandInteraction(event: SlashCommandInteractionEvent) {
         if (event.name != name) {
             return
         }

@@ -175,6 +175,26 @@ public class ConfigManager {
 		}
 	}
 
+    public boolean isPatreonEnabled() {
+        try {
+            return config.getJSONObject("patreon").getBoolean("enabled");
+        } catch (JSONException e) {
+            return false;
+        }
+    }
+
+    public String getPatreonAccessToken() {
+        return config.getJSONObject("patreon").getString("access_token");
+    }
+
+    public String getPatreonCampaign() {
+        return config.getJSONObject("patreon").getString("campaign_id");
+    }
+
+    public String getPatreonServer() {
+        return config.getJSONObject("patreon").getString("server");
+    }
+
 	public long getServerID() {
 		try {
 			return config.getJSONObject("bot").getLong("serverid");
@@ -196,5 +216,4 @@ public class ConfigManager {
 			return false;
 		}
 	}
-
 }
