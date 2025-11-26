@@ -77,6 +77,7 @@ public class RelayConfig {
 	public String formatChatMessage(GroupChatMessageAction action) {
 		String output = chatFormat;
 		output = output.replace("%PLAYER%", DiscordMsgUtil.escape(action.getSender()));
+		output = output.replace("%PLAYERUUID%", action.getSenderUUID().toString());
 		output = output.replace("%MESSAGE%", DiscordMsgUtil.escape(action.getMessage()));
 		output = output.replace("%GROUP%", action.getGroupName());
 		output = output.replace("%TIME%", getFormattedTime(action.getTimeStamp()));
@@ -86,7 +87,8 @@ public class RelayConfig {
 
 	public String formatNewPlayerMessage(NewPlayerAction action) {
 		String output = newPlayerFormat;
-		output = output.replace("%PLAYER%", DiscordMsgUtil.escape(action.getPlayer()));
+        output = output.replace("%PLAYER%", DiscordMsgUtil.escape(action.getPlayer()));
+		output = output.replace("%PLAYERUUID%", action.getPlayerUUID().toString());
 		output = output.replace("%TIME%", getFormattedTime(action.getTimeStamp()));
 		output = reformatPings(output);
 		return output;
@@ -107,6 +109,7 @@ public class RelayConfig {
 		}
 		output = output.replace("%ACTION%", actionString);
 		output = output.replace("%PLAYER%", DiscordMsgUtil.escape(action.getPlayer()));
+		output = output.replace("%PLAYERUUID%", action.getPlayerUUID().toString());
 		output = output.replace("%TIME%", getFormattedTime(action.getTimeStamp()));
 		output = reformatPings(output);
 		return output;
@@ -136,6 +139,7 @@ public class RelayConfig {
 		output = output.replace("%WORLD%", String.valueOf(loc.getWorld()));
 		output = output.replace("%SNITCH%", action.getSnitchName());
 		output = output.replaceAll("%PLAYER%", DiscordMsgUtil.escape(action.getPlayerName()));
+		output = output.replace("%PLAYERUUID%", action.getPlayerUUID().toString());
 		output = output.replace("%GROUP%", action.getGroupName());
 		output = output.replace("%TIME%", getFormattedTime(action.getTimeStamp()));
 		output = reformatPings(output);
