@@ -4,12 +4,12 @@ import org.json.JSONObject;
 
 public class NewPlayerAction extends MinecraftAction {
 
-	private String player;
+	private final String player;
 
 	public NewPlayerAction(long timestamp, String player) {
 		super(timestamp);
 		this.player = player;
-	}
+    }
 
 	public String getPlayer() {
 		return player;

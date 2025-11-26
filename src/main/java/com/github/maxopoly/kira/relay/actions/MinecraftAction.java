@@ -7,21 +7,21 @@ import org.json.JSONObject;
  *
  */
 public abstract class MinecraftAction {
-	
-	private long timeStamp;
+
+	private final long timeStamp;
 	private JSONObject json;
-	
+
 	public MinecraftAction(long timeStamp) {
 		this.timeStamp = timeStamp;
 	}
-	
-	private final JSONObject constructJSON() {
+
+	private JSONObject constructJSON() {
 		JSONObject json = new JSONObject();
 		json.put("time", timeStamp);
 		internalConstructJSON(json);
 		return json;
 	}
-	
+
 	public JSONObject getJSON() {
 		if (json != null) {
 			return json;
@@ -29,11 +29,11 @@ public abstract class MinecraftAction {
 		json = constructJSON();
 		return json;
 	}
-	
+
 	public long getTimeStamp() {
 		return timeStamp;
 	}
-	
+
 	protected abstract void internalConstructJSON(JSONObject json);
 
 }

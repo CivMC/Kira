@@ -92,9 +92,11 @@ public class GroupChatManager {
 		}
 	}
 
-	public void applyToAll(Consumer<GroupChat> function) {
+	public void applyToAll(String server, Consumer<GroupChat> function) {
 		for (GroupChat chat : groupChatByName.values()) {
-			function.accept(chat);
+            if (chat.getServer().equals(server)) {
+                function.accept(chat);
+            }
 		}
 	}
 
