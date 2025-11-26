@@ -7,7 +7,7 @@ public class SkynetAction extends MinecraftAction {
 
 	private final SkynetType type;
 	private final String player;
-	private UUID playerUUID;
+	private final UUID playerUUID;
 
 	public SkynetAction(long timestamp, String player, UUID playerUUID, SkynetType type) {
 		super(timestamp);

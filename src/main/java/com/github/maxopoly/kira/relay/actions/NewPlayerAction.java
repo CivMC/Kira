@@ -6,7 +6,7 @@ import java.util.UUID;
 public class NewPlayerAction extends MinecraftAction {
 
 	private final String player;
-	private UUID playerUUID;
+	private final UUID playerUUID;
 
 	public NewPlayerAction(long timestamp, String player, UUID playerUUID) {
 		super(timestamp);
