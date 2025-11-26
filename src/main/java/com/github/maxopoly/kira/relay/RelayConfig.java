@@ -137,7 +137,7 @@ public class RelayConfig {
 		output = output.replace("%Y%", String.valueOf(loc.getY()));
 		output = output.replace("%Z%", String.valueOf(loc.getZ()));
 		output = output.replace("%WORLD%", String.valueOf(loc.getWorld()));
-		output = output.replace("%SNITCH%", DiscordMsgUtil.escape(action.getSnitchName()));
+		output = output.replace("%SNITCH%", action.getSnitchName());
 		output = output.replaceAll("%PLAYER%", DiscordMsgUtil.escape(action.getPlayerName()));
 		output = output.replace("%PLAYERUUID%", action.getPlayerUUID().toString());
 		output = output.replace("%GROUP%", action.getGroupName());

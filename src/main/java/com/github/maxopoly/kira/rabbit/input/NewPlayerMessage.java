@@ -21,7 +21,7 @@ public class NewPlayerMessage extends RabbitMessage {
 
         NewPlayerAction action = new NewPlayerAction(timestamp, player, playerUUID);
         KiraMain.getInstance().getAPISessionManager().handleNewPlayerMessage(action);
-        KiraMain.getInstance().getGroupChatManager().applyToAll(chat -> {
+        KiraMain.getInstance().getGroupChatManager().applyToAll(json.getString("server"), chat -> {
             chat.sendNewPlayer(action);
         });
     }

@@ -5,8 +5,8 @@ import java.util.UUID;
 
 public class SkynetAction extends MinecraftAction {
 
-	private SkynetType type;
-	private String player;
+	private final SkynetType type;
+	private final String player;
 	private UUID playerUUID;
 
 	public SkynetAction(long timestamp, String player, UUID playerUUID, SkynetType type) {
@@ -14,7 +14,7 @@ public class SkynetAction extends MinecraftAction {
 		this.player = player;
 		this.playerUUID = playerUUID;
 		this.type = type;
-	}
+    }
 
 	public String getPlayer() {
 		return player;

@@ -5,7 +5,7 @@ import java.util.UUID;
 
 public class NewPlayerAction extends MinecraftAction {
 
-	private String player;
+	private final String player;
 	private UUID playerUUID;
 
 	public NewPlayerAction(long timestamp, String player, UUID playerUUID) {

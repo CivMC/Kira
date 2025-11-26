@@ -23,6 +23,6 @@ public class SkynetMessage extends RabbitMessage {
 
 		SkynetAction action = new SkynetAction(timestamp, player, playerUUID, type);
 		KiraMain.getInstance().getAPISessionManager().handleSkynetMessage(action);
-		KiraMain.getInstance().getGroupChatManager().applyToAll(chat -> {chat.sendSkynet(action);});
+		KiraMain.getInstance().getGroupChatManager().applyToAll(json.getString("server"), chat -> {chat.sendSkynet(action);});
 	}
 }
