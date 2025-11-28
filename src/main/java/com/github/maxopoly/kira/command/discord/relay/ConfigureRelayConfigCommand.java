@@ -128,10 +128,10 @@ public class ConfigureRelayConfigCommand extends ArgumentBasedCommand {
 			reply.append(" - Format used for group chat messages (chatformat): " + verbatimFormat(relay.getChatFormat()) + "\n");
 			reply.append(
 					"    Example: " + relay.formatChatMessage(new GroupChatMessageAction(System.currentTimeMillis(),
-							"exampleGroup", "ttk2", UUID.fromString("8326bc561ed940ff8f2446bf3e300e51"), "hello, this is an example message")) + "\n");
+							"exampleGroup", "ttk2", UUID.fromString("8326bc56-1ed9-40ff-8f24-46bf3e300e51"), "hello, this is an example message")) + "\n");
 			reply.append(" - Format used for snitch alerts (snitchformat): " + verbatimFormat(relay.getSnitchFormat()) + "\n");
 			reply.append("    Example: " + relay.formatSnitchOutput(
-					new PlayerHitSnitchAction(System.currentTimeMillis(), "ttk2", UUID.fromString("8326bc561ed940ff8f2446bf3e300e51"), "SecretBaseSnitch", "exampleGroup",
+					new PlayerHitSnitchAction(System.currentTimeMillis(), "ttk2", UUID.fromString("8326bc56-1ed9-40ff-8f24-46bf3e300e51"), "SecretBaseSnitch", "exampleGroup",
 							new MinecraftLocation("world", 420, 100, 420), SnitchHitType.ENTER, SnitchType.ENTRY))
 					+ "\n");
 			reply.append(" - Format used for entering a snitch range (snitchentermessage): "
@@ -154,7 +154,7 @@ public class ConfigureRelayConfigCommand extends ArgumentBasedCommand {
 					+ relay.isSkynetEnabled() + "\n");
 			reply.append(" - Skynet format (skynetformat): " + verbatimFormat(relay.getSkynetFormat()) + "\n");
 			reply.append("    Example: "
-					+ relay.formatSkynetMessage(new SkynetAction(System.currentTimeMillis(), "ttk2", UUID.fromString("8326bc561ed940ff8f2446bf3e300e51"), SkynetType.LOGIN))
+					+ relay.formatSkynetMessage(new SkynetAction(System.currentTimeMillis(), "ttk2", UUID.fromString("8326bc56-1ed9-40ff-8f24-46bf3e300e51"), SkynetType.LOGIN))
 					+ "\n");
 			reply.append(" - Skynet login format (skynetloginformat): " + relay.getSkynetLoginString() + "\n");
 			reply.append(" - Skynet logout format (skynetlogoutformat): " + relay.getSkynetLogoutString() + "\n");
@@ -162,7 +162,7 @@ public class ConfigureRelayConfigCommand extends ArgumentBasedCommand {
 					+ relay.isNewPlayerEnabled() + "\n");
 			reply.append(" - new player announcement format (newplayerformat): " + verbatimFormat(relay.getNewPlayerFormat()) + "\n");
 			reply.append("    Example: "
-					+ relay.formatNewPlayerMessage(new NewPlayerAction(System.currentTimeMillis(), "ttk2", UUID.fromString("8326bc561ed940ff8f2446bf3e300e51")))
+					+ relay.formatNewPlayerMessage(new NewPlayerAction(System.currentTimeMillis(), "ttk2", UUID.fromString("8326bc56-1ed9-40ff-8f24-46bf3e300e51")))
 					+ "\n");
 			reply.append(" - Use \"help relayconfig\" for more information on how to configure these properties\n");
 			return reply.toString();
@@ -214,7 +214,7 @@ public class ConfigureRelayConfigCommand extends ArgumentBasedCommand {
 				relay.updateChatFormat(arguments);
 				reply.append("Example chat message would look like this:\n");
 				reply.append(relay.formatChatMessage(new GroupChatMessageAction(System.currentTimeMillis(),
-						"exampleGroup", "ttk2", UUID.fromString("8326bc561ed940ff8f2446bf3e300e51"), "hello, this is an example message")));
+						"exampleGroup", "ttk2", UUID.fromString("8326bc56-1ed9-40ff-8f24-46bf3e300e51"), "hello, this is an example message")));
 				reply.append('\n');
 				checkPingAbility(relay, reply);
 			}
@@ -224,7 +224,7 @@ public class ConfigureRelayConfigCommand extends ArgumentBasedCommand {
 				reply.append("Setting snitch alert format to: " + arguments + "\n");
 				relay.setSnitchFormat(arguments);
 				reply.append("Example snitch message would look like this:\n");
-				reply.append(relay.formatSnitchOutput(new PlayerHitSnitchAction(System.currentTimeMillis(), "ttk2", UUID.fromString("8326bc561ed940ff8f2446bf3e300e51"),
+				reply.append(relay.formatSnitchOutput(new PlayerHitSnitchAction(System.currentTimeMillis(), "ttk2", UUID.fromString("8326bc56-1ed9-40ff-8f24-46bf3e300e51"),
 						"SecretBaseSnitch", "exampleGroup", new MinecraftLocation("world", 420, 100, 420),
 						SnitchHitType.ENTER, SnitchType.ENTRY)));
 				reply.append('\n');
@@ -238,7 +238,7 @@ public class ConfigureRelayConfigCommand extends ArgumentBasedCommand {
 				reply.append("Setting login message to: " + arguments + "\n");
 				relay.updateLoginAction(arguments);
 				reply.append("Example snitch message would look like this:\n");
-				reply.append(new PlayerHitSnitchAction(System.currentTimeMillis(), "ttk2",  UUID.fromString("8326bc561ed940ff8f2446bf3e300e51"),"SecretBaseSnitch",
+				reply.append(new PlayerHitSnitchAction(System.currentTimeMillis(), "ttk2",  UUID.fromString("8326bc56-1ed9-40ff-8f24-46bf3e300e51"),"SecretBaseSnitch",
 						"exampleGroup", new MinecraftLocation("world", 420, 100, 420), SnitchHitType.LOGIN,
 						SnitchType.ENTRY));
 			}
@@ -249,7 +249,7 @@ public class ConfigureRelayConfigCommand extends ArgumentBasedCommand {
 			if (passLengthCheck(arguments, 256, reply)) {
 				reply.append("Setting logout message to: " + arguments + "\n");
 				relay.updateLogoutAction(arguments);
-				reply.append(new PlayerHitSnitchAction(System.currentTimeMillis(), "ttk2", UUID.fromString("8326bc561ed940ff8f2446bf3e300e51"), "SecretBaseSnitch",
+				reply.append(new PlayerHitSnitchAction(System.currentTimeMillis(), "ttk2", UUID.fromString("8326bc56-1ed9-40ff-8f24-46bf3e300e51"), "SecretBaseSnitch",
 						"exampleGroup", new MinecraftLocation("world", 420, 100, 420), SnitchHitType.LOGOUT,
 						SnitchType.ENTRY));
 			}
@@ -260,7 +260,7 @@ public class ConfigureRelayConfigCommand extends ArgumentBasedCommand {
 			if (passLengthCheck(arguments, 256, reply)) {
 				reply.append("Setting enter message to: " + arguments + "\n");
 				relay.updateEnterAction(arguments);
-				reply.append(new PlayerHitSnitchAction(System.currentTimeMillis(), "ttk2", UUID.fromString("8326bc561ed940ff8f2446bf3e300e51"), "SecretBaseSnitch",
+				reply.append(new PlayerHitSnitchAction(System.currentTimeMillis(), "ttk2", UUID.fromString("8326bc56-1ed9-40ff-8f24-46bf3e300e51"), "SecretBaseSnitch",
 						"exampleGroup", new MinecraftLocation("world", 420, 100, 420), SnitchHitType.ENTER,
 						SnitchType.ENTRY));
 			}
@@ -327,7 +327,7 @@ public class ConfigureRelayConfigCommand extends ArgumentBasedCommand {
 				relay.updateSkynetFormat(arguments);
 				reply.append("Example skynet message would look like this:\n");
 				reply.append(relay
-						.formatSkynetMessage(new SkynetAction(System.currentTimeMillis(), "ttk2", UUID.fromString("8326bc561ed940ff8f2446bf3e300e51"), SkynetType.LOGIN)));
+						.formatSkynetMessage(new SkynetAction(System.currentTimeMillis(), "ttk2", UUID.fromString("8326bc56-1ed9-40ff-8f24-46bf3e300e51"), SkynetType.LOGIN)));
 				reply.append('\n');
 			}
 			break;
@@ -338,7 +338,7 @@ public class ConfigureRelayConfigCommand extends ArgumentBasedCommand {
 				relay.updateSkynetLoginString(arguments);
 				reply.append("Example skynet login message would look like this:\n");
 				reply.append(relay
-						.formatSkynetMessage(new SkynetAction(System.currentTimeMillis(), "ttk2", UUID.fromString("8326bc561ed940ff8f2446bf3e300e51"), SkynetType.LOGIN)));
+						.formatSkynetMessage(new SkynetAction(System.currentTimeMillis(), "ttk2", UUID.fromString("8326bc56-1ed9-40ff-8f24-46bf3e300e51"), SkynetType.LOGIN)));
 				reply.append('\n');
 			}
 			break;
@@ -349,7 +349,7 @@ public class ConfigureRelayConfigCommand extends ArgumentBasedCommand {
 				relay.updateSkynetLogoutString(arguments);
 				reply.append("Example skynet logout message would look like this:\n");
 				reply.append(relay
-						.formatSkynetMessage(new SkynetAction(System.currentTimeMillis(), "ttk2", UUID.fromString("8326bc561ed940ff8f2446bf3e300e51"), SkynetType.LOGOUT)));
+						.formatSkynetMessage(new SkynetAction(System.currentTimeMillis(), "ttk2", UUID.fromString("8326bc56-1ed9-40ff-8f24-46bf3e300e51"), SkynetType.LOGOUT)));
 				reply.append('\n');
 			}
 			break;
@@ -366,7 +366,7 @@ public class ConfigureRelayConfigCommand extends ArgumentBasedCommand {
 				relay.updateNewPlayerFormat(arguments);
 				reply.append("Example new player announcements message would look like this:\n");
 				reply.append(relay
-						.formatNewPlayerMessage(new NewPlayerAction(System.currentTimeMillis(), "ttk2", UUID.fromString("8326bc561ed940ff8f2446bf3e300e51"))));
+						.formatNewPlayerMessage(new NewPlayerAction(System.currentTimeMillis(), "ttk2", UUID.fromString("8326bc56-1ed9-40ff-8f24-46bf3e300e51"))));
 				reply.append('\n');
 			}
 			break;
