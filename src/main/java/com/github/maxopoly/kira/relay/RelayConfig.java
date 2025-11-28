@@ -82,6 +82,8 @@ public class RelayConfig {
 		output = output.replace("%MESSAGE%", DiscordMsgUtil.escape(action.getMessage()));
 		output = output.replace("%GROUP%", action.getGroupName());
 		output = output.replace("%TIME%", getFormattedTime(action.getTimeStamp()));
+		output = output.replace("%SECONDS%", String.valueOf(action.getTimeStamp() / 1000));
+		output = output.replace("%MILLIS%", String.valueOf(action.getTimeStamp()));
 		output = reformatPings(output);
 		return output;
 	}
@@ -92,6 +94,8 @@ public class RelayConfig {
         output = output.replace("%PLAYERRAW%", action.getPlayer());
 		output = output.replace("%PLAYERUUID%", action.getPlayerUUID().toString());
 		output = output.replace("%TIME%", getFormattedTime(action.getTimeStamp()));
+		output = output.replace("%SECONDS%", String.valueOf(action.getTimeStamp() / 1000));
+		output = output.replace("%MILLIS%", String.valueOf(action.getTimeStamp()));
 		output = reformatPings(output);
 		return output;
 	}
@@ -114,6 +118,8 @@ public class RelayConfig {
         output = output.replace("%PLAYERRAW%", action.getPlayer());
 		output = output.replace("%PLAYERUUID%", action.getPlayerUUID().toString());
 		output = output.replace("%TIME%", getFormattedTime(action.getTimeStamp()));
+		output = output.replace("%SECONDS%", String.valueOf(action.getTimeStamp() / 1000));
+		output = output.replace("%MILLIS%", String.valueOf(action.getTimeStamp()));
 		output = reformatPings(output);
 		return output;
 	}
@@ -146,6 +152,8 @@ public class RelayConfig {
 		output = output.replace("%PLAYERUUID%", action.getPlayerUUID().toString());
 		output = output.replace("%GROUP%", action.getGroupName());
 		output = output.replace("%TIME%", getFormattedTime(action.getTimeStamp()));
+		output = output.replace("%SECONDS%", String.valueOf(action.getTimeStamp() / 1000));
+		output = output.replace("%MILLIS%", String.valueOf(action.getTimeStamp()));
 		output = reformatPings(output);
 		return output;
 	}
