@@ -24,6 +24,7 @@ public abstract class MinecraftAction {
 	private JSONObject constructJSON() {
 		JSONObject json = new JSONObject();
 		json.put("time", timeStamp);
+		json.put("server", server);
 		internalConstructJSON(json);
 		return json;
 	}
