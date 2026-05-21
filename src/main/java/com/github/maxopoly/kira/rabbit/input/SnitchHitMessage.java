@@ -41,7 +41,7 @@ public class SnitchHitMessage extends RabbitMessage {
 		SnitchHitType hitType = SnitchHitType.valueOf(json.optString("type", "ENTER"));
 		SnitchType snitchType = SnitchType.getType(json.optString("snitchtype", "ENTRY"));
 		long timestamp = json.optLong("timestamp", System.currentTimeMillis());
-		PlayerHitSnitchAction snitchAction = new PlayerHitSnitchAction(timestamp, victimName, victimUUID, snitchName, groupName,
+		PlayerHitSnitchAction snitchAction = new PlayerHitSnitchAction(timestamp, server, victimName, victimUUID, snitchName, groupName,
 				new MinecraftLocation(world, x, y, z), hitType, snitchType);
 		KiraMain.getInstance().getAPISessionManager().handleSnitchHit(snitchAction);
 		if (!chat.sendSnitchHit(snitchAction)) {

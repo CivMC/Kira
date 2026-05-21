@@ -8,8 +8,8 @@ public class NewPlayerAction extends MinecraftAction {
 	private final String player;
 	private final UUID playerUUID;
 
-	public NewPlayerAction(long timestamp, String player, UUID playerUUID) {
-		super(timestamp);
+	public NewPlayerAction(long timestamp, String server, String player, UUID playerUUID) {
+		super(timestamp, server);
 		this.player = player;
 		this.playerUUID = playerUUID;
 	}

@@ -9,10 +9,16 @@ import org.json.JSONObject;
 public abstract class MinecraftAction {
 
 	private final long timeStamp;
+	private final String server;
 	private JSONObject json;
 
-	public MinecraftAction(long timeStamp) {
+	public MinecraftAction(long timeStamp, String server) {
 		this.timeStamp = timeStamp;
+		this.server = server;
+	}
+
+	public String getServer() {
+		return server;
 	}
 
 	private JSONObject constructJSON() {

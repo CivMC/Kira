@@ -21,8 +21,9 @@ public class SkynetMessage extends RabbitMessage {
 		SkynetType type = SkynetType.valueOf(json.getString("action").toUpperCase());
 		long timestamp = json.optLong("timestamp", System.currentTimeMillis());
 
-		SkynetAction action = new SkynetAction(timestamp, player, playerUUID, type);
+		String server = json.getString("server");
+		SkynetAction action = new SkynetAction(timestamp, server, player, playerUUID, type);
 		KiraMain.getInstance().getAPISessionManager().handleSkynetMessage(action);
-		KiraMain.getInstance().getGroupChatManager().applyToAll(json.getString("server"), chat -> {chat.sendSkynet(action);});
+		KiraMain.getInstance().getGroupChatManager().applyToAll(server, chat -> {chat.sendSkynet(action);});
 	}
 }
