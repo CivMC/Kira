@@ -13,9 +13,9 @@ public class PlayerHitSnitchAction extends MinecraftAction {
 	private String groupName;
 	private SnitchType snitchType;
 
-	public PlayerHitSnitchAction(long timestamp, String playerName, UUID playerUUID, String snitchname, String groupName,
+	public PlayerHitSnitchAction(long timestamp, String server, String playerName, UUID playerUUID, String snitchname, String groupName,
 								 MinecraftLocation location, SnitchHitType hitType, SnitchType snitchType) {
-		super(timestamp);
+		super(timestamp, server);
 		this.playerName = playerName;
 		this.playerUUID = playerUUID;
 		this.snitchName = snitchname;

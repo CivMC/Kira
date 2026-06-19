@@ -10,8 +10,8 @@ public class GroupChatMessageAction extends MinecraftAction {
 	private UUID senderUUID;
 	private String message;
 
-	public GroupChatMessageAction(long timeStamp, String group, String sender, UUID senderUUID, String message) {
-		super(timeStamp);
+	public GroupChatMessageAction(long timeStamp, String server, String group, String sender, UUID senderUUID, String message) {
+		super(timeStamp, server);
 		this.group = group;
 		this.sender = sender;
 		this.senderUUID = senderUUID;

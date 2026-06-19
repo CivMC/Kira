@@ -81,6 +81,7 @@ public class RelayConfig {
 		output = output.replace("%PLAYERUUID%", action.getSenderUUID().toString());
 		output = output.replace("%MESSAGE%", DiscordMsgUtil.escape(action.getMessage()));
 		output = output.replace("%GROUP%", action.getGroupName());
+		output = output.replace("%SERVER%", action.getServer());
 		output = output.replace("%TIME%", getFormattedTime(action.getTimeStamp()));
 		output = output.replace("%SECONDS%", String.valueOf(action.getTimeStamp() / 1000));
 		output = output.replace("%MILLIS%", String.valueOf(action.getTimeStamp()));
@@ -93,6 +94,7 @@ public class RelayConfig {
         output = output.replace("%PLAYER%", DiscordMsgUtil.escape(action.getPlayer()));
         output = output.replace("%PLAYERRAW%", action.getPlayer());
 		output = output.replace("%PLAYERUUID%", action.getPlayerUUID().toString());
+		output = output.replace("%SERVER%", action.getServer());
 		output = output.replace("%TIME%", getFormattedTime(action.getTimeStamp()));
 		output = output.replace("%SECONDS%", String.valueOf(action.getTimeStamp() / 1000));
 		output = output.replace("%MILLIS%", String.valueOf(action.getTimeStamp()));
@@ -117,6 +119,7 @@ public class RelayConfig {
 		output = output.replace("%PLAYER%", DiscordMsgUtil.escape(action.getPlayer()));
         output = output.replace("%PLAYERRAW%", action.getPlayer());
 		output = output.replace("%PLAYERUUID%", action.getPlayerUUID().toString());
+		output = output.replace("%SERVER%", action.getServer());
 		output = output.replace("%TIME%", getFormattedTime(action.getTimeStamp()));
 		output = output.replace("%SECONDS%", String.valueOf(action.getTimeStamp() / 1000));
 		output = output.replace("%MILLIS%", String.valueOf(action.getTimeStamp()));
@@ -151,6 +154,7 @@ public class RelayConfig {
         output = output.replaceAll("%PLAYERRAAW%", action.getPlayerName());
 		output = output.replace("%PLAYERUUID%", action.getPlayerUUID().toString());
 		output = output.replace("%GROUP%", action.getGroupName());
+		output = output.replace("%SERVER%", action.getServer());
 		output = output.replace("%TIME%", getFormattedTime(action.getTimeStamp()));
 		output = output.replace("%SECONDS%", String.valueOf(action.getTimeStamp() / 1000));
 		output = output.replace("%MILLIS%", String.valueOf(action.getTimeStamp()));

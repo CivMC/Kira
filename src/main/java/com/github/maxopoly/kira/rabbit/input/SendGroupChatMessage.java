@@ -25,7 +25,7 @@ public class SendGroupChatMessage extends RabbitMessage {
 		UUID senderUUID = UUID.fromString(json.getString("senderUUID"));
 		long timestamp = json.optLong("timestamp", System.currentTimeMillis());
 
-		GroupChatMessageAction action = new GroupChatMessageAction(timestamp, group, sender, senderUUID, msg);
+		GroupChatMessageAction action = new GroupChatMessageAction(timestamp, server, group, sender, senderUUID, msg);
 		KiraMain.getInstance().getAPISessionManager().handleGroupMessage(action);
 		GroupChatManager man = KiraMain.getInstance().getGroupChatManager();
 		GroupChat chat = man.getGroupChat(new GroupId(server, group.toLowerCase()));

@@ -9,8 +9,8 @@ public class SkynetAction extends MinecraftAction {
 	private final String player;
 	private final UUID playerUUID;
 
-	public SkynetAction(long timestamp, String player, UUID playerUUID, SkynetType type) {
-		super(timestamp);
+	public SkynetAction(long timestamp, String server, String player, UUID playerUUID, SkynetType type) {
+		super(timestamp, server);
 		this.player = player;
 		this.playerUUID = playerUUID;
 		this.type = type;
