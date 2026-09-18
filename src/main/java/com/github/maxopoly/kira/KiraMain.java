@@ -13,6 +13,8 @@ import com.github.maxopoly.kira.rabbit.RabbitHandler;
 import com.github.maxopoly.kira.rabbit.session.RequestSessionManager;
 import com.github.maxopoly.kira.relay.GroupChatManager;
 import com.github.maxopoly.kira.relay.RelayConfigManager;
+import com.github.maxopoly.kira.relay.snitch.JdaSnitchMessageSender;
+import com.github.maxopoly.kira.relay.snitch.SnitchMessageBatcher;
 import com.github.maxopoly.kira.user.AuthManager;
 import com.github.maxopoly.kira.user.DiscordRoleManager;
 import com.github.maxopoly.kira.user.KiraUser;
@@ -39,6 +41,26 @@ public class KiraMain {
 	public static KiraMain getInstance() {
 		return instance;
 	}
+
+	private SnitchMessageBatcher snitchBatcher;
+
+	private Logger logger = LogManager.getLogger("Main");
+	private JDA jda;
+	private boolean shutdown = false;
+	private CommandHandler commandHandler;
+	private long guildId;
+	private UserManager userManager;
+	private ConfigManager configManager;
+	private DiscordRoleManager roleManager;
+	private DAO dao;
+	private RabbitHandler rabbit;
+	private MinecraftRabbitGateway mcRabbit;
+	private AuthManager authManager;
+	private KiraRoleManager kiraRoleManager;
+	private GroupChatManager groupChatManager;
+	private RelayConfigManager relayConfigManager;
+	private RequestSessionManager requestSessionManager;
+	private APISessionManager apiSessionManager;
 
 	public static void main(String[] args) {
 		instance = new KiraMain();
@@ -75,6 +97,8 @@ public class KiraMain {
 		CommandManager.INSTANCE.registerCommands();
 
 		instance.apiSessionManager = new APISessionManager(instance.logger, 500);
+		instance.snitchBatcher = SnitchMessageBatcher.create(new JdaSnitchMessageSender(instance::getJDA),
+				instance.logger);
 		instance.rabbit.beginAsyncListen();
 
         if (instance.configManager.isPatreonEnabled()) {
@@ -84,24 +108,6 @@ public class KiraMain {
 
 		instance.parseInput();
 	}
-
-	private Logger logger = LogManager.getLogger("Main");
-	private JDA jda;
-	private boolean shutdown = false;
-	private CommandHandler commandHandler;
-	private long guildId;
-	private UserManager userManager;
-	private ConfigManager configManager;
-	private DiscordRoleManager roleManager;
-	private DAO dao;
-	private RabbitHandler rabbit;
-	private MinecraftRabbitGateway mcRabbit;
-	private AuthManager authManager;
-	private KiraRoleManager kiraRoleManager;
-	private GroupChatManager groupChatManager;
-	private RelayConfigManager relayConfigManager;
-	private RequestSessionManager requestSessionManager;
-	private APISessionManager apiSessionManager;
 
 	public APISessionManager getAPISessionManager() {
 		return apiSessionManager;
@@ -149,6 +155,10 @@ public class KiraMain {
 
 	public RabbitHandler getRabbitHandler() {
 		return rabbit;
+	}
+
+	public SnitchMessageBatcher getSnitchBatcher() {
+		return snitchBatcher;
 	}
 
 	public RelayConfigManager getRelayConfigManager() {
@@ -287,6 +297,9 @@ public class KiraMain {
 
 
 	public void stop() {
+		if (snitchBatcher != null) {
+			snitchBatcher.shutdown();
+		}
 		rabbit.shutdown();
 		apiSessionManager.shutdown();
 		shutdown = true;

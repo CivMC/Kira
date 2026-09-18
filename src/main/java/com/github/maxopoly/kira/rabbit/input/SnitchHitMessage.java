@@ -1,16 +1,16 @@
 package com.github.maxopoly.kira.rabbit.input;
 
-import com.github.maxopoly.kira.relay.GroupId;
-import org.json.JSONObject;
-
 import com.github.maxopoly.kira.KiraMain;
 import com.github.maxopoly.kira.rabbit.RabbitInputSupplier;
 import com.github.maxopoly.kira.relay.GroupChat;
 import com.github.maxopoly.kira.relay.GroupChatManager;
+import com.github.maxopoly.kira.relay.GroupId;
 import com.github.maxopoly.kira.relay.actions.MinecraftLocation;
 import com.github.maxopoly.kira.relay.actions.PlayerHitSnitchAction;
 import com.github.maxopoly.kira.relay.actions.SnitchHitType;
 import com.github.maxopoly.kira.relay.actions.SnitchType;
+import org.json.JSONObject;
+
 import java.util.UUID;
 
 public class SnitchHitMessage extends RabbitMessage {
@@ -44,9 +44,6 @@ public class SnitchHitMessage extends RabbitMessage {
 		PlayerHitSnitchAction snitchAction = new PlayerHitSnitchAction(timestamp, server, victimName, victimUUID, snitchName, groupName,
 				new MinecraftLocation(world, x, y, z), hitType, snitchType);
 		KiraMain.getInstance().getAPISessionManager().handleSnitchHit(snitchAction);
-		if (!chat.sendSnitchHit(snitchAction)) {
-			KiraMain.getInstance().getLogger()
-					.info("Failed to send snitch hit to group " + groupName + ". Channel did not exist");
-		}
+		chat.sendSnitchHit(snitchAction);
 	}
 }

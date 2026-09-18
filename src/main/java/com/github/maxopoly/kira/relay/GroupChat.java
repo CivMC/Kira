@@ -127,19 +127,9 @@ public class GroupChat {
 		return true;
 	}
 
-	public boolean sendSnitchHit(PlayerHitSnitchAction action) {
-		JDA jda = KiraMain.getInstance().getJDA();
-		Guild guild = jda.getGuildById(guildId);
-		if (guild == null) {
-			return false;
-		}
-		TextChannel channel = guild.getTextChannelById(channelId);
-		if (channel == null) {
-			return false;
-		}
-		String msg = config.formatSnitchOutput(action);
-		channel.sendMessage(msg).queue();
-		return true;
+	 // Hands the hit to batcher
+	public void sendSnitchHit(PlayerHitSnitchAction action) {
+		KiraMain.getInstance().getSnitchBatcher().submit(guildId, channelId, config.formatSnitchOutput(action));
 	}
 
 	public void setConfig(RelayConfig config) {
