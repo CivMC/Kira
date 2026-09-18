@@ -7,17 +7,7 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.LongSupplier;
 
-/**
- * Collects snitch hits per Discord channel and sends them as one message.
- * <p>
- * A channel's hits are collected for up to a second, then sent together, and a channel has only one
- * message in flight at a time: hits arriving while JDA waits for Discord capacity go into the next
- * message. Hits are never reordered or dropped to make a message fit, so a busy channel sends fewer,
- * fuller messages instead of falling behind. Channels are independent, so a busy one does not hold
- * back a quiet one, and rate limits are still left to JDA.
- * <p>
- * Hits waiting to be sent are held in memory, as they were in JDA's request queue before.
- */
+// Collects snitch hits per Discord channel and sends them as one message.
 public final class SnitchMessageBatcher {
 
 	static final long COLLECT_WINDOW_MILLIS = 1000;
@@ -38,9 +28,6 @@ public final class SnitchMessageBatcher {
 		this.logger = logger;
 	}
 
-	/**
-	 * Creates a batcher with its own scheduling thread.
-	 */
 	public static SnitchMessageBatcher create(SnitchMessageSender sender, Logger logger) {
 		return new SnitchMessageBatcher(sender, new ExecutorScheduler(logger), System::currentTimeMillis, logger);
 	}
@@ -49,9 +36,7 @@ public final class SnitchMessageBatcher {
 		return failure instanceof CompletionException && failure.getCause() != null ? failure.getCause() : failure;
 	}
 
-	/**
-	 * Queues a formatted hit. Returns without waiting for Discord.
-	 */
+//	hits waiting to be sent are held in memory
 	public void submit(long guildId, long channelId, String entry) {
 		String rejectionReason = SnitchBatchPacker.rejectionReason(entry);
 		if (rejectionReason != null) {
@@ -69,10 +54,8 @@ public final class SnitchMessageBatcher {
 		}
 	}
 
-	/**
-	 * Stops sending. Hits that were not sent yet are discarded, as they were when Kira stopped with
-	 * messages still queued in JDA.
-	 */
+	// future work: on shutdown, in-flight hits get discarded (same as before batch re-work). implement durable queue
+	// of some variety
 	public void shutdown() {
 		int waiting = 0;
 		synchronized (lock) {
@@ -163,7 +146,6 @@ public final class SnitchMessageBatcher {
 		}
 	}
 
-	/** Runs delayed work. */
 	public interface Scheduler {
 
 		void schedule(Runnable task, long delayMillis);
@@ -180,9 +162,7 @@ public final class SnitchMessageBatcher {
 		final long guildId;
 		final long channelId;
 		final ArrayDeque<Entry> entries = new ArrayDeque<>();
-		/** Combined length of the waiting entries, without separators. */
 		int contentLength;
-		/** A message for this channel is on its way to Discord. */
 		boolean sending;
 		boolean flushScheduled;
 
@@ -191,15 +171,12 @@ public final class SnitchMessageBatcher {
 			this.channelId = channelId;
 		}
 
-		/** Length of the message the waiting entries would form. */
 		int length() {
 			return contentLength + Math.max(0, entries.size() - 1) * SnitchBatchPacker.SEPARATOR.length();
 		}
 	}
 
-	/**
-	 * {@link Scheduler} backed by a single daemon thread.
-	 */
+	// single daemon thread
 	private static final class ExecutorScheduler implements Scheduler {
 
 		private final ScheduledThreadPoolExecutor executor;
