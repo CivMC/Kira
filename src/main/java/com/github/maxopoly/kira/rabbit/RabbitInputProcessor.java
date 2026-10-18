@@ -16,6 +16,7 @@ import com.github.maxopoly.kira.rabbit.input.SendGroupChatMessage;
 import com.github.maxopoly.kira.rabbit.input.SkynetMessage;
 import com.github.maxopoly.kira.rabbit.input.SnitchHitMessage;
 import com.github.maxopoly.kira.rabbit.input.SyncGroupChatMembers;
+import com.github.maxopoly.kira.rabbit.input.VoiceChannelStatusMessage;
 
 public class RabbitInputProcessor extends JsonInputHandler<RabbitInputSupplier> {
 
@@ -45,6 +46,8 @@ public class RabbitInputProcessor extends JsonInputHandler<RabbitInputSupplier> 
 		registerCommand(new RequestSessionReplyMessage());
 		registerCommand(new SkynetMessage());
 		registerCommand(new NewPlayerMessage());
+        registerCommand(new VoiceChannelStatusMessage(false));
+        registerCommand(new VoiceChannelStatusMessage(true));
 		registerCommand(new ConsoleForwardMessage(KiraMain.getInstance().getConfig().getConsoleForwardingMapping()));
 	}
 

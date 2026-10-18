@@ -17,6 +17,8 @@
     "bot": {
         "serverid": 0,
         "authroleid": 0,
+        "mainVoiceChannelId": 0,
+        "queueVoiceChannelId": 0,
         "token": "<token>"
     },
     "api": {

@@ -85,6 +85,14 @@ public class ConfigManager {
 		}
 	}
 
+    public long getMainVoiceChannelId() {
+        return config.getJSONObject("bot").optLong("mainVoiceChannelId", 0);
+    }
+
+    public long getQueueVoiceChannelId() {
+        return config.getJSONObject("bot").optLong("queueVoiceChannelId", 0);
+    }
+
 	public String getCommandPrefix() {
 		try {
 			return config.getString("commandprefix");
