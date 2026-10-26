@@ -1,22 +1,36 @@
 package net.civmc.kira.command.user
 
 import com.github.maxopoly.kira.command.model.top.InputSupplier
+import com.github.maxopoly.kira.user.KiraUser
 import com.github.maxopoly.kira.user.UserManager
 import net.civmc.kira.command.Command
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import net.dv8tion.jda.api.interactions.commands.build.Commands
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData
 import org.apache.logging.log4j.Logger
+import org.json.JSONObject
 
 class WhoAmICommand(logger: Logger, userManager: UserManager): Command(logger, userManager) {
-
-    override val name ="whoami"
+    override val name = "whoami"
 
     override fun dispatchCommand(event: SlashCommandInteractionEvent, sender: InputSupplier) {
-        event.reply("Your details are as follows: ```json\n${sender.identifier}\n```").queue()
+        event.reply(
+            sender.user
+                ?.let { "Your details are as follows: ```json\n${it.asJson()}\n```" }
+                ?: "Your details are unknown."
+        ).queue()
     }
 
     override fun getCommandData(): SlashCommandData {
         return Commands.slash("whoami", "Shows your linked accounts")
     }
+}
+
+private fun KiraUser.asJson(): String {
+    val obj = JSONObject()
+    obj.put("id", this.id)
+    obj.put("name", this.name)
+    obj.put("discordId", this.discordID)
+    obj.put("uuid", this.ingameUUID?.toString())
+    return obj.toString()
 }
